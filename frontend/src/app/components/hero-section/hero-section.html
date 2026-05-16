@@ -1,0 +1,39 @@
+<section class="hero" [class.hero--home]="isHome" aria-labelledby="hero-title">
+  <div class="hero__content">
+    <h1 id="hero-title" class="hero__title">{{ title }}</h1>
+    <p class="hero__tagline">{{ subtitle }}</p>
+  </div>
+
+  <div *ngIf="isHome" class="hero__quick-access" aria-label="Truy cập nhanh">
+    <h2 class="quick-access__label">Truy cập nhanh</h2>
+    <div class="quick-access__grid">
+      <article
+        *ngFor="let card of quickAccessCards"
+        class="quick-card"
+        [class.quick-card--large]="quickAccessCards.indexOf(card) === 0"
+        (click)="onCardClick(card.id)"
+        (keyup.enter)="onCardClick(card.id)"
+        (keyup.space)="onCardClick(card.id)"
+        tabindex="0"
+        role="button"
+        [attr.aria-label]="card.title + ': ' + card.description">
+        <div class="quick-card__icon-wrapper" [style.--accent-color]="card.accent">
+          <span class="quick-card__icon" aria-hidden="true">
+            <i class="ti" [ngClass]="card.icon"></i>
+          </span>
+        </div>
+        <div class="quick-card__content">
+          <h3 class="quick-card__title">{{ card.title }}</h3>
+          <p class="quick-card__description">{{ card.description }}</p>
+        </div>
+        <span class="quick-card__arrow" aria-hidden="true">
+          <i class="ti ti-arrow-right"></i>
+        </span>
+      </article>
+    </div>
+  </div>
+
+  <div *ngIf="!isHome" class="hero__module-info">
+    <p class="module-info__text">Đang xem: <strong>{{ title }}</strong></p>
+  </div>
+</section>

@@ -1,0 +1,41 @@
+<header class="header" role="banner">
+  <div class="header__brand">
+    <span class="header__logo" aria-label="EntryAI">
+      <i class="ti ti-brain"></i>
+    </span>
+    <span class="header__wordmark">EntryAI</span>
+  </div>
+
+  <div class="header__search">
+    <label for="global-search" class="visually-hidden">Tìm kiếm thuật ngữ hoặc prompt</label>
+    <div class="search-bar">
+      <span class="search-bar__icon" aria-hidden="true">
+        <i class="ti ti-search"></i>
+      </span>
+      <input
+        type="search"
+        id="global-search"
+        class="search-bar__input"
+        placeholder="Tra cứu thuật ngữ, prompt..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchInput()"
+        autocomplete="off"
+        aria-label="Tìm kiếm nhanh"
+      />
+      <button
+        *ngIf="searchQuery"
+        type="button"
+        class="search-bar__clear"
+        (click)="clearSearch()"
+        aria-label="Xóa tìm kiếm">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="header__actions">
+    <button type="button" class="header__action-btn" aria-label="Cài đặt">
+      <i class="ti ti-settings"></i>
+    </button>
+  </div>
+</header>

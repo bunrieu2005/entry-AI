@@ -1,0 +1,160 @@
+<article class="guides" aria-labelledby="guides-title">
+  <!-- Navigation Status Banner -->
+  <div
+    *ngIf="isFocusLocked"
+    class="navigation-status-banner"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true">
+    <i class="ti ti-device-gamepad" aria-hidden="true"></i>
+    Chế độ WASD đang bật. Dùng <span class="keycap">W</span> / <span class="keycap">A</span> / <span class="keycap">S</span> / <span class="keycap">D</span> để di chuyển &bull; <span class="keycap">Enter</span> để vào phó bản &bull; <span class="keycap">ESC</span> để thoát
+  </div>
+
+  <header class="guides__header">
+    <h1 id="guides-title" class="guides__title">Phím Tắt & Thao Tác Nhanh</h1>
+    <p class="guides__subtitle">Làm chủ EntryAI bằng bàn phím - Nhanh hơn, hiệu quả hơn</p>
+  </header>
+
+  <div class="guides__layout">
+    <!-- Cột trái: Instruction Card -->
+    <section class="guides__instruction" aria-label="Hướng dẫn từng bước">
+      <div class="step-card">
+        <div class="step-card__meta">
+          <span class="step-card__label">Bước</span>
+          <span class="step-card__progress">{{ currentStep.stepNumber }} / {{ totalSteps }}</span>
+        </div>
+
+        <div class="step-card__key-hint">
+          <kbd class="key-badge">{{ currentStep.stepNumber === 1 ? '↑↓' : currentStep.stepNumber === 2 ? '/' : 'Enter' }}</kbd>
+        </div>
+
+        <h2 class="step-card__title">{{ currentStep.title }}</h2>
+
+        <p class="step-card__description">{{ currentStep.description }}</p>
+
+        <div class="action-box" role="note" aria-label="Gợi ý hành động">
+          <span class="action-box__icon" aria-hidden="true">
+            <i class="ti ti-keyboard"></i>
+          </span>
+          <span class="action-box__text">{{ currentStep.actionHint }}</span>
+        </div>
+
+        <nav class="step-nav" aria-label="Điều hướng bước">
+          <button
+            type="button"
+            class="step-nav__btn step-nav__btn--prev"
+            [disabled]="isFirstStep"
+            (click)="prevStep()"
+            aria-label="Bước trước">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            <span>Quay lại</span>
+          </button>
+
+          <button
+            type="button"
+            class="step-nav__btn step-nav__btn--next"
+            [disabled]="isLastStep"
+            (click)="nextStep()"
+            aria-label="Bước tiếp theo">
+            <span>Tiếp theo</span>
+            <i class="ti ti-arrow-right" aria-hidden="true"></i>
+          </button>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Cột phải: Interactive Sandbox -->
+    <section class="guides__sandbox" aria-label="Khu vực thực hành phím tắt">
+      <!-- Bước 1: Menu Navigation -->
+      <div *ngIf="currentStep.stepNumber === 1" class="sandbox sandbox--menu">
+        <div class="sandbox__menu-demo" aria-label="Menu mô phỏng">
+          <div class="menu-mock">
+            <div class="menu-mock__header">
+              <span class="menu-mock__title">Phân khu</span>
+            </div>
+            <div
+              *ngFor="let item of menuItems"
+              class="menu-mock__item"
+              [class.menu-mock__item--active]="isActive(item.id)"
+              [class.menu-mock__item--arrow-left]="isActive(item.id)"
+              role="option"
+              [attr.aria-selected]="isActive(item.id)">
+              <span class="menu-mock__item-text">{{ item.name }}</span>
+              <span *ngIf="isActive(item.id)" class="menu-mock__item-arrow" aria-hidden="true">
+                <i class="ti ti-arrow-left"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="sandbox__key-hint">
+            <span class="key-hint__arrow">
+              <kbd class="key-badge key-badge--small">↑</kbd>
+              <kbd class="key-badge key-badge--small">↓</kbd>
+            </span>
+            <span class="key-hint__text">Nhấn để duyệt menu</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bước 2: Search Focus -->
+      <div *ngIf="currentStep.stepNumber === 2" class="sandbox sandbox--search">
+        <div class="sandbox__search-demo">
+          <div class="search-mock" [class.search-mock--focused]="isSearchFocused">
+            <span class="search-mock__icon" aria-hidden="true">
+              <i class="ti ti-search"></i>
+            </span>
+            <input
+              type="text"
+              class="search-mock__input"
+              placeholder="Tra cứu thuật ngữ, prompt..."
+              [value]="isSearchFocused ? '' : ''"
+              readonly
+              aria-label="Ô tìm kiếm mô phỏng"
+            />
+          </div>
+
+          <div *ngIf="isSearchFocused" class="sandbox__success-message" role="status" aria-live="polite">
+            <i class="ti ti-check" aria-hidden="true"></i>
+            <span>Hệ thống đã nhận lệnh bấm phím [/] từ bạn!</span>
+          </div>
+
+          <div *ngIf="!isSearchFocused" class="sandbox__key-hint">
+            <kbd class="key-badge">/</kbd>
+            <span class="key-hint__text">Nhấn phím gạch chéo để kích hoạt</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bước 3: Copy with Enter -->
+      <div *ngIf="currentStep.stepNumber === 3" class="sandbox sandbox--copy">
+        <div class="sandbox__copy-demo">
+          <div
+            class="prompt-card-mock"
+            [class.prompt-card-mock--success]="hasCopiedDemo"
+            role="article"
+            [attr.aria-label]="hasCopiedDemo ? 'Đã sao chép thành công' : 'Thẻ Prompt mẫu'">
+            <div class="prompt-card-mock__header">
+              <span class="prompt-card-mock__tag">Marketing</span>
+            </div>
+            <div class="prompt-card-mock__content">
+              <code class="prompt-card-mock__code">
+                Hãy thử tạo một prompt hiệu quả cho AI của bạn!
+              </code>
+            </div>
+            <div class="prompt-card-mock__footer">
+              <span class="prompt-card-mock__shortcut">
+                <kbd class="key-badge key-badge--small">Enter</kbd>
+                <span>để sao chép</span>
+              </span>
+            </div>
+          </div>
+
+          <div *ngIf="hasCopiedDemo" class="sandbox__success-message" role="status" aria-live="polite">
+            <i class="ti ti-check" aria-hidden="true"></i>
+            <span>Đã dùng phím Enter để sao chép thành công!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>

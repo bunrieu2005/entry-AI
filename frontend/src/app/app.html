@@ -1,0 +1,26 @@
+<div class="app-wrapper">
+  <app-sidebar [activeId]="activeModuleId" (moduleSelected)="onModuleSelected($event)"></app-sidebar>
+
+  <div class="app-content">
+    <app-header></app-header>
+
+    <main class="main-content" role="main">
+      <app-guides *ngIf="isGuidesModule" [isFocusLocked]="isLockedInsideModule"></app-guides>
+      <app-ai-tools *ngIf="isExploreModule" [isFocusLocked]="isLockedInsideModule"></app-ai-tools>
+      <app-glossary *ngIf="isGlossaryModule" [isFocusLocked]="isLockedInsideModule"></app-glossary>
+
+      <app-prompts
+        *ngIf="isPromptsModule"
+        [isFocusLocked]="isLockedInsideModule">
+      </app-prompts>
+
+      <app-hero-section
+        *ngIf="!isGuidesModule && !isExploreModule && !isGlossaryModule && !isPromptsModule"
+        [title]="getHeroTitle()"
+        [subtitle]="getHeroSubtitle()"
+        [isHome]="!activeModuleId"
+        (cardSelected)="onModuleSelected($event)">
+      </app-hero-section>
+    </main>
+  </div>
+</div>

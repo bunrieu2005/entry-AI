@@ -1,0 +1,15 @@
+Luôn tuân thủ các quy tắc sau khi viết code cho dự án này:
+
+1. Tiêu chuẩn WCAG 2.2 (Mức độ AA/AAA):
+   - [cite_start]Mọi nút bấm (Button) phải có kích thước tối thiểu 44x44px để hỗ trợ người hạn chế vận động tay[cite: 729].
+   - [cite_start]Sử dụng sự kiện (pointerup) cho các hành động quan trọng để hỗ trợ "Hủy con trỏ"[cite: 704].
+   - [cite_start]Mọi phần tử tương tác phải có chỉ báo tiêu điểm (:focus-visible) rõ ràng, dày 3px[cite: 645].
+   - [cite_start]Sử dụng Semantic HTML (article, nav, main, button)[cite: 988].
+
+2. Kraft Paper Design System:
+   - Màu sắc: Primary (#251812), Surface (#F1E3C6), Tertiary (#B83B2E - chỉ dùng cho nút Copy).
+   - [cite_start]Typography: Archivo cho tiêu đề, Inter cho nội dung.
+   - Phong cách: Phẳng (Flat), không gradient.
+
+3. Kỹ thuật:
+   - [cite_start]Sử dụng Angular CDK (A11y, LiveAnnouncer) để thông báo trạng thái[cite: 921].

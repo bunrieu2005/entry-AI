@@ -1,0 +1,126 @@
+<article class="glossary" aria-labelledby="glossary-title">
+  <!-- Navigation Status Banner -->
+  <div
+    *ngIf="isFocusLocked"
+    class="navigation-status-banner"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true">
+    <i class="ti ti-device-gamepad" aria-hidden="true"></i>
+    Chế độ duyệt đang bật. Dùng <span class="keycap">W</span> / <span class="keycap">S</span> hoặc <span class="keycap">↑</span> / <span class="keycap">↓</span> để di chuyển &bull; <span class="keycap">Enter</span> để xem định nghĩa &bull; <span class="keycap">ESC</span> để thoát
+  </div>
+
+  <header class="glossary__header">
+    <h1 id="glossary-title" class="glossary__title">Từ Điển Thuật Ngữ AI</h1>
+    <p class="glossary__subtitle">Tra cứu nhanh các khái niệm và thuật ngữ về trí tuệ nhân tạo</p>
+
+    <!-- Search Bar -->
+    <div class="glossary__search">
+      <label for="glossary-search" class="visually-hidden">Tìm kiếm thuật ngữ</label>
+      <div class="search-input-wrapper">
+        <span class="search-input-wrapper__icon" aria-hidden="true">
+          <i class="ti ti-search"></i>
+        </span>
+        <input
+          type="text"
+          id="glossary-search"
+          class="search-input-wrapper__input"
+          placeholder="Tìm kiếm thuật ngữ..."
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="filterTerms()"
+          autocomplete="off"
+          aria-label="Tìm kiếm thuật ngữ AI"
+          [attr.aria-disabled]="isFocusLocked"
+          [class.search-input-wrapper__input--locked]="isFocusLocked"
+        />
+        <button
+          *ngIf="searchQuery"
+          type="button"
+          class="search-input-wrapper__clear"
+          (click)="searchQuery = ''; filterTerms()"
+          aria-label="Xóa tìm kiếm">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="glossary__loading" role="status" aria-live="polite">
+    <div class="loading-spinner"></div>
+    <span class="loading-text">Đang tải danh sách thuật ngữ...</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="glossary__error" role="alert">
+    <div class="error-icon">
+      <i class="ti ti-alert-circle"></i>
+    </div>
+    <p class="error-message">{{ errorMessage }}</p>
+    <button type="button" class="retry-btn" (pointerup)="loadTerms()">
+      <i class="ti ti-refresh" aria-hidden="true"></i>
+      <span>Thử lại</span>
+    </button>
+  </div>
+
+  <!-- Terms List -->
+  <div *ngIf="!isLoading && !errorMessage" class="glossary__list" role="list">
+    <div
+      *ngFor="let term of filteredTerms; let i = index; trackBy: trackByTermId"
+      class="term-item"
+      [class.is-focused]="isFocusLocked && i === activeItemIndex"
+      role="listitem"
+      [attr.aria-current]="isFocusLocked && i === activeItemIndex ? 'true' : null">
+      <!-- Term Header (Accordion Trigger) -->
+      <button
+        type="button"
+        class="term-item__header"
+        (click)="toggleTerm(term.id)"
+        [attr.aria-expanded]="isTermExpanded(term.id)"
+        [attr.aria-controls]="'term-detail-' + term.id"
+        [attr.aria-label]="'Mở rộng định nghĩa của ' + term.term">
+        <div class="term-item__info">
+          <h2 class="term-item__term">{{ term.term }}</h2>
+          <div class="term-item__tags" *ngIf="parseTags(term.tags).length > 0">
+            <span
+              *ngFor="let tag of parseTags(term.tags)"
+              class="tag-badge">
+              {{ tag }}
+            </span>
+          </div>
+        </div>
+        <span class="term-item__chevron" [class.term-item__chevron--open]="isTermExpanded(term.id)" aria-hidden="true">
+          <i class="ti" [ngClass]="isTermExpanded(term.id) ? 'ti-chevron-up' : 'ti-chevron-down'"></i>
+        </span>
+      </button>
+
+      <!-- Term Detail (Accordion Content) -->
+      <div
+        *ngIf="isTermExpanded(term.id)"
+        [id]="'term-detail-' + term.id"
+        class="term-item__detail"
+        role="region"
+        [attr.aria-labelledby]="'term-header-' + term.id">
+        <div class="term-item__definition">
+          <p>{{ term.definitionVi }}</p>
+        </div>
+        <div class="term-item__example" *ngIf="term.exampleVi">
+          <div class="example-header">
+            <i class="ti ti-lightbulb" aria-hidden="true"></i>
+            <span>Ví dụ thực tế</span>
+          </div>
+          <p class="example-content">{{ term.exampleVi }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && !errorMessage && filteredTerms.length === 0" class="glossary__empty" role="status">
+    <div class="empty-icon">
+      <i class="ti ti-search"></i>
+    </div>
+    <p class="empty-text" *ngIf="searchQuery">Không tìm thấy thuật ngữ nào phù hợp với "{{ searchQuery }}".</p>
+    <p class="empty-text" *ngIf="!searchQuery">Chưa có thuật ngữ nào được thêm vào.</p>
+  </div>
+</article>

@@ -1,0 +1,6 @@
+
+backend/target/
+backend/.idea/
+backend/**/*.class
+backend/*.iml
+backend/.mvn/

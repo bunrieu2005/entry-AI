@@ -1,0 +1,127 @@
+<section class="prompts" aria-labelledby="prompts-heading">
+
+  <!-- Navigation Status Banner -->
+  <div
+    *ngIf="isFocusLocked"
+    class="navigation-status-banner"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true">
+    <i class="ti ti-device-gamepad" aria-hidden="true"></i>
+    Chế độ WASD đang bật. Dùng <span class="keycap">A</span> / <span class="keycap">D</span> hoặc <span class="keycap">←</span> / <span class="keycap">→</span> để di chuyển &bull; <span class="keycap">Enter</span> để sao chép &bull; <span class="keycap">ESC</span> để thoát
+  </div>
+
+  <!-- Category Tabs -->
+  <nav class="prompts__tabs" aria-label="Lĩnh vực prompt" role="tablist">
+    <button
+      *ngFor="let cat of categories"
+      role="tab"
+      type="button"
+      class="prompts__tab"
+      [class.active]="cat.id === activeCategoryId"
+      [attr.aria-selected]="cat.id === activeCategoryId"
+      [attr.aria-disabled]="isFocusLocked"
+      [class.prompts__tab--locked]="isFocusLocked"
+      (pointerup)="!isFocusLocked && loadPromptsByCategory(cat.id)"
+      (keydown.enter)="!isFocusLocked && loadPromptsByCategory(cat.id)"
+      (keydown.space)="!isFocusLocked && loadPromptsByCategory(cat.id); $event.preventDefault()"
+    >
+      <i class="{{ cat.icon }}" aria-hidden="true"></i>
+      <span>{{ cat.name }}</span>
+    </button>
+  </nav>
+
+  <!-- Section Header -->
+  <header class="prompts__header">
+    <h1 id="prompts-heading" class="prompts__title">
+      Thư viện Prompt
+    </h1>
+    <p class="prompts__subtitle">
+      Khám phá các câu lệnh AI được tuyển chọn cho lĩnh vực
+      <strong>{{ getCategoryName(activeCategoryId) }}</strong>.
+    </p>
+  </header>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="prompts__state prompts__loading" role="status" aria-live="polite">
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <span class="loading-text">Đang tải câu lệnh...</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && errorMessage" class="prompts__state prompts__error" role="alert">
+    <div class="error-icon" aria-hidden="true">
+      <i class="ti ti-alert-circle"></i>
+    </div>
+    <p class="error-message">{{ errorMessage }}</p>
+    <button
+      type="button"
+      class="retry-btn"
+      (pointerup)="loadPromptsByCategory(activeCategoryId)"
+      (keydown.enter)="loadPromptsByCategory(activeCategoryId)"
+    >
+      <i class="ti ti-refresh" aria-hidden="true"></i>
+      Thử lại
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && !errorMessage && promptsList.length === 0" class="prompts__state prompts__empty" role="status">
+    <div class="empty-icon" aria-hidden="true">
+      <i class="ti ti-inbox"></i>
+    </div>
+    <p class="empty-text">Chưa có prompt nào trong lĩnh vực này.</p>
+  </div>
+
+  <!-- Prompt Grid -->
+  <div *ngIf="!isLoading && !errorMessage && promptsList.length > 0" class="prompts__grid" role="tabpanel">
+
+    <article
+      *ngFor="let prompt of promptsList; let i = index; trackBy: trackByPromptId"
+      class="prompt-card"
+      [class.is-targeted]="isFocusLocked && i === activeCardIndex"
+      [attr.aria-label]="'Prompt: ' + prompt.titleVi"
+      [attr.aria-current]="isFocusLocked && i === activeCardIndex ? 'true' : null"
+    >
+      <!-- Card Header -->
+      <div class="prompt-card__header">
+        <h2 class="prompt-card__title">{{ prompt.titleVi }}</h2>
+        <span class="prompt-card__copy-count" aria-label="Số lần sao chép">
+          <i class="ti ti-copy" aria-hidden="true"></i>
+          {{ prompt.copyCount }} lần
+        </span>
+      </div>
+
+      <!-- Prompt Content Box -->
+      <div class="prompt-card__content" role="region" aria-label="Nội dung prompt">
+        <pre class="prompt-card__text">{{ prompt.content }}</pre>
+      </div>
+
+      <!-- Compatible Tools Badges -->
+      <div class="prompt-card__tools" aria-label="Công cụ tương thích" *ngIf="prompt.compatibleTools && prompt.compatibleTools.length > 0">
+        <span
+          *ngFor="let tool of prompt.compatibleTools"
+          class="tool-badge"
+        >{{ tool }}</span>
+      </div>
+
+      <!-- Copy Button -->
+      <button
+        type="button"
+        class="prompt-card__copy-btn"
+        [class.copied]="copiedPromptId === prompt.id"
+        [attr.aria-label]="copiedPromptId === prompt.id ? 'Đã sao chép câu lệnh' : 'Sao chép câu lệnh: ' + prompt.titleVi"
+        [attr.aria-pressed]="copiedPromptId === prompt.id"
+        (pointerup)="copyPromptContent(prompt.content, prompt.id)"
+        (keydown.enter)="copyPromptContent(prompt.content, prompt.id)"
+        (keydown.space)="copyPromptContent(prompt.content, prompt.id); $event.preventDefault()"
+      >
+        <i [class]="copiedPromptId === prompt.id ? 'ti ti-check' : 'ti ti-clipboard'" aria-hidden="true"></i>
+        <span>{{ copiedPromptId === prompt.id ? 'Đã sao chép!' : 'Sao chép câu lệnh' }}</span>
+      </button>
+
+    </article>
+
+  </div>
+
+</section>
