@@ -22,7 +22,13 @@ public class VibeLessonController {
     }
 
     @GetMapping("/lesson/{lessonNo}")
-    public ResponseEntity<VibeLesson> getLessonByNo(@PathVariable Integer lessonNo) {
+    public ResponseEntity<VibeLesson> getLessonByNo(@PathVariable("lessonNo") Integer lessonNo) {
         return ResponseEntity.ok(vibeLessonService.getLessonByNo(lessonNo));
     }
+
+    @GetMapping("/track/{slug}")
+    public ResponseEntity<List<VibeLesson>> getLessonsByTrack(@PathVariable("slug") String slug) {
+        return ResponseEntity.ok(vibeLessonService.getLessonsByTrack(slug));
+    }
+
 }

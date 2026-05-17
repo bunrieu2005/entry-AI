@@ -15,4 +15,9 @@ public interface VibeLessonRepository extends JpaRepository<VibeLesson, Long> {
 
     // Tìm bài học theo số thứ tự bài
     Optional<VibeLesson> findByLessonNo(Integer lessonNo);
+
+
+    //  (NON-TECH / DEV) ---
+    // Từ khóa "TrackSlug" sẽ  chui vào Entity SeriesTrack để tìm theo trường slug
+    List<VibeLesson> findByTrackSlugOrderByLessonNoAsc(String slug);
 }

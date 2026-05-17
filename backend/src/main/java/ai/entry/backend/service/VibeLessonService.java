@@ -20,4 +20,8 @@ public class VibeLessonService {
         return vibeLessonRepository.findByLessonNo(lessonNo)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy bài học số: " + lessonNo));
     }
+
+    public List<VibeLesson> getLessonsByTrack(String slug) {
+        return vibeLessonRepository.findByTrackSlugOrderByLessonNoAsc(slug);
+    }
 }
