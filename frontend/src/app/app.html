@@ -14,8 +14,10 @@
         [isFocusLocked]="isLockedInsideModule">
       </app-prompts>
 
+      <router-outlet *ngIf="isVibeModule"></router-outlet>
+
       <app-hero-section
-        *ngIf="!isGuidesModule && !isExploreModule && !isGlossaryModule && !isPromptsModule"
+        *ngIf="!isGuidesModule && !isExploreModule && !isGlossaryModule && !isPromptsModule && !isVibeModule"
         [title]="getHeroTitle()"
         [subtitle]="getHeroSubtitle()"
         [isHome]="!activeModuleId"

@@ -7,7 +7,7 @@ import { GuidesComponent } from './components/guides/guides';
 import { AiToolsComponent } from './components/ai-tools/ai-tools';
 import { GlossaryComponent } from './components/glossary/glossary';
 import { PromptsComponent } from './components/prompts/prompts';
-
+import { RouterOutlet } from '@angular/router';
 export interface ModuleInfo {
   id: string;
   name: string;
@@ -20,6 +20,7 @@ export interface ModuleInfo {
   standalone: true,
   imports: [
     CommonModule,
+    RouterOutlet,
     SidebarComponent,
     HeaderComponent,
     HeroSectionComponent,
@@ -32,7 +33,7 @@ export interface ModuleInfo {
   styleUrl: './app.css',
 })
 export class AppComponent {
-  readonly modulesList: string[] = ['guides', 'explore', 'glossary', 'prompts', 'vibe'];
+  readonly modulesList: string[] = ['guides', 'explore', 'glossary', 'prompts', 'vibe-coding'];
 
   activeModuleId: string = 'guides';
   isLockedInsideModule: boolean = false;
@@ -58,7 +59,7 @@ export class AppComponent {
   }
 
   get isVibeModule(): boolean {
-    return this.activeModuleId === 'vibe';
+    return this.activeModuleId === 'vibe-coding';
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -99,7 +100,7 @@ export class AppComponent {
         return 'Thuật Ngữ AI';
       case 'prompts':
         return 'Thư Viện Prompt';
-      case 'vibe':
+        case 'vibe-coding': 
         return 'Vibe Coding';
       default:
         return 'EntryAI';
@@ -116,7 +117,7 @@ export class AppComponent {
         return 'Từ điển thuật ngữ AI với ví dụ minh hoạ trực quan';
       case 'prompts':
         return 'Kho prompt mẫu phân loại theo lĩnh vực, sẵn sàng sao chép';
-      case 'vibe':
+        case 'vibe-coding': 
         return 'Series hướng dẫn tạo web từ ý tưởng đến sản phẩm';
       default:
         return 'Nền tảng học và làm chủ AI cho người Việt';

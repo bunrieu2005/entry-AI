@@ -6,6 +6,7 @@
   <nav class="sidebar__nav">
     <ul class="sidebar__list" role="list">
       <li *ngFor="let mod of modules" class="sidebar__item">
+        
         <button
           type="button"
           class="sidebar__btn"
@@ -22,6 +23,16 @@
             <span class="sidebar__desc">{{ mod.desc }}</span>
           </span>
         </button>
+
+        <ul *ngIf="mod.children && isActive(mod.id)" class="sidebar__sub-list">
+          <li *ngFor="let child of mod.children" class="sidebar__sub-item">
+            <a [routerLink]="child.path" 
+               class="sidebar__sub-link"
+               routerLinkActive="sidebar__sub-link--active"> {{ child.name }}
+            </a>
+          </li>
+        </ul>
+
       </li>
     </ul>
   </nav>
