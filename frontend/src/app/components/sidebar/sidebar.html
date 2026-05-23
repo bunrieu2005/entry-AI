@@ -6,15 +6,17 @@
   <nav class="sidebar__nav">
     <ul class="sidebar__list" role="list">
       <li *ngFor="let mod of modules" class="sidebar__item">
-        
+
+        <!-- Parent button with optional chevron for modules with children -->
         <button
           type="button"
           class="sidebar__btn"
-          [class.sidebar__btn--active]="isActive(mod.id)"
+          [class.sidebar__btn--active]="isActive(mod.id) || hasActiveChild(mod)"
           (click)="selectModule(mod.id)"
-          [attr.aria-pressed]="isActive(mod.id)"
-          role="menuitemradio"
-          [attr.aria-checked]="isActive(mod.id)">
+          (pointerup)="$event"
+          [attr.aria-expanded]="mod.children ? isExpanded(mod.id) : null"
+          role="menuitem"
+          [attr.aria-haspopup]="mod.children ? 'menu' : null">
           <span class="sidebar__icon" aria-hidden="true">
             <i class="ti" [ngClass]="mod.icon"></i>
           </span>
@@ -22,13 +24,26 @@
             <span class="sidebar__name">{{ mod.name }}</span>
             <span class="sidebar__desc">{{ mod.desc }}</span>
           </span>
+          <span *ngIf="mod.children" class="sidebar__chevron" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                 [class.sidebar__chevron--rotated]="isExpanded(mod.id)">
+              <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
         </button>
 
-        <ul *ngIf="mod.children && isActive(mod.id)" class="sidebar__sub-list">
+        <!-- Sub-items: show when expanded OR when a child is active -->
+        <ul *ngIf="mod.children && (isExpanded(mod.id) || hasActiveChild(mod))"
+            class="sidebar__sub-list"
+            role="menu">
           <li *ngFor="let child of mod.children" class="sidebar__sub-item">
-            <a [routerLink]="child.path" 
+            <a [routerLink]="child.path"
                class="sidebar__sub-link"
-               routerLinkActive="sidebar__sub-link--active"> {{ child.name }}
+               routerLinkActive="sidebar__sub-link--active"
+               role="menuitem">
+              <span class="sidebar__sub-dot" aria-hidden="true"></span>
+              {{ child.name }}
             </a>
           </li>
         </ul>

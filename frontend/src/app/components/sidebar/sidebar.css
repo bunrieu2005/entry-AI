@@ -1,3 +1,7 @@
+/* ============================================
+   Sidebar Container
+   ============================================ */
+
 .sidebar {
   width: 280px;
   min-width: 280px;
@@ -38,9 +42,17 @@
   gap: 8px;
 }
 
+/* ============================================
+   Sidebar Nav Items
+   ============================================ */
+
 .sidebar__item {
   width: 100%;
 }
+
+/* ============================================
+   Parent Button (all modules)
+   ============================================ */
 
 .sidebar__btn {
   width: 100%;
@@ -79,6 +91,37 @@
   border-color: var(--color-primary);
 }
 
+/* Chevron icon on parent buttons that have children */
+.sidebar__chevron {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-secondary);
+  transition: color 0.2s ease;
+}
+
+.sidebar__btn:hover .sidebar__chevron {
+  color: var(--color-primary);
+}
+
+.sidebar__btn--active .sidebar__chevron {
+  color: rgba(241, 227, 198, 0.7);
+}
+
+.sidebar__chevron svg {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar__chevron--rotated svg {
+  transform: rotate(180deg);
+}
+
+/* ============================================
+   Icon & Text Layout
+   ============================================ */
+
 .sidebar__icon {
   display: flex;
   align-items: center;
@@ -94,6 +137,7 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  flex: 1;
 }
 
 .sidebar__name {
@@ -121,6 +165,77 @@
   color: rgba(241, 227, 198, 0.6);
 }
 
+/* ============================================
+   Sub-list (children) — expand/collapse
+   ============================================ */
+
+.sidebar__sub-list {
+  list-style: none;
+  padding: 6px 0 6px 48px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar__sub-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--color-secondary);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  min-height: 38px;
+  transition: background-color 0.15s ease, color 0.15s ease, padding-left 0.15s ease;
+  border-left: 2px solid transparent;
+}
+
+.sidebar__sub-link:hover {
+  background-color: rgba(37, 24, 18, 0.06);
+  color: var(--color-primary);
+  padding-left: 16px;
+}
+
+.sidebar__sub-link--active {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 600;
+  border-left-color: var(--color-tertiary);
+}
+
+.sidebar__sub-link--active:hover {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* Small dot indicator for active sub-item */
+.sidebar__sub-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.sidebar__sub-link--active .sidebar__sub-dot {
+  opacity: 1;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   Responsive — Mobile Sidebar
+   ============================================ */
+
 @media (max-width: 900px) {
   .sidebar {
     width: 72px;
@@ -146,6 +261,14 @@
     height: 28px;
     font-size: 1.25rem;
   }
+
+  .sidebar__chevron {
+    display: none;
+  }
+
+  .sidebar__sub-list {
+    display: none;
+  }
 }
 
 @media (max-width: 600px) {
@@ -159,41 +282,4 @@
     height: 24px;
     font-size: 1.1rem;
   }
-}
-/* CSS CHO MENU XỔ XUỐNG */
-.sidebar__sub-list {
-  list-style: none;
-  padding: 5px 0 5px 40px; /* Thụt lề vào cho giống menu con */
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  animation: slideDown 0.2s ease-in-out; /* Hiệu ứng trượt xuống cho mượt */
-}
-
-.sidebar__sub-link {
-  display: block;
-  text-decoration: none;
-  color: #6b6560; 
-  font-size: 14px;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.sidebar__sub-link:hover {
-  background-color: #f0f0f0;
-  color: #1a1a1a;
-}
-
-.sidebar__sub-link--active {
-  background-color: #e4e4e4;
-  color: #1a1a1a;
-  font-weight: 600;
-}
-
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
 }

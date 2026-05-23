@@ -1,0 +1,127 @@
+<!-- ============================================
+     AI Guidelines — Main Layout
+     Two-panel: lesson list (left) + lesson detail (right)
+     ============================================ -->
+
+<div class="ai-guidelines">
+
+  <!-- ============================================
+       AI Tab Bar
+       ============================================ -->
+  <div class="ai-tabs" role="tablist" aria-label="Chọn trợ lý AI">
+    <button
+      *ngFor="let tab of aiTabs"
+      type="button"
+      class="ai-tab"
+      role="tab"
+      [class.ai-tab--active]="currentCategory === tab.id"
+      [attr.aria-selected]="currentCategory === tab.id"
+      (click)="changeCategory(tab.id)"
+      (pointerup)="$event">
+      <span class="ai-tab__icon" aria-hidden="true">
+        <i class="ti" [ngClass]="tab.icon"></i>
+      </span>
+      <span class="ai-tab__label">{{ tab.name }}</span>
+    </button>
+  </div>
+
+  <!-- ============================================
+       Two-panel layout: lessons + detail
+       ============================================ -->
+  <div class="ai-layout">
+
+    <!-- Lesson List (left panel) -->
+    <aside class="ai-lessons" aria-label="Danh sách bài học">
+      <div class="ai-lessons__header">
+        <h2 class="ai-lessons__title">Danh sách bài</h2>
+        <span class="ai-lessons__count">{{ lessons.length }} bài</span>
+      </div>
+
+      <ul class="ai-lessons__list" role="list">
+        <li *ngFor="let lesson of lessons" class="ai-lesson-item">
+          <button
+            type="button"
+            class="ai-lesson-item__btn"
+            [class.ai-lesson-item__btn--active]="currentLesson && currentLesson.id === lesson.id"
+            (click)="selectLesson(lesson.id)"
+            (pointerup)="$event">
+            <span class="ai-lesson-item__number" aria-hidden="true">
+              {{ lesson.id.split('-')[1] || '?' }}
+            </span>
+            <span class="ai-lesson-item__info">
+              <span class="ai-lesson-item__title">{{ lesson.title }}</span>
+              <span *ngIf="lesson.tag" class="ai-lesson-item__tag">{{ lesson.tag }}</span>
+            </span>
+          </button>
+        </li>
+
+        <!-- Empty state -->
+        <li *ngIf="lessons.length === 0" class="ai-lessons__empty" role="status">
+          <span class="ai-lessons__empty-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <rect x="6" y="8" width="28" height="4" rx="2" fill="currentColor" opacity="0.3"/>
+              <rect x="6" y="16" width="20" height="4" rx="2" fill="currentColor" opacity="0.2"/>
+              <rect x="6" y="24" width="24" height="4" rx="2" fill="currentColor" opacity="0.15"/>
+              <rect x="6" y="32" width="16" height="4" rx="2" fill="currentColor" opacity="0.1"/>
+            </svg>
+          </span>
+          <span class="ai-lessons__empty-text">Đang tải bài học...</span>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Lesson Detail (right panel) -->
+    <main class="ai-detail" aria-label="Chi tiết bài học" tabindex="-1">
+
+      <!-- No lesson selected — welcome state -->
+      <div *ngIf="!currentLesson" class="ai-detail__welcome">
+        <div class="ai-detail__welcome-icon" aria-hidden="true">
+          <i class="ti" [ngClass]="currentAiTab.icon"></i>
+        </div>
+        <h2 class="ai-detail__welcome-title">
+          Chào mừng đến với {{ currentAiTab.name }}
+        </h2>
+        <p class="ai-detail__welcome-desc">
+          Chọn một bài học từ danh sách bên trái để bắt đầu học cách sử dụng
+          {{ currentAiTab.name }} hiệu quả.
+        </p>
+        <div class="ai-detail__welcome-hint">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 2V14M8 14L4 10M8 14L12 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Chọn bài từ danh sách bên trái</span>
+        </div>
+      </div>
+
+      <!-- Lesson loaded -->
+      <article *ngIf="currentLesson" class="ai-detail__content">
+
+        <header class="ai-detail__header">
+          <div class="ai-detail__meta">
+            <span class="ai-detail__badge">{{ currentCategory | titlecase }}</span>
+            <span *ngIf="currentLesson.tag" class="ai-detail__tag">{{ currentLesson.tag }}</span>
+          </div>
+          <h1 class="ai-detail__title">{{ currentLesson.title }}</h1>
+        </header>
+
+        <div class="ai-detail__body" [innerHTML]="currentLesson.content"></div>
+
+        <footer *ngIf="currentLesson.examples" class="ai-detail__examples">
+          <h3 class="ai-detail__examples-title">Ví dụ thực tế</h3>
+          <div *ngFor="let ex of currentLesson.examples" class="ai-example">
+            <div class="ai-example__prompt">
+              <span class="ai-example__label">Prompt</span>
+              <p class="ai-example__text">{{ ex.prompt }}</p>
+            </div>
+            <div *ngIf="ex.result" class="ai-example__result">
+              <span class="ai-example__label">Kết quả</span>
+              <p class="ai-example__text">{{ ex.result }}</p>
+            </div>
+          </div>
+        </footer>
+
+      </article>
+
+    </main>
+  </div>
+</div>
