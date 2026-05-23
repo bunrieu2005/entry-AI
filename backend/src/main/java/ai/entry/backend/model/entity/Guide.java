@@ -40,7 +40,6 @@ public class Guide {
     @Column(name = "difficulty", nullable = false, length = 20)
     private DifficultyLevel difficulty;
 
-    // MySQL SET: lưu dưới dạng chuỗi comma-separated để tối giản ánh xạ
     @Column(name = "input_type", nullable = false, length = 100)
     private String inputType;
 
