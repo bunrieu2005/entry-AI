@@ -1,0 +1,503 @@
+/* ============================================
+   Gemini Lessons — Bento Box Layout
+   Ruột tĩnh cho các bài học Gemini
+   ============================================ */
+
+/* ── Container ── */
+.gemini-lessons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* ── Bento Lesson Wrapper ── */
+.bento-lesson {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* ── Phân khu (Section) ── */
+.bento-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.bento-section__title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0;
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 2px solid rgba(139, 110, 82, 0.3);
+}
+
+/* ── Card Base ── */
+.bento-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-card-padding);
+}
+
+/* Card toàn chiều rộng */
+.bento-card--wide .bento-card__text {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+/* ── Card Icon (Grid 4 cột) ── */
+.bento-card--icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--space-card-padding);
+  text-align: center;
+  min-height: 100px;
+  cursor: default;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.bento-card--icon:hover {
+  background-color: rgba(37, 24, 18, 0.06);
+  border-color: rgba(139, 110, 82, 0.5);
+}
+
+.bento-card__icon-wrap {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(37, 24, 18, 0.08);
+  border-radius: var(--radius-md);
+  color: var(--color-secondary);
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.bento-card--icon:hover .bento-card__icon-wrap {
+  background-color: rgba(37, 24, 18, 0.14);
+  color: var(--color-primary);
+}
+
+.bento-card__label {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  line-height: 1.4;
+}
+
+/* ── Card Model (Grid 2×2) ── */
+.bento-card--model {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--space-card-padding);
+  transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.bento-card--model:hover {
+  box-shadow: 0 4px 12px rgba(37, 24, 18, 0.1);
+  transform: translateY(-1px);
+}
+
+.bento-card__model-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 1px solid rgba(139, 110, 82, 0.25);
+}
+
+.bento-card__model-name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  flex: 1;
+  min-width: 0;
+}
+
+.bento-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  background-color: rgba(139, 110, 82, 0.14);
+  color: var(--color-secondary);
+  font-family: var(--font-label);
+  font-size: var(--text-label);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Card nổi bật — Gemini 2.5 Flash */
+.bento-card--model-active {
+  border-color: var(--color-tertiary);
+  background-color: rgba(184, 59, 46, 0.04);
+}
+
+.bento-card--model-active .bento-card__model-header {
+  border-bottom-color: rgba(184, 59, 46, 0.3);
+}
+
+.bento-card--model-active .bento-card__model-name {
+  color: var(--color-tertiary);
+}
+
+.bento-card--model-active .bento-card__badge {
+  background-color: var(--color-tertiary);
+  color: var(--color-on-primary);
+}
+
+.bento-card--model-active .bento-card__text {
+  color: var(--color-primary);
+}
+
+.bento-card--model-active:hover {
+  box-shadow: 0 4px 16px rgba(184, 59, 46, 0.15);
+}
+
+/* ── Grid Layouts ── */
+.bento-grid--3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-sm);
+}
+
+.bento-grid--4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-sm);
+}
+
+.bento-grid--2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-sm);
+}
+
+/* ── Vertical Steps ── */
+.bento-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: bento-steps;
+}
+
+.bento-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  position: relative;
+  padding: var(--spacing-sm) 0;
+  min-height: 44px;
+}
+
+.bento-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: calc(var(--spacing-sm) + 28px);
+  width: 2px;
+  height: calc(100% - 28px);
+  background-color: rgba(139, 110, 82, 0.3);
+}
+
+.bento-step__circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: 50%;
+  font-family: var(--font-label);
+  font-size: 0.875rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.bento-step__content {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: var(--color-primary);
+  padding-top: 8px;
+}
+
+.bento-step__sub-list {
+  width: 100%;
+  list-style: disc;
+  padding-left: 20px;
+  margin: 4px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bento-step__sub-list li {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-primary);
+}
+
+.bento-step__kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  background-color: rgba(37, 24, 18, 0.08);
+  border: 1px solid rgba(139, 110, 82, 0.4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-label);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+/* ── Placeholder (bài 2, 3, 4) ── */
+.lesson-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 300px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl);
+}
+
+.lesson-placeholder__icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(37, 24, 18, 0.06);
+  border: 2px dashed var(--color-secondary);
+  border-radius: var(--radius-lg);
+  color: var(--color-secondary);
+  font-size: 1.75rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.lesson-placeholder__title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.lesson-placeholder__desc {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-secondary);
+  max-width: 360px;
+  margin: 0;
+}
+
+/* ── Card Prompt (Phần 4 - Prompt thực hành) ── */
+.bento-card--prompt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--space-card-padding);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.bento-card--prompt:hover {
+  box-shadow: 0 4px 12px rgba(37, 24, 18, 0.1);
+  transform: translateY(-1px);
+}
+
+.bento-card__prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 1px solid rgba(139, 110, 82, 0.25);
+}
+
+.bento-card__prompt-label {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.bento-card__prompt-text {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.bento-card__prompt-code {
+  margin: 0;
+  padding: var(--spacing-xs);
+  background-color: rgba(37, 24, 18, 0.05);
+  border-left: 3px solid var(--color-tertiary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--color-primary);
+  font-style: italic;
+}
+
+/* ── Card Note (Lưu ý cuối bài) ── */
+.bento-card--note {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  background-color: rgba(37, 24, 18, 0.04);
+  border-color: rgba(139, 110, 82, 0.4);
+}
+
+.bento-card__note-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(37, 24, 18, 0.08);
+  border-radius: var(--radius-md);
+  color: var(--color-secondary);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.bento-card__note-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.bento-card__note-label {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--color-secondary);
+}
+
+.bento-card__note-list {
+  margin: 6px 0 0 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: disc;
+}
+
+.bento-card__note-list li {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-primary);
+}
+
+/* ── Visually hidden (screen reader only) ── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 900px) {
+  .bento-grid--4col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bento-grid--3col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bento-grid--2x2 {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-card--note {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .bento-grid--4col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xs);
+  }
+
+  .bento-grid--3col {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xs);
+  }
+
+  .bento-grid--2x2 {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xs);
+  }
+
+  .bento-section__title {
+    font-size: 1.1rem;
+  }
+
+  .bento-step__circle {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 0.8rem;
+  }
+
+  .bento-step:not(:last-child)::after {
+    left: 17px;
+  }
+
+  .bento-card--note {
+    flex-direction: column;
+  }
+}

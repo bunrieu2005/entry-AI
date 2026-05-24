@@ -104,7 +104,21 @@
           <h1 class="ai-detail__title">{{ currentLesson.title }}</h1>
         </header>
 
-        <div class="ai-detail__body" [innerHTML]="currentLesson.content"></div>
+        <!-- ── PLATFORM SWITCH: Điều phối theo nền tảng AI ── -->
+        @switch (currentCategory) {
+          @case ('gemini') {
+            <app-gemini-lessons [lessonId]="currentLesson.id"></app-gemini-lessons>
+          }
+          @case ('claude') {
+            <app-claude-lessons [lessonId]="currentLesson.id"></app-claude-lessons>
+          }
+          @case ('chatgpt') {
+            <app-chatgpt-lessons [lessonId]="currentLesson.id"></app-chatgpt-lessons>
+          }
+          @default {
+            <div class="ai-detail__body" [innerHTML]="currentLesson.content"></div>
+          }
+        }
 
         <footer *ngIf="currentLesson.examples" class="ai-detail__examples">
           <h3 class="ai-detail__examples-title">Ví dụ thực tế</h3>

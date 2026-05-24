@@ -2,11 +2,20 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { GeminiLessonsComponent } from './gemini-lessons';
+import { ClaudeLessonsComponent } from './claude-lessons';
+import { ChatgptLessonsComponent } from './chatgpt-lessons';
 
 @Component({
   selector: 'app-ai-guidelines',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    GeminiLessonsComponent,
+    ClaudeLessonsComponent,
+    ChatgptLessonsComponent
+  ],
   templateUrl: './ai-guidelines.html',
   styleUrl: './ai-guidelines.css'
 })

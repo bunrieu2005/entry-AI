@@ -1,0 +1,52 @@
+/* ============================================
+   ChatGPT Lessons — Component Styles
+   ============================================ */
+
+.chatgpt-lessons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* ── Placeholder (bài 1–4) ── */
+.lesson-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 300px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl);
+}
+
+.lesson-placeholder__icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(37, 24, 18, 0.06);
+  border: 2px dashed var(--color-secondary);
+  border-radius: var(--radius-lg);
+  color: var(--color-secondary);
+  font-size: 1.75rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.lesson-placeholder__title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.lesson-placeholder__desc {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-secondary);
+  max-width: 360px;
+  margin: 0;
+}
