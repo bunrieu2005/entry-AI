@@ -170,7 +170,7 @@
               </p>
             </div>
             <div class="bento-card bento-card--model" role="listitem">
-              <div class="bento-card__model-header">
+              <div class="bento-card__model-header">  
                 <span class="bento-card__model-name">Video</span>
                 <span class="bento-card__badge">MP4 · YouTube URL</span>
               </div>
@@ -336,11 +336,11 @@
     }
 
     @case ('gemini-3') {
-      <div class="bento-lesson" aria-label="Bài 3: Tiện ích Mở rộng của Gemini">
+      <div class="bento-lesson" aria-label="Bài 3: Cá nhân hóa Gemini">
 
         <!-- ── PHẦN 1: Gems ── -->
-        <section class="bento-section" aria-labelledby="gemini-ext-gems-title">
-          <h2 id="gemini-ext-gems-title" class="bento-section__title">1. Gems: Tạo AI tùy chỉnh cho từng mục đích</h2>
+        <section class="bento-section" aria-labelledby="gemini-personal-gems-title">
+          <h2 id="gemini-personal-gems-title" class="bento-section__title">1. Gems: Tạo AI tùy chỉnh cho từng mục đích</h2>
 
           <div class="bento-card bento-card--wide" role="note" aria-label="Định nghĩa Gems">
             <p class="bento-card__text">
@@ -422,9 +422,120 @@
           </div>
         </section>
 
-        <!-- ── PHẦN 2: Canvas ── -->
-        <section class="bento-section" aria-labelledby="gemini-ext-canvas-title">
-          <h2 id="gemini-ext-canvas-title" class="bento-section__title">2. Canvas: Viết &amp; lập trình trực tiếp với Gemini</h2>
+        <!-- ── PHẦN 2: Trí thông minh cá nhân ── -->
+        <section class="bento-section" aria-labelledby="gemini-personal-memory-title">
+          <h2 id="gemini-personal-memory-title" class="bento-section__title">2. Trí thông minh cá nhân: Gemini ghi nhớ về bạn</h2>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="Định nghĩa Trí thông minh cá nhân">
+            <p class="bento-card__text">
+              Tính năng này cho phép Gemini lưu lại thông tin về bạn — sở thích,
+              công việc, phong cách làm việc — để cá nhân hóa câu trả lời trong
+              mọi cuộc trò chuyện về sau.
+            </p>
+          </div>
+
+          <div class="bento-grid bento-grid--2col" role="list" aria-label="Ví dụ cá nhân hóa">
+            <div class="bento-card bento-card--model bento-card--model-active" role="listitem" aria-label="Trước khi lưu thông tin">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Trước khi lưu</span>
+                <span class="bento-card__badge">Không cá nhân hóa</span>
+              </div>
+              <p class="bento-card__text">
+                Hỏi "Giải thích API là gì?" → Gemini trả lời chung chung,
+                dùng ví dụ bất kỳ.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Sau khi lưu</span>
+                <span class="bento-card__badge">Cá nhân hóa</span>
+              </div>
+              <p class="bento-card__text">
+                Đã lưu "Tôi là developer React/TypeScript" → mọi câu trả lời
+                về code tự dùng React/TypeScript.
+              </p>
+            </div>
+          </div>
+
+          <ol class="bento-steps" aria-label="4 bước bật Trí thông minh cá nhân">
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">1</div>
+              <div class="bento-step__content">
+                Click avatar góc dưới trái → chọn
+                <strong>"Trí thông minh cá nhân"</strong>.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">2</div>
+              <div class="bento-step__content">
+                Xem danh sách thông tin Gemini đã ghi nhớ về bạn.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">3</div>
+              <div class="bento-step__content">
+                Click <strong>"+"</strong> để thêm thông tin thủ công, hoặc bật
+                toggle để Gemini tự học từ các cuộc hội thoại.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">4</div>
+              <div class="bento-step__content">
+                Trong ô chat, click <strong>"+"</strong> → bật toggle
+                <strong>"Trí thông minh cá nhân"</strong> để áp dụng cho
+                cuộc trò chuyện hiện tại.
+              </div>
+            </li>
+          </ol>
+
+          <div class="bento-card bento-card--wide bento-card--prompt" role="note" aria-label="Prompt thực hành Trí thông minh cá nhân">
+            <div class="bento-card__prompt-header">
+              <span class="bento-card__prompt-label">Prompt thực hành</span>
+            </div>
+            <p class="bento-card__prompt-text">
+              Vào <strong>"Trí thông minh cá nhân"</strong> → thêm thông tin:
+            </p>
+            <blockquote class="bento-card__prompt-code">
+              "Tôi đang học AI và phát triển web với React. Tôi thích giải thích
+              ngắn gọn, có ví dụ thực tế, viết bằng tiếng Việt."
+            </blockquote>
+            <p class="bento-card__prompt-text" style="margin-top: 8px;">
+              → Quay lại chat, hỏi: <strong>"Giải thích API là gì?"</strong>
+              → Quan sát Gemini trả lời có cá nhân hóa theo thông tin vừa lưu không.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── LƯU Ý CUỐI ── -->
+        <section class="bento-section" aria-labelledby="gemini-personal-note-title">
+          <h2 id="gemini-personal-note-title" class="bento-section__title visually-hidden">Lưu ý quan trọng</h2>
+
+          <div class="bento-card bento-card--wide bento-card--note" role="note" aria-label="Lưu ý phân biệt Gems và Trí thông minh cá nhân">
+            <div class="bento-card__note-icon" aria-hidden="true">
+              <i class="ti ti-info-circle"></i>
+            </div>
+            <div class="bento-card__note-body">
+              <strong class="bento-card__note-label">Gems và Trí thông minh cá nhân hoạt động độc lập:</strong>
+              <ul class="bento-card__note-list">
+                <li><strong>Gems</strong> → định nghĩa <strong>VAI TRÒ</strong> của Gemini (Gemini là ai)</li>
+                <li><strong>Trí thông minh cá nhân</strong> → định nghĩa <strong>NGƯỜI DÙNG</strong> là ai (bạn là ai)</li>
+              </ul>
+              <p class="bento-card__text" style="margin-top: 8px;">
+                Dùng cả hai cùng lúc cho trải nghiệm cá nhân hóa tốt nhất.
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    }
+
+    @case ('gemini-4') {
+      <div class="bento-lesson" aria-label="Bài 4: Làm việc tương tác">
+
+        <!-- ── PHẦN 1: Canvas ── -->
+        <section class="bento-section" aria-labelledby="gemini-interactive-canvas-title">
+          <h2 id="gemini-interactive-canvas-title" class="bento-section__title">1. Canvas: Viết &amp; lập trình trực tiếp với Gemini</h2>
 
           <div class="bento-card bento-card--wide" role="note" aria-label="Định nghĩa Canvas">
             <p class="bento-card__text">
@@ -502,6 +613,10 @@
                 "Viết cho tôi một bài giới thiệu bản thân bằng tiếng Anh dùng để
                 đăng LinkedIn. Tôi là developer, 3 năm kinh nghiệm, đang học AI."
               </blockquote>
+              <p class="bento-card__prompt-text" style="margin-top: 8px;">
+                → Thử click vào một đoạn trong Canvas và yêu cầu:
+                <em>"Viết lại đoạn này ngắn hơn."</em>
+              </p>
             </div>
             <div class="bento-card bento-card--prompt" role="listitem">
               <div class="bento-card__prompt-header">
@@ -514,20 +629,49 @@
                 "Viết một trang HTML đơn giản có ô input và nút bấm. Khi nhấn
                 nút, hiển thị chữ 'Xin chào [tên vừa nhập]'."
               </blockquote>
+              <p class="bento-card__prompt-text" style="margin-top: 8px;">
+                → Sau khi có code, yêu cầu tiếp:
+                <em>"Thêm CSS để giao diện trông đẹp hơn."</em>
+              </p>
             </div>
           </div>
         </section>
 
-        <!-- ── PHẦN 3: Học có hướng dẫn ── -->
-        <section class="bento-section" aria-labelledby="gemini-ext-guided-title">
-          <h2 id="gemini-ext-guided-title" class="bento-section__title">3. Học có hướng dẫn: Tính năng học tương tác</h2>
+        <!-- ── PHẦN 2: Học có hướng dẫn ── -->
+        <section class="bento-section" aria-labelledby="gemini-interactive-guided-title">
+          <h2 id="gemini-interactive-guided-title" class="bento-section__title">2. Học có hướng dẫn: Gemini thành gia sư cá nhân</h2>
 
           <div class="bento-card bento-card--wide" role="note" aria-label="Định nghĩa Học có hướng dẫn">
             <p class="bento-card__text">
-              <strong>"Học có hướng dẫn"</strong> biến Gemini thành gia sư cá nhân —
-              thay vì trả lời thẳng, Gemini đặt câu hỏi dẫn dắt để bạn tự tìm ra
-              câu trả lời, giúp ghi nhớ lâu hơn.
+              <strong>"Học có hướng dẫn"</strong> biến Gemini thành gia sư — thay vì trả
+              lời thẳng, Gemini đặt câu hỏi dẫn dắt để bạn tự tìm ra câu trả lời,
+              giúp ghi nhớ lâu hơn thay vì chỉ đọc đáp án.
             </p>
+          </div>
+
+          <div class="bento-grid bento-grid--2x2" role="list" aria-label="Khi nào nên dùng Học có hướng dẫn">
+            <div class="bento-card bento-card--model bento-card--model-active" role="listitem" aria-label="Nên dùng">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Nên dùng</span>
+                <span class="bento-card__badge" style="background: #e8f5e9; color: #2e7d32;">Phù hợp</span>
+              </div>
+              <ul class="bento-card__text" style="margin: 0; padding-left: 18px;">
+                <li>Đang học khái niệm mới, muốn thật sự hiểu</li>
+                <li>Ôn tập trước kỳ thi hoặc buổi thuyết trình</li>
+                <li>Luyện tư duy giải quyết vấn đề</li>
+              </ul>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Không nên dùng</span>
+                <span class="bento-card__badge" style="background: #ffebee; color: #c62828;">Tránh</span>
+              </div>
+              <ul class="bento-card__text" style="margin: 0; padding-left: 18px;">
+                <li>Cần câu trả lời nhanh để làm việc</li>
+                <li>Đang debug code gấp</li>
+                <li>Chỉ cần tra cứu thông tin đơn giản</li>
+              </ul>
+            </div>
           </div>
 
           <ol class="bento-steps" aria-label="4 bước bật Học có hướng dẫn">
@@ -566,107 +710,37 @@
               Bật <strong>"Học có hướng dẫn"</strong> → nhập vào ô chat:
             </p>
             <blockquote class="bento-card__prompt-code">
-              "Tôi muốn hiểu tại sao Gemini lại giỏi xử lý nhiều loại dữ liệu
-              hơn các AI khác."
-            </blockquote>
-          </div>
-        </section>
-
-        <!-- ── PHẦN 4: Trí thông minh cá nhân ── -->
-        <section class="bento-section" aria-labelledby="gemini-ext-memory-title">
-          <h2 id="gemini-ext-memory-title" class="bento-section__title">4. Trí thông minh cá nhân: Gemini ghi nhớ về bạn</h2>
-
-          <div class="bento-card bento-card--wide" role="note" aria-label="Định nghĩa Trí thông minh cá nhân">
-            <p class="bento-card__text">
-              Gemini lưu lại thông tin về bạn — sở thích, công việc, phong cách
-              làm việc — để cá nhân hóa câu trả lời trong mọi cuộc trò chuyện về sau.
-              Ví dụ: đã lưu <em>"Tôi là developer, dùng React và TypeScript"</em> →
-              mọi câu trả lời về code sau này Gemini sẽ tự động dùng React/TypeScript
-              mà không cần nhắc lại.
-            </p>
-          </div>
-
-          <ol class="bento-steps" aria-label="4 bước bật Trí thông minh cá nhân">
-            <li class="bento-step">
-              <div class="bento-step__circle" aria-hidden="true">1</div>
-              <div class="bento-step__content">
-                Click avatar góc dưới trái → chọn
-                <strong>"Trí thông minh cá nhân"</strong>.
-              </div>
-            </li>
-            <li class="bento-step">
-              <div class="bento-step__circle" aria-hidden="true">2</div>
-              <div class="bento-step__content">
-                Xem danh sách thông tin Gemini đã ghi nhớ về bạn.
-              </div>
-            </li>
-            <li class="bento-step">
-              <div class="bento-step__circle" aria-hidden="true">3</div>
-              <div class="bento-step__content">
-                Click <strong>"+"</strong> để thêm thông tin thủ công, hoặc bật
-                toggle để Gemini tự học từ các cuộc hội thoại.
-              </div>
-            </li>
-            <li class="bento-step">
-              <div class="bento-step__circle" aria-hidden="true">4</div>
-              <div class="bento-step__content">
-                Trong ô chat, click <strong>"+"</strong> → bật toggle
-                <strong>"Trí thông minh cá nhân"</strong> để áp dụng cho
-                cuộc trò chuyện hiện tại.
-              </div>
-            </li>
-          </ol>
-
-          <div class="bento-card bento-card--wide bento-card--prompt" role="note" aria-label="Prompt thực hành Trí thông minh cá nhân">
-            <div class="bento-card__prompt-header">
-              <span class="bento-card__prompt-label">Prompt thực hành</span>
-            </div>
-            <p class="bento-card__prompt-text">
-              Vào <strong>"Trí thông minh cá nhân"</strong> → thêm thông tin:
-            </p>
-            <blockquote class="bento-card__prompt-code">
-              "Tôi đang học AI và phát triển web với React. Tôi thích giải thích
-              ngắn gọn, có ví dụ code thực tế, viết bằng tiếng Việt."
+              "Tôi muốn hiểu tại sao Prompt Engineering lại quan trọng
+              khi làm việc với AI."
             </blockquote>
             <p class="bento-card__prompt-text" style="margin-top: 8px;">
-              Sau đó quay lại chat và hỏi: <strong>"Giải thích API là gì?"</strong>
-              → Quan sát Gemini trả lời có khác không so với trước.
+              → Quan sát Gemini hỏi ngược lại thay vì giải thích thẳng.
+              → Trả lời theo suy nghĩ của bạn và tiếp tục cuộc hội thoại.
             </p>
           </div>
         </section>
 
         <!-- ── LƯU Ý CUỐI ── -->
-        <section class="bento-section" aria-labelledby="gemini-ext-note-title">
-          <h2 id="gemini-ext-note-title" class="bento-section__title visually-hidden">Lưu ý quan trọng</h2>
+        <section class="bento-section" aria-labelledby="gemini-interactive-note-title">
+          <h2 id="gemini-interactive-note-title" class="bento-section__title visually-hidden">Lưu ý quan trọng</h2>
 
-          <div class="bento-card bento-card--wide bento-card--note" role="note" aria-label="Lưu ý kết hợp 4 tính năng">
+          <div class="bento-card bento-card--wide bento-card--note" role="note" aria-label="Lưu ý Canvas và Học có hướng dẫn">
             <div class="bento-card__note-icon" aria-hidden="true">
               <i class="ti ti-info-circle"></i>
             </div>
             <div class="bento-card__note-body">
-              <strong class="bento-card__note-label">Kết hợp cả 4 tính năng để có trải nghiệm tốt nhất:</strong>
+              <strong class="bento-card__note-label">Canvas và Học có hướng dẫn phục vụ mục đích khác nhau:</strong>
               <ul class="bento-card__note-list">
-                <li>Tạo <strong>Gem</strong> phù hợp công việc → tiết kiệm thời gian nhập context</li>
-                <li>Bật <strong>Trí thông minh cá nhân</strong> → Gemini hiểu bạn hơn theo thời gian</li>
-                <li>Dùng <strong>Canvas</strong> khi cần chỉnh sửa tài liệu hoặc code dài</li>
-                <li>Bật <strong>Học có hướng dẫn</strong> khi muốn học một khái niệm mới thật sự</li>
+                <li><strong>Canvas</strong> → dùng khi cần <strong>TẠO RA</strong> sản phẩm (văn bản, code)</li>
+                <li><strong>Học có hướng dẫn</strong> → dùng khi cần <strong>HIỂU SÂU</strong> một khái niệm</li>
               </ul>
+              <p class="bento-card__text" style="margin-top: 8px;">
+                Không nên bật cả hai cùng lúc vì chúng phục vụ mục tiêu ngược nhau.
+              </p>
             </div>
           </div>
         </section>
 
-      </div>
-    }
-
-    @case ('gemini-4') {
-      <div class="lesson-placeholder" aria-label="Bài 4: Đang được phát triển">
-        <div class="lesson-placeholder__icon" aria-hidden="true">
-          <i class="ti ti-sparkles"></i>
-        </div>
-        <h2 class="lesson-placeholder__title">Bài 4: Đang được phát triển</h2>
-        <p class="lesson-placeholder__desc">
-          Nội dung bài học sẽ được cập nhật sớm nhất.
-        </p>
       </div>
     }
 

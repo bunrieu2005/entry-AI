@@ -3,62 +3,999 @@
   @switch (lessonId) {
 
     <!-- ══════════════════════════════════════════════
-         BÀI 1 — placeholder
+         BÀI 1 — Giới thiệu Claude & Bắt đầu
          ══════════════════════════════════════════════ -->
     @case ('claude-1') {
-      <div class="lesson-placeholder" aria-label="Bài 1: Đang được phát triển">
-        <div class="lesson-placeholder__icon" aria-hidden="true">
-          <i class="ti ti-sparkles"></i>
-        </div>
-        <h2 class="lesson-placeholder__title">Bài 1: Đang được phát triển</h2>
-        <p class="lesson-placeholder__desc">
-          Nội dung bài học sẽ được cập nhật sớm nhất.
-        </p>
+      <div class="bento-lesson" aria-label="Bài 1: Giới thiệu Claude">
+
+        <!-- ── PHẦN 1: Claude là gì? ── -->
+        <section class="bento-section" aria-labelledby="claude-intro-what-title">
+          <h2 id="claude-intro-what-title" class="bento-section__title">1. Claude là gì?</h2>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="Định nghĩa Claude">
+            <p class="bento-card__text">
+              Claude là trợ lý AI do <strong>Anthropic</strong> phát triển, được xây dựng với
+              triết lý ưu tiên <strong>sự an toàn và tính trung thực</strong>.
+              Khác với các AI khác, Claude được huấn luyện để thẳng thắn nói khi
+              không biết, từ chối yêu cầu có hại và giải thích lý do rõ ràng.
+            </p>
+          </div>
+
+          <div class="bento-grid bento-grid--4col" role="list" aria-label="Điểm mạnh nổi bật của Claude">
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-file-text"></i>
+              </div>
+              <span class="bento-card__label">Đọc hiểu tài liệu dài</span>
+            </div>
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-pen"></i>
+              </div>
+              <span class="bento-card__label">Viết văn tự nhiên nhất</span>
+            </div>
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-brain"></i>
+              </div>
+              <span class="bento-card__label">Lý luận logic chặt chẽ</span>
+            </div>
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-shield-check"></i>
+              </div>
+              <span class="bento-card__label">Trả lời trung thực</span>
+            </div>
+          </div>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="So sánh Claude với các AI khác">
+            <div class="bento-card__note-icon" aria-hidden="true">
+              <i class="ti ti-arrows-exchange"></i>
+            </div>
+            <div class="bento-card__note-body">
+              <strong class="bento-card__note-label">So sánh nhanh 3 trợ lý AI phổ biến:</strong>
+              <ul class="bento-card__note-list">
+                <li><strong>Gemini</strong> → mạnh về đa phương thức &amp; tích hợp Google</li>
+                <li><strong>ChatGPT</strong> → mạnh về hệ sinh thái plugin &amp; DALL-E</li>
+                <li><strong>Claude</strong> → mạnh về đọc hiểu sâu, viết văn &amp; phân tích tài liệu</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 2: Các phiên bản Claude ── -->
+        <section class="bento-section" aria-labelledby="claude-intro-models-title">
+          <h2 id="claude-intro-models-title" class="bento-section__title">2. Các phiên bản Claude hiện nay</h2>
+
+          <div class="bento-grid bento-grid--2x2" role="list" aria-label="Ba phiên bản Claude">
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Claude Haiku</span>
+                <span class="bento-card__badge">Nhanh nhất</span>
+              </div>
+              <p class="bento-card__text">
+                Phiên bản nhỏ gọn, tốc độ cao nhất,
+                phù hợp tác vụ đơn giản và khối lượng lớn.
+              </p>
+            </div>
+
+            <div class="bento-card bento-card--model bento-card--model-active" role="listitem" aria-label="Claude Sonnet — phổ biến nhất">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Claude Sonnet</span>
+                <span class="bento-card__badge">Phổ biến nhất</span>
+              </div>
+              <p class="bento-card__text">
+                Cân bằng tốc độ và chất lượng.
+                Phù hợp đa số công việc hàng ngày —
+                <strong>khuyến nghị cho người mới bắt đầu</strong>.
+              </p>
+            </div>
+
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Claude Opus</span>
+                <span class="bento-card__badge">Mạnh nhất</span>
+              </div>
+              <p class="bento-card__text">
+                Mạnh nhất, phân tích sâu nhất,
+                phù hợp tác vụ phức tạp đòi hỏi độ chính xác cao.
+              </p>
+            </div>
+
+            <div class="bento-card bento-card--wide bento-card--note" role="note" aria-label="Lưu ý về gói sử dụng">
+              <div class="bento-card__note-icon" aria-hidden="true">
+                <i class="ti ti-info-circle"></i>
+              </div>
+              <div class="bento-card__note-body">
+                <strong class="bento-card__note-label">Lưu ý về gói sử dụng:</strong>
+                <ul class="bento-card__note-list">
+                  <li><strong>Free</strong>: Dùng Claude Sonnet, giới hạn số tin nhắn/ngày</li>
+                  <li><strong>Pro</strong>: Không giới hạn, truy cập Opus, dùng được Projects &amp; Artifacts</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 3: Thao tác đầu tiên ── -->
+        <section class="bento-section" aria-labelledby="claude-intro-steps-title">
+          <h2 id="claude-intro-steps-title" class="bento-section__title">3. Thao tác đầu tiên trên claude.ai</h2>
+
+          <ol class="bento-steps" aria-label="4 bước bắt đầu với Claude">
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">1</div>
+              <div class="bento-step__content">
+                Truy cập <kbd class="bento-step__kbd">claude.ai</kbd> trên trình duyệt.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">2</div>
+              <div class="bento-step__content">
+                Click <strong>"Sign up"</strong> → đăng ký bằng email
+                hoặc tài khoản Google/Apple.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">3</div>
+              <div class="bento-step__content">
+                Xác nhận email → điền thông tin cơ bản →
+                vào giao diện chat chính.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">4</div>
+              <div class="bento-step__content">
+                Gõ câu hỏi vào ô chat phía dưới → nhấn <strong>Enter</strong> để bắt đầu.
+              </div>
+            </li>
+          </ol>
+
+          <div class="bento-card bento-card--wide bento-card--prompt" role="note" aria-label="Prompt thực hành Bài 1">
+            <div class="bento-card__prompt-header">
+              <span class="bento-card__prompt-label">Prompt thực hành</span>
+            </div>
+            <p class="bento-card__prompt-text">
+              Nhập vào ô chat:
+            </p>
+            <blockquote class="bento-card__prompt-code">
+              "Hãy giới thiệu bản thân bạn là Claude trong 3 câu: bạn là ai,
+              bạn làm được gì tốt nhất và điều gì làm bạn khác biệt
+              so với các AI khác."
+            </blockquote>
+          </div>
+        </section>
+
       </div>
     }
 
     <!-- ══════════════════════════════════════════════
-         BÀI 2 — placeholder
+         BÀI 2 — Làm việc với tài liệu dài
          ══════════════════════════════════════════════ -->
     @case ('claude-2') {
-      <div class="lesson-placeholder" aria-label="Bài 2: Đang được phát triển">
-        <div class="lesson-placeholder__icon" aria-hidden="true">
-          <i class="ti ti-sparkles"></i>
-        </div>
-        <h2 class="lesson-placeholder__title">Bài 2: Đang được phát triển</h2>
-        <p class="lesson-placeholder__desc">
-          Nội dung bài học sẽ được cập nhật sớm nhất.
-        </p>
+      <div class="bento-lesson" aria-label="Bài 2: Làm việc với tài liệu dài">
+
+        <!-- ── PHẦN 1: Tại sao Claude đọc tài liệu dài tốt? ── -->
+        <section class="bento-section" aria-labelledby="claude-doc-why-title">
+          <h2 id="claude-doc-why-title" class="bento-section__title">1. Tại sao Claude đọc tài liệu dài tốt hơn?</h2>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="Context window Claude">
+            <p class="bento-card__text">
+              Claude có <strong>context window 200.000 token</strong> — tương đương khoảng
+              <strong>150.000 từ</strong> hoặc một cuốn sách <strong>500 trang</strong>.
+              Toàn bộ nội dung được xử lý cùng lúc, không bị cắt bớt hay "quên"
+              phần đầu khi đọc đến phần cuối.
+            </p>
+          </div>
+
+          <div class="bento-grid bento-grid--2x2" role="list" aria-label="Ứng dụng thực tế đọc tài liệu dài">
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Đọc hợp đồng</span>
+              </div>
+              <p class="bento-card__text">
+                Đọc toàn bộ hợp đồng và chỉ ra điều khoản bất lợi cho bạn.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Tóm tắt báo cáo</span>
+              </div>
+              <p class="bento-card__text">
+                Tóm tắt báo cáo tài chính 100 trang thành 1 trang ngắn gọn.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">So sánh tài liệu</span>
+              </div>
+              <p class="bento-card__text">
+                So sánh 2 phiên bản tài liệu và liệt kê điểm khác nhau.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Trích xuất dữ liệu</span>
+              </div>
+              <p class="bento-card__text">
+                Trích xuất dữ liệu từ file CSV hoặc log dài hàng nghìn dòng.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 2: Cách upload file ── -->
+        <section class="bento-section" aria-labelledby="claude-doc-upload-title">
+          <h2 id="claude-doc-upload-title" class="bento-section__title">2. Cách upload file lên claude.ai</h2>
+
+          <ol class="bento-steps" aria-label="4 bước upload file lên Claude">
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">1</div>
+              <div class="bento-step__content">
+                Truy cập <kbd class="bento-step__kbd">claude.ai</kbd>,
+                bắt đầu cuộc trò chuyện mới.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">2</div>
+              <div class="bento-step__content">
+                Click icon đính kèm <strong>(📎)</strong> bên trái ô chat.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">3</div>
+              <div class="bento-step__content">
+                Chọn file từ máy tính.
+                <ul class="bento-step__sub-list">
+                  <li>Hỗ trợ: <strong>PDF, Word (.docx), TXT, CSV</strong></li>
+                  <li>Hình ảnh, code files cũng được hỗ trợ.</li>
+                </ul>
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">4</div>
+              <div class="bento-step__content">
+                Chờ file upload xong → gõ câu hỏi về file → nhấn <strong>Enter</strong>.
+              </div>
+            </li>
+          </ol>
+
+          <div class="bento-card bento-card--wide bento-card--note" role="note" aria-label="Lưu ý upload nhiều file">
+            <div class="bento-card__note-icon" aria-hidden="true">
+              <i class="ti ti-info-circle"></i>
+            </div>
+            <div class="bento-card__note-body">
+              <strong class="bento-card__note-label">Lưu ý:</strong>
+              <p class="bento-card__text">
+                Có thể upload <strong>nhiều file cùng lúc</strong> trong một cuộc trò chuyện.
+                Tuy nhiên, Claude không lưu file giữa các cuộc hội thoại —
+                nếu muốn dùng lại file nhiều lần, hãy dùng <strong>Projects</strong> (Bài 4).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 3: 3 Prompt thực hành ── -->
+        <section class="bento-section" aria-labelledby="claude-doc-prompts-title">
+          <h2 id="claude-doc-prompts-title" class="bento-section__title">3. Ba prompt thực hành ngay</h2>
+
+          <div class="bento-grid bento-grid--3col" role="list" aria-label="Ba prompt thực hành đọc tài liệu">
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Thực hành 1</span>
+                <span class="bento-card__badge">Tóm tắt tài liệu</span>
+              </div>
+              <p class="bento-card__prompt-text">
+                Upload bất kỳ file PDF hoặc Word nào → nhập:
+              </p>
+              <blockquote class="bento-card__prompt-code">
+                "Đây là tài liệu gì? Tóm tắt nội dung chính trong
+                5 điểm ngắn gọn. Mỗi điểm không quá 2 câu."
+              </blockquote>
+            </div>
+
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Thực hành 2</span>
+                <span class="bento-card__badge">Trích xuất thông tin</span>
+              </div>
+              <p class="bento-card__prompt-text">
+                Upload hợp đồng hoặc tài liệu có điều khoản → nhập:
+              </p>
+              <blockquote class="bento-card__prompt-code">
+                "Trong tài liệu này, hãy liệt kê tất cả các deadline,
+                ngày tháng và con số quan trọng tôi cần chú ý."
+              </blockquote>
+            </div>
+
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Thực hành 3</span>
+                <span class="bento-card__badge">Đặt câu hỏi</span>
+              </div>
+              <p class="bento-card__prompt-text">
+                Sau khi upload file → nhập:
+              </p>
+              <blockquote class="bento-card__prompt-code">
+                "Dựa trên tài liệu trên, nếu tôi là người mới đọc lần
+                đầu, tôi cần biết gì trước tiên?"
+              </blockquote>
+            </div>
+          </div>
+        </section>
+
       </div>
     }
 
     <!-- ══════════════════════════════════════════════
-         BÀI 3 — placeholder
+         BÀI 3 — Viết & chỉnh sửa nội dung
          ══════════════════════════════════════════════ -->
     @case ('claude-3') {
-      <div class="lesson-placeholder" aria-label="Bài 3: Đang được phát triển">
-        <div class="lesson-placeholder__icon" aria-hidden="true">
-          <i class="ti ti-sparkles"></i>
-        </div>
-        <h2 class="lesson-placeholder__title">Bài 3: Đang được phát triển</h2>
-        <p class="lesson-placeholder__desc">
-          Nội dung bài học sẽ được cập nhật sớm nhất.
-        </p>
+      <div class="bento-lesson" aria-label="Bài 3: Viết & chỉnh sửa nội dung">
+
+        <!-- ── PHẦN 1: Tại sao Claude viết tốt? ── -->
+        <section class="bento-section" aria-labelledby="claude-write-why-title">
+          <h2 id="claude-write-why-title" class="bento-section__title">1. Tại sao Claude viết tốt?</h2>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="Điểm mạnh viết của Claude">
+            <p class="bento-card__text">
+              Claude được huấn luyện trên lượng lớn văn bản chất lượng cao,
+              giúp <strong>văn phong tự nhiên, mạch lạc</strong> và ít bị "lộ AI"
+              nhất trong các mô hình hiện nay. Claude cũng hiểu sắc thái ngôn
+              ngữ tốt — phân biệt được <strong>tone trang trọng, thân mật,
+              hài hước hay học thuật</strong>.
+            </p>
+          </div>
+
+          <div class="bento-grid bento-grid--4col" role="list" aria-label="Điểm mạnh viết của Claude">
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-mail"></i>
+              </div>
+              <span class="bento-card__label">Email &amp; văn bản công việc</span>
+            </div>
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-device-mobile"></i>
+              </div>
+              <span class="bento-card__label">Content mạng xã hội</span>
+            </div>
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-file-code"></i>
+              </div>
+              <span class="bento-card__label">Tài liệu kỹ thuật</span>
+            </div>
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-pen"></i>
+              </div>
+              <span class="bento-card__label">Chỉnh sửa văn bản có sẵn</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 2: Các dạng nội dung Claude viết tốt ── -->
+        <section class="bento-section" aria-labelledby="claude-write-types-title">
+          <h2 id="claude-write-types-title" class="bento-section__title">2. Các dạng nội dung Claude viết tốt</h2>
+
+          <div class="bento-grid bento-grid--2x2" role="list" aria-label="Bốn dạng nội dung Claude viết">
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Email &amp; văn bản công việc</span>
+              </div>
+              <p class="bento-card__text">
+                Viết email xin lỗi, email đề xuất, email follow-up,
+                báo cáo tuần, biên bản họp.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Content mạng xã hội</span>
+              </div>
+              <p class="bento-card__text">
+                Bài đăng Facebook, caption Instagram,
+                thread Twitter/X, bài LinkedIn.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Tài liệu kỹ thuật</span>
+              </div>
+              <p class="bento-card__text">
+                README, tài liệu API, hướng dẫn sử dụng,
+                comment code.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Chỉnh sửa văn bản có sẵn</span>
+              </div>
+              <p class="bento-card__text">
+                Sửa lỗi ngữ pháp, cải thiện văn phong,
+                rút ngắn hoặc mở rộng nội dung.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 3: Kỹ thuật kiểm soát giọng văn ── -->
+        <section class="bento-section" aria-labelledby="claude-write-tone-title">
+          <h2 id="claude-write-tone-title" class="bento-section__title">3. Kỹ thuật kiểm soát giọng văn</h2>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="Từ khóa kiểm soát giọng văn">
+            <p class="bento-card__text">
+              Thêm các từ khóa sau vào prompt để điều chỉnh tone:
+            </p>
+            <ul class="bento-card__note-list">
+              <li><em>"Viết theo giọng <strong>trang trọng, chuyên nghiệp</strong>"</em></li>
+              <li><em>"Viết <strong>thân mật</strong> như đang nói chuyện với bạn bè"</em></li>
+              <li><em>"<strong>Ngắn gọn, súc tích</strong>, không quá 100 từ"</em></li>
+              <li><em>"Dùng <strong>bullet points</strong>, dễ đọc nhanh"</em></li>
+              <li><em>"Giọng <strong>truyền cảm hứng, tích cực</strong>"</em></li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 4: 3 Prompt thực hành ── -->
+        <section class="bento-section" aria-labelledby="claude-write-prompts-title">
+          <h2 id="claude-write-prompts-title" class="bento-section__title">4. Ba prompt thực hành ngay</h2>
+
+          <div class="bento-grid bento-grid--3col" role="list" aria-label="Ba prompt thực hành viết">
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Thực hành 1</span>
+                <span class="bento-card__badge">Viết email</span>
+              </div>
+              <p class="bento-card__prompt-text">Nhập vào ô chat:</p>
+              <blockquote class="bento-card__prompt-code">
+                "Viết email xin lỗi khách hàng vì giao hàng trễ 3 ngày.
+                Giọng văn lịch sự, chân thành. Không quá 150 từ.
+                Cuối email hứa tặng voucher 10% cho đơn tiếp theo."
+              </blockquote>
+            </div>
+
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Thực hành 2</span>
+                <span class="bento-card__badge">Viết caption</span>
+              </div>
+              <p class="bento-card__prompt-text">Nhập vào ô chat:</p>
+              <blockquote class="bento-card__prompt-code">
+                "Viết 3 phiên bản caption cho bài đăng Facebook về việc
+                tôi vừa hoàn thành khóa học AI đầu tiên.
+                Phiên bản 1: trang trọng.
+                Phiên bản 2: vui vẻ hài hước.
+                Phiên bản 3: truyền cảm hứng."
+              </blockquote>
+            </div>
+
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Thực hành 3</span>
+                <span class="bento-card__badge">Chỉnh sửa văn bản</span>
+              </div>
+              <p class="bento-card__prompt-text">
+                Dán đoạn văn bạn đã viết vào chat → nhập:
+              </p>
+              <blockquote class="bento-card__prompt-code">
+                "Hãy cải thiện đoạn văn này: giữ nguyên ý nghĩa
+                nhưng làm cho tự nhiên hơn, bỏ các từ thừa
+                và sửa lỗi ngữ pháp nếu có."
+              </blockquote>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── LƯU Ý CUỐI ── -->
+        <section class="bento-section" aria-labelledby="claude-write-note-title">
+          <h2 id="claude-write-note-title" class="bento-section__title visually-hidden">Lưu ý quan trọng</h2>
+
+          <div class="bento-card bento-card--wide bento-card--note" role="note" aria-label="Lưu ý cải thiện văn bản">
+            <div class="bento-card__note-icon" aria-hidden="true">
+              <i class="ti ti-info-circle"></i>
+            </div>
+            <div class="bento-card__note-body">
+              <strong class="bento-card__note-label">Mẹo quan trọng khi viết với Claude:</strong>
+              <p class="bento-card__text">
+                Nếu Claude viết không đúng ý, <strong>đừng bắt đầu lại</strong> —
+                hãy tiếp tục hội thoại và nói cụ thể điều chỉnh cần:
+                <em>"Viết lại đoạn 2 ngắn hơn"</em> hoặc
+                <em>"Đổi tone thân mật hơn một chút."</em>
+              </p>
+            </div>
+          </div>
+        </section>
+
       </div>
     }
 
     <!-- ══════════════════════════════════════════════
-         BÀI 4 — placeholder
+         BÀI 4 — Projects
          ══════════════════════════════════════════════ -->
     @case ('claude-4') {
-      <div class="lesson-placeholder" aria-label="Bài 4: Đang được phát triển">
-        <div class="lesson-placeholder__icon" aria-hidden="true">
-          <i class="ti ti-sparkles"></i>
-        </div>
-        <h2 class="lesson-placeholder__title">Bài 4: Đang được phát triển</h2>
-        <p class="lesson-placeholder__desc">
-          Nội dung bài học sẽ được cập nhật sớm nhất.
-        </p>
+      <div class="bento-lesson" aria-label="Bài 4: Projects">
+
+        <!-- ── PHẦN 1: Projects là gì? ── -->
+        <section class="bento-section" aria-labelledby="claude-project-what-title">
+          <h2 id="claude-project-what-title" class="bento-section__title">1. Projects là gì?</h2>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="Định nghĩa Projects">
+            <p class="bento-card__text">
+              <strong>Projects</strong> là tính năng cho phép nhóm nhiều cuộc hội thoại
+              vào cùng một không gian làm việc. Claude ghi nhớ toàn bộ
+              file và context bạn upload vào Project — <strong>không cần upload
+              lại mỗi lần chat mới</strong>.
+            </p>
+          </div>
+
+          <div class="bento-grid bento-grid--3col" role="list" aria-label="Ví dụ thực tế về Projects">
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Project "Website cá nhân"</span>
+              </div>
+              <p class="bento-card__text">
+                Upload toàn bộ code, mọi cuộc chat đều hiểu
+                cấu trúc project.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Project "Báo cáo Q4"</span>
+              </div>
+              <p class="bento-card__text">
+                Upload dữ liệu, hỏi nhiều góc độ khác nhau
+                mà không cần giải thích lại.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Project "Học AI"</span>
+              </div>
+              <p class="bento-card__text">
+                Upload tài liệu học, Claude luôn trả lời
+                theo đúng level của bạn.
+              </p>
+            </div>
+          </div>
+
+          <div class="bento-card bento-card--wide bento-card--note" role="note" aria-label="Lưu ý Projects chỉ có Pro">
+            <div class="bento-card__note-icon" aria-hidden="true">
+              <i class="ti ti-lock"></i>
+            </div>
+            <div class="bento-card__note-body">
+              <strong class="bento-card__note-label">Lưu ý:</strong>
+              <p class="bento-card__text">
+                Projects chỉ có trên <strong>gói Claude Pro</strong>.
+                Gói Free có thể upload file trong từng cuộc chat
+                nhưng không lưu xuyên suốt các cuộc hội thoại.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 2: Cách tạo và dùng Projects ── -->
+        <section class="bento-section" aria-labelledby="claude-project-steps-title">
+          <h2 id="claude-project-steps-title" class="bento-section__title">2. Cách tạo và dùng Projects</h2>
+
+          <ol class="bento-steps" aria-label="5 bước tạo Project">
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">1</div>
+              <div class="bento-step__content">
+                Tại sidebar trái claude.ai, click <strong>"Projects"</strong> →
+                click <strong>"New Project"</strong>.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">2</div>
+              <div class="bento-step__content">
+                Đặt tên project → click <strong>"Create Project"</strong>.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">3</div>
+              <div class="bento-step__content">
+                Upload file tài liệu vào Project
+                (PDF, Word, code, CSV...).
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">4</div>
+              <div class="bento-step__content">
+                Viết <strong>Custom Instructions</strong> cho Project —
+                mô tả Claude nên hiểu project này là gì,
+                bạn muốn Claude hỗ trợ theo cách nào.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">5</div>
+              <div class="bento-step__content">
+                Bắt đầu chat mới trong Project → Claude tự động
+                hiểu toàn bộ file và instructions đã upload.
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <!-- ── PHẦN 3: Custom Instructions trong Project ── -->
+        <section class="bento-section" aria-labelledby="claude-project-instructions-title">
+          <h2 id="claude-project-instructions-title" class="bento-section__title">3. Custom Instructions trong Project</h2>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="Đây là phần quan trọng nhất">
+            <p class="bento-card__text">
+              Đây là <strong>phần quan trọng nhất</strong> của Projects.
+              Custom Instructions quyết định Claude hiểu project của bạn
+              ở mức độ nào.
+            </p>
+          </div>
+
+          <div class="bento-grid bento-grid--2x2" role="list" aria-label="Ví dụ Custom Instructions">
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Cho project phát triển web</span>
+              </div>
+              <blockquote class="bento-card__prompt-code">
+                "Đây là project website bán hàng dùng React + TypeScript.
+                Khi tôi hỏi về code, hãy luôn dùng TypeScript,
+                follow convention đặt tên camelCase và giải thích
+                ngắn gọn trước khi đưa code."
+              </blockquote>
+            </div>
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Cho project viết content</span>
+              </div>
+              <blockquote class="bento-card__prompt-code">
+                "Đây là blog về công nghệ cho người không chuyên.
+                Mọi bài viết cần: giọng thân thiện, tránh thuật ngữ
+                kỹ thuật, có ví dụ thực tế, độ dài 500-800 từ."
+              </blockquote>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 4: Prompt thực hành ── -->
+        <section class="bento-section" aria-labelledby="claude-project-prompt-title">
+          <h2 id="claude-project-prompt-title" class="bento-section__title">4. Prompt thực hành: Tạo Project đầu tiên</h2>
+
+          <div class="bento-card bento-card--wide bento-card--prompt" role="note" aria-label="Prompt thực hành Projects">
+            <div class="bento-card__prompt-header">
+              <span class="bento-card__prompt-label">Thực hành: Tạo Project "Luyện tập Claude"</span>
+            </div>
+            <p class="bento-card__prompt-text">
+              <strong>Bước 1:</strong> Tạo Project tên <em>"Luyện tập Claude"</em><br>
+              <strong>Bước 2:</strong> Viết Custom Instructions:
+            </p>
+            <blockquote class="bento-card__prompt-code">
+              "Tôi đang học cách dùng AI hiệu quả. Hãy luôn giải thích
+              bằng tiếng Việt, dùng ví dụ đơn giản và cuối mỗi câu trả lời
+              gợi ý thêm 1 điều tôi có thể thử tiếp theo."
+            </blockquote>
+            <p class="bento-card__prompt-text" style="margin-top: 8px;">
+              <strong>Bước 3:</strong> Chat trong Project và hỏi:
+              <em>"Tôi nên học kỹ năng gì tiếp theo để dùng Claude
+              hiệu quả hơn trong công việc?"</em>
+            </p>
+          </div>
+        </section>
+
+      </div>
+    }
+
+    <!-- ══════════════════════════════════════════════
+         BÀI 5 — Artifacts
+         ══════════════════════════════════════════════ -->
+    @case ('claude-5') {
+      <div class="bento-lesson" aria-label="Bài 5: Artifacts">
+
+        <!-- ── PHẦN 1: Artifacts là gì? ── -->
+        <section class="bento-section" aria-labelledby="claude-artifact-what-title">
+          <h2 id="claude-artifact-what-title" class="bento-section__title">1. Artifacts là gì?</h2>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="Định nghĩa Artifacts">
+            <p class="bento-card__text">
+              <strong>Artifacts</strong> là tính năng cho phép Claude tạo ra <strong>file hoàn chỉnh</strong>
+              ngay trong cửa sổ chat — hiển thị ở khung bên phải, có thể
+              xem trước và copy trực tiếp. Không cần copy từng đoạn code
+              rồi paste sang nơi khác.
+            </p>
+          </div>
+
+          <div class="bento-grid bento-grid--4col" role="list" aria-label="Các loại Artifacts Claude tạo được">
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-brand-html5"></i>
+              </div>
+              <span class="bento-card__label">HTML / CSS / JS</span>
+            </div>
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-code"></i>
+              </div>
+              <span class="bento-card__label">Python · React · SQL</span>
+            </div>
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-file-text"></i>
+              </div>
+              <span class="bento-card__label">Markdown</span>
+            </div>
+            <div class="bento-card bento-card--icon" role="listitem">
+              <div class="bento-card__icon-wrap" aria-hidden="true">
+                <i class="ti ti-vector"></i>
+              </div>
+              <span class="bento-card__label">SVG</span>
+            </div>
+          </div>
+
+          <div class="bento-card bento-card--wide bento-card--note" role="note" aria-label="So sánh Artifacts và Canvas">
+            <div class="bento-card__note-icon" aria-hidden="true">
+              <i class="ti ti-info-circle"></i>
+            </div>
+            <div class="bento-card__note-body">
+              <strong class="bento-card__note-label">Artifacts vs Canvas (Gemini):</strong>
+              <p class="bento-card__text">
+                <strong>Artifacts</strong> của Claude tập trung vào việc tạo ra <strong>FILE hoàn chỉnh</strong>.
+                <strong>Canvas</strong> của Gemini thiên về <strong>chỉnh sửa cộng tác</strong> theo từng đoạn.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 2: Cách dùng Artifacts ── -->
+        <section class="bento-section" aria-labelledby="claude-artifact-steps-title">
+          <h2 id="claude-artifact-steps-title" class="bento-section__title">2. Cách dùng Artifacts</h2>
+
+          <ol class="bento-steps" aria-label="5 bước dùng Artifacts">
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">1</div>
+              <div class="bento-step__content">
+                Chat bình thường với Claude, yêu cầu tạo code hoặc tài liệu.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">2</div>
+              <div class="bento-step__content">
+                Claude tự động mở khung Artifacts bên phải khi nội dung
+                đủ dài hoặc là file hoàn chỉnh.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">3</div>
+              <div class="bento-step__content">
+                Xem trước kết quả trong khung <strong>Preview</strong>.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">4</div>
+              <div class="bento-step__content">
+                Click <strong>"Copy"</strong> để lấy code, hoặc tiếp tục chat
+                để yêu cầu chỉnh sửa.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">5</div>
+              <div class="bento-step__content">
+                Yêu cầu chỉnh sửa trực tiếp:
+                <em>"Đổi màu nền sang trắng"</em> hoặc
+                <em>"Thêm validation cho form"</em> →
+                Claude cập nhật Artifact ngay lập tức.
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <!-- ── PHẦN 3: 3 Prompt thực hành ── -->
+        <section class="bento-section" aria-labelledby="claude-artifact-prompts-title">
+          <h2 id="claude-artifact-prompts-title" class="bento-section__title">3. Ba prompt thực hành ngay</h2>
+
+          <div class="bento-grid bento-grid--3col" role="list" aria-label="Ba prompt thực hành Artifacts">
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Thực hành 1</span>
+                <span class="bento-card__badge">Tạo trang HTML</span>
+              </div>
+              <p class="bento-card__prompt-text">Nhập vào ô chat:</p>
+              <blockquote class="bento-card__prompt-code">
+                "Tạo một trang HTML đơn giản có form đăng ký gồm:
+                họ tên, email, số điện thoại và nút Gửi.
+                Có CSS cơ bản, màu sắc tối giản, responsive."
+              </blockquote>
+            </div>
+
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Thực hành 2</span>
+                <span class="bento-card__badge">Tạo tài liệu</span>
+              </div>
+              <p class="bento-card__prompt-text">Nhập vào ô chat:</p>
+              <blockquote class="bento-card__prompt-code">
+                "Tạo template README.md cho một project web cá nhân.
+                Gồm các mục: Mô tả, Tính năng, Cài đặt,
+                Cách dùng, Đóng góp, License."
+              </blockquote>
+            </div>
+
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Thực hành 3</span>
+                <span class="bento-card__badge">Chỉnh sửa Artifact</span>
+              </div>
+              <p class="bento-card__prompt-text">
+                Sau khi có Artifact từ thực hành 1 → nhập tiếp:
+              </p>
+              <blockquote class="bento-card__prompt-code">
+                "Thêm validation: email phải đúng định dạng,
+                số điện thoại chỉ nhận số, họ tên tối thiểu 2 ký tự.
+                Hiện thông báo lỗi màu đỏ ngay dưới ô input."
+              </blockquote>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    }
+
+    <!-- ══════════════════════════════════════════════
+         BÀI 6 — Custom Instructions & Tối ưu Claude
+         ══════════════════════════════════════════════ -->
+    @case ('claude-6') {
+      <div class="bento-lesson" aria-label="Bài 6: Custom Instructions & Tối ưu Claude">
+
+        <!-- ── PHẦN 1: Custom Instructions là gì? ── -->
+        <section class="bento-section" aria-labelledby="claude-custom-what-title">
+          <h2 id="claude-custom-what-title" class="bento-section__title">1. Custom Instructions là gì?</h2>
+
+          <div class="bento-card bento-card--wide" role="note" aria-label="Định nghĩa Custom Instructions">
+            <p class="bento-card__text">
+              <strong>Custom Instructions</strong> là nơi bạn khai báo một lần để Claude
+              luôn hiểu <strong>bạn là ai</strong> và <strong>bạn muốn được hỗ trợ theo cách nào</strong> —
+              áp dụng cho mọi cuộc trò chuyện, không cần nhắc lại.
+            </p>
+          </div>
+
+          <div class="bento-grid bento-grid--2x2" role="list" aria-label="So sánh Custom Instructions và Trí thông minh cá nhân">
+            <div class="bento-card bento-card--model" role="listitem">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Custom Instructions (Claude)</span>
+              </div>
+              <p class="bento-card__text">
+                Bạn <strong>chủ động viết</strong> và kiểm soát hoàn toàn nội dung.
+              </p>
+            </div>
+            <div class="bento-card bento-card--model bento-card--model-active" role="listitem" aria-label="Trí thông minh cá nhân (Gemini) — nổi bật">
+              <div class="bento-card__model-header">
+                <span class="bento-card__model-name">Trí thông minh cá nhân (Gemini)</span>
+              </div>
+              <p class="bento-card__text">
+                Gemini <strong>tự học từ hội thoại</strong> — ít kiểm soát hơn nhưng
+                tiện hơn.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 2: Cách thiết lập Custom Instructions ── -->
+        <section class="bento-section" aria-labelledby="claude-custom-steps-title">
+          <h2 id="claude-custom-steps-title" class="bento-section__title">2. Cách thiết lập Custom Instructions</h2>
+
+          <ol class="bento-steps" aria-label="4 bước thiết lập Custom Instructions">
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">1</div>
+              <div class="bento-step__content">
+                Click avatar góc dưới trái → chọn <strong>"Settings"</strong>.
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">2</div>
+              <div class="bento-step__content">
+                Chọn tab <strong>"Custom Instructions"</strong> (hoặc <em>"Profile"</em>).
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">3</div>
+              <div class="bento-step__content">
+                Điền 2 phần:
+                <ul class="bento-step__sub-list">
+                  <li><strong>"Về bạn"</strong>: Bạn là ai, làm gì, background và mục tiêu dùng Claude.</li>
+                  <li><strong>"Về cách Claude trả lời"</strong>: Định dạng ưa thích, độ dài, ngôn ngữ, phong cách.</li>
+                </ul>
+              </div>
+            </li>
+            <li class="bento-step">
+              <div class="bento-step__circle" aria-hidden="true">4</div>
+              <div class="bento-step__content">
+                Click <strong>"Save"</strong> → áp dụng ngay từ cuộc chat tiếp theo.
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <!-- ── PHẦN 3: Ví dụ Custom Instructions thực tế ── -->
+        <section class="bento-section" aria-labelledby="claude-custom-examples-title">
+          <h2 id="claude-custom-examples-title" class="bento-section__title">3. Ví dụ Custom Instructions thực tế</h2>
+
+          <div class="bento-grid bento-grid--2x2" role="list" aria-label="Ví dụ Custom Instructions">
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Dành cho Developer</span>
+              </div>
+              <p class="bento-card__prompt-text"><strong>Về bạn:</strong></p>
+              <blockquote class="bento-card__prompt-code">
+                "Tôi là frontend developer, 3 năm kinh nghiệm, chuyên React
+                + TypeScript. Tôi đang học thêm về AI và thỉnh thoảng
+                cần hỗ trợ backend Node.js."
+              </blockquote>
+              <p class="bento-card__prompt-text"><strong>Về cách trả lời:</strong></p>
+              <blockquote class="bento-card__prompt-code">
+                "Luôn dùng TypeScript trong ví dụ code. Giải thích ngắn
+                gọn trước khi đưa code. Nếu có nhiều cách giải quyết,
+                nêu trade-off của từng cách. Trả lời bằng tiếng Việt."
+              </blockquote>
+            </div>
+
+            <div class="bento-card bento-card--prompt" role="listitem">
+              <div class="bento-card__prompt-header">
+                <span class="bento-card__prompt-label">Dành cho người viết content</span>
+              </div>
+              <p class="bento-card__prompt-text"><strong>Về bạn:</strong></p>
+              <blockquote class="bento-card__prompt-code">
+                "Tôi viết blog công nghệ cho người không chuyên. Độc giả
+                của tôi là người đi làm văn phòng, không có background kỹ thuật."
+              </blockquote>
+              <p class="bento-card__prompt-text"><strong>Về cách trả lời:</strong></p>
+              <blockquote class="bento-card__prompt-code">
+                "Tránh thuật ngữ kỹ thuật, dùng ví dụ đời thường. Mỗi bài
+                viết 500-800 từ, có tiêu đề phụ rõ ràng, kết bằng
+                call-to-action. Giọng thân thiện, gần gũi."
+              </blockquote>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PHẦN 4: Prompt thực hành ── -->
+        <section class="bento-section" aria-labelledby="claude-custom-prompt-title">
+          <h2 id="claude-custom-prompt-title" class="bento-section__title">4. Prompt thực hành</h2>
+
+          <div class="bento-card bento-card--wide bento-card--prompt" role="note" aria-label="Prompt thực hành Custom Instructions">
+            <div class="bento-card__prompt-header">
+              <span class="bento-card__prompt-label">Thực hành</span>
+            </div>
+            <p class="bento-card__prompt-text">
+              <strong>Bước 1:</strong> Vào Settings → Custom Instructions →
+              điền thông tin thật của bạn vào 2 ô.<br>
+              <strong>Bước 2:</strong> Lưu lại và mở cuộc chat mới.<br>
+              <strong>Bước 3:</strong> Nhập vào ô chat:
+            </p>
+            <blockquote class="bento-card__prompt-code">
+              "Dựa trên thông tin tôi đã cung cấp về bản thân, hãy đề xuất
+              5 cách tôi có thể dùng Claude hiệu quả nhất
+              trong công việc hàng ngày của mình."
+            </blockquote>
+          </div>
+        </section>
+
+        <!-- ── LƯU Ý CUỐI ── -->
+        <section class="bento-section" aria-labelledby="claude-custom-note-title">
+          <h2 id="claude-custom-note-title" class="bento-section__title visually-hidden">Lưu ý quan trọng</h2>
+
+          <div class="bento-card bento-card--wide bento-card--note" role="note" aria-label="Ba lớp cá nhân hóa Claude">
+            <div class="bento-card__note-icon" aria-hidden="true">
+              <i class="ti ti-info-circle"></i>
+            </div>
+            <div class="bento-card__note-body">
+              <strong class="bento-card__note-label">3 lớp cá nhân hóa trong Claude theo thứ tự ưu tiên:</strong>
+              <ul class="bento-card__note-list">
+                <li><strong>1. Custom Instructions (Settings)</strong> → áp dụng toàn bộ mọi cuộc chat</li>
+                <li><strong>2. Project Instructions</strong> → áp dụng trong project đó thôi</li>
+                <li><strong>3. Prompt cụ thể trong chat</strong> → áp dụng cho tin nhắn đó</li>
+              </ul>
+              <p class="bento-card__text" style="margin-top: 8px;">
+                Lớp sau sẽ <strong>ghi đè</strong> lớp trước nếu có xung đột.
+              </p>
+            </div>
+          </div>
+        </section>
+
       </div>
     }
 
@@ -70,7 +1007,8 @@
         </div>
         <h2 class="lesson-placeholder__title">Bài học không xác định</h2>
         <p class="lesson-placeholder__desc">
-          Không tìm thấy nội dung cho bài học này.
+          Không tìm thấy nội dung cho bài học này.<br>
+          ID hiện tại là: <strong>{{ lessonId }}</strong>
         </p>
       </div>
     }

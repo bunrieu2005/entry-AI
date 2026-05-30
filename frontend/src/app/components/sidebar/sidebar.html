@@ -12,9 +12,11 @@
           type="button"
           class="sidebar__btn"
           [class.sidebar__btn--active]="isActive(mod.id) || hasActiveChild(mod)"
+          [class.sidebar__btn--focused]="isKeyboardLocked && isFocused(mod.id)"
           (click)="selectModule(mod.id)"
           (pointerup)="$event"
           [attr.aria-expanded]="mod.children ? isExpanded(mod.id) : null"
+          [attr.aria-current]="isKeyboardLocked && isFocused(mod.id) ? 'true' : null"
           role="menuitem"
           [attr.aria-haspopup]="mod.children ? 'menu' : null">
           <span class="sidebar__icon" aria-hidden="true">
@@ -34,7 +36,7 @@
         </button>
 
         <!-- Sub-items: show when expanded OR when a child is active -->
-        <ul *ngIf="mod.children && (isExpanded(mod.id) || hasActiveChild(mod))"
+        <ul *ngIf="mod.children && (isExpanded(mod.id) || hasActiveChild(mod) || (isKeyboardLocked && isFocused(mod.id)))"
             class="sidebar__sub-list"
             role="menu">
           <li *ngFor="let child of mod.children" class="sidebar__sub-item">

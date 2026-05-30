@@ -1,126 +1,235 @@
-<article class="glossary" aria-labelledby="glossary-title">
-  <!-- Navigation Status Banner -->
+<div class="glossary" aria-label="Từ điển thuật ngữ AI">
+
+  <!-- ── Navigation Status Banner ── -->
   <div
     *ngIf="isFocusLocked"
-    class="navigation-status-banner"
+    class="nav-status-banner"
     role="status"
     aria-live="polite"
     aria-atomic="true">
     <i class="ti ti-device-gamepad" aria-hidden="true"></i>
-    Chế độ duyệt đang bật. Dùng <span class="keycap">W</span> / <span class="keycap">S</span> hoặc <span class="keycap">↑</span> / <span class="keycap">↓</span> để di chuyển &bull; <span class="keycap">Enter</span> để xem định nghĩa &bull; <span class="keycap">ESC</span> để thoát
+    Chế độ duyệt đang bật. Dùng
+    <span class="keycap">W</span> / <span class="keycap">S</span> hoặc
+    <span class="keycap">↑</span> / <span class="keycap">↓</span> để di chuyển &bull;
+    <span class="keycap">Enter</span> để chọn &bull;
+    <span class="keycap">ESC</span> để thoát
   </div>
 
-  <header class="glossary__header">
-    <h1 id="glossary-title" class="glossary__title">Từ Điển Thuật Ngữ AI</h1>
-    <p class="glossary__subtitle">Tra cứu nhanh các khái niệm và thuật ngữ về trí tuệ nhân tạo</p>
+  <!-- ── TWO-COLUMN LAYOUT ── -->
+  <div class="glossary__layout">
 
-    <!-- Search Bar -->
-    <div class="glossary__search">
-      <label for="glossary-search" class="visually-hidden">Tìm kiếm thuật ngữ</label>
-      <div class="search-input-wrapper">
-        <span class="search-input-wrapper__icon" aria-hidden="true">
-          <i class="ti ti-search"></i>
-        </span>
-        <input
-          type="text"
-          id="glossary-search"
-          class="search-input-wrapper__input"
-          placeholder="Tìm kiếm thuật ngữ..."
-          [(ngModel)]="searchQuery"
-          (ngModelChange)="filterTerms()"
-          autocomplete="off"
-          aria-label="Tìm kiếm thuật ngữ AI"
-          [attr.aria-disabled]="isFocusLocked"
-          [class.search-input-wrapper__input--locked]="isFocusLocked"
-        />
+    <!-- ═══════════════════════════════════════
+         COLUMN LEFT — Term List & Filters
+         ═══════════════════════════════════════ -->
+    <aside class="glossary__sidebar" aria-label="Danh sách thuật ngữ">
+
+      <!-- Search Box -->
+      <div class="sidebar__search">
+        <label for="glossary-search" class="visually-hidden">Tìm thuật ngữ</label>
+        <div class="search-box">
+          <span class="search-box__icon" aria-hidden="true">
+            <i class="ti ti-search"></i>
+          </span>
+          <input
+            type="text"
+            id="glossary-search"
+            class="search-box__input"
+            placeholder="Tìm thuật ngữ..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="filterTerms()"
+            autocomplete="off"
+            aria-label="Tìm thuật ngữ AI"
+            [attr.aria-disabled]="isFocusLocked"
+          />
+          <button
+            *ngIf="searchQuery"
+            type="button"
+            class="search-box__clear"
+            (click)="searchQuery = ''; filterTerms()"
+            aria-label="Xóa tìm kiếm">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Group Filter Pills -->
+      <div class="sidebar__filters" role="group" aria-label="Lọc nhóm thuật ngữ">
         <button
-          *ngIf="searchQuery"
+          *ngFor="let g of filterGroups"
           type="button"
-          class="search-input-wrapper__clear"
-          (click)="searchQuery = ''; filterTerms()"
-          aria-label="Xóa tìm kiếm">
-          <i class="ti ti-x"></i>
+          class="filter-pill"
+          [class.filter-pill--active]="activeGroup === g.key"
+          (click)="setGroup(g.key)"
+          [attr.aria-pressed]="activeGroup === g.key">
+          {{ g.label }}
         </button>
       </div>
-    </div>
-  </header>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="glossary__loading" role="status" aria-live="polite">
-    <div class="loading-spinner"></div>
-    <span class="loading-text">Đang tải danh sách thuật ngữ...</span>
-  </div>
-
-  <!-- Error State -->
-  <div *ngIf="errorMessage && !isLoading" class="glossary__error" role="alert">
-    <div class="error-icon">
-      <i class="ti ti-alert-circle"></i>
-    </div>
-    <p class="error-message">{{ errorMessage }}</p>
-    <button type="button" class="retry-btn" (pointerup)="loadTerms()">
-      <i class="ti ti-refresh" aria-hidden="true"></i>
-      <span>Thử lại</span>
-    </button>
-  </div>
-
-  <!-- Terms List -->
-  <div *ngIf="!isLoading && !errorMessage" class="glossary__list" role="list">
-    <div
-      *ngFor="let term of filteredTerms; let i = index; trackBy: trackByTermId"
-      class="term-item"
-      [class.is-focused]="isFocusLocked && i === activeItemIndex"
-      role="listitem"
-      [attr.aria-current]="isFocusLocked && i === activeItemIndex ? 'true' : null">
-      <!-- Term Header (Accordion Trigger) -->
-      <button
-        type="button"
-        class="term-item__header"
-        (click)="toggleTerm(term.id)"
-        [attr.aria-expanded]="isTermExpanded(term.id)"
-        [attr.aria-controls]="'term-detail-' + term.id"
-        [attr.aria-label]="'Mở rộng định nghĩa của ' + term.term">
-        <div class="term-item__info">
-          <h2 class="term-item__term">{{ term.term }}</h2>
-          <div class="term-item__tags" *ngIf="parseTags(term.tags).length > 0">
-            <span
-              *ngFor="let tag of parseTags(term.tags)"
-              class="tag-badge">
-              {{ tag }}
-            </span>
-          </div>
-        </div>
-        <span class="term-item__chevron" [class.term-item__chevron--open]="isTermExpanded(term.id)" aria-hidden="true">
-          <i class="ti" [ngClass]="isTermExpanded(term.id) ? 'ti-chevron-up' : 'ti-chevron-down'"></i>
-        </span>
-      </button>
-
-      <!-- Term Detail (Accordion Content) -->
-      <div
-        *ngIf="isTermExpanded(term.id)"
-        [id]="'term-detail-' + term.id"
-        class="term-item__detail"
-        role="region"
-        [attr.aria-labelledby]="'term-header-' + term.id">
-        <div class="term-item__definition">
-          <p>{{ term.definitionVi }}</p>
-        </div>
-        <div class="term-item__example" *ngIf="term.exampleVi">
-          <div class="example-header">
-            <i class="ti ti-lightbulb" aria-hidden="true"></i>
-            <span>Ví dụ thực tế</span>
-          </div>
-          <p class="example-content">{{ term.exampleVi }}</p>
-        </div>
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="sidebar__loading" role="status" aria-live="polite">
+        <div class="loading-spinner"></div>
+        <span>Đang tải...</span>
       </div>
-    </div>
-  </div>
 
-  <!-- Empty State -->
-  <div *ngIf="!isLoading && !errorMessage && filteredTerms.length === 0" class="glossary__empty" role="status">
-    <div class="empty-icon">
-      <i class="ti ti-search"></i>
-    </div>
-    <p class="empty-text" *ngIf="searchQuery">Không tìm thấy thuật ngữ nào phù hợp với "{{ searchQuery }}".</p>
-    <p class="empty-text" *ngIf="!searchQuery">Chưa có thuật ngữ nào được thêm vào.</p>
+      <!-- Error State -->
+      <div *ngIf="errorMessage && !isLoading" class="sidebar__error" role="alert">
+        <p>{{ errorMessage }}</p>
+        <button type="button" class="retry-btn" (click)="loadTerms()">
+          <i class="ti ti-refresh" aria-hidden="true"></i> Thử lại
+        </button>
+      </div>
+
+      <!-- Term List -->
+      <nav
+        *ngIf="!isLoading && !errorMessage"
+        class="sidebar__list"
+        aria-label="Danh sách thuật ngữ">
+
+        <!-- When group = all: show grouped list -->
+        <ng-container *ngIf="activeGroup === 'all' && groupedTerms.length > 0">
+          <div *ngFor="let group of groupedTerms" class="term-group">
+            <div class="term-group__label" aria-hidden="true">{{ group.label }}</div>
+            <ul class="term-group__items" role="list">
+              <li
+                *ngFor="let term of group.terms; trackBy: trackByTermId"
+                role="listitem">
+                <button
+                  type="button"
+                  class="term-row"
+                  [class.term-row--active]="isActive(term)"
+                  [class.is-focused]="isFocusLocked && filteredTerms[activeItemIndex]?.id === term.id"
+                  (click)="selectTerm(term)"
+                  [attr.aria-current]="isActive(term) ? 'page' : null">
+                  <span class="term-row__name">{{ term.term }}</span>
+                  <span
+                    *ngIf="parseTags(term.tags).length > 0"
+                    class="term-row__tag">
+                    {{ parseTags(term.tags)[0] }}
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </ng-container>
+
+        <!-- When group is filtered: show flat list -->
+        <ng-container *ngIf="activeGroup !== 'all' || groupedTerms.length === 0">
+          <ul class="term-list-flat" role="list">
+            <li
+              *ngFor="let term of filteredTerms; trackBy: trackByTermId"
+              role="listitem">
+              <button
+                type="button"
+                class="term-row"
+                [class.term-row--active]="isActive(term)"
+                [class.is-focused]="isFocusLocked && filteredTerms[activeItemIndex]?.id === term.id"
+                (click)="selectTerm(term)"
+                [attr.aria-current]="isActive(term) ? 'page' : null">
+                <span class="term-row__name">{{ term.term }}</span>
+                <span
+                  *ngIf="parseTags(term.tags).length > 0"
+                  class="term-row__tag">
+                  {{ parseTags(term.tags)[0] }}
+                </span>
+              </button>
+            </li>
+          </ul>
+        </ng-container>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoading && filteredTerms.length === 0" class="sidebar__empty" role="status">
+          <i class="ti ti-search" aria-hidden="true"></i>
+          <p *ngIf="searchQuery">Không có kết quả cho "{{ searchQuery }}"</p>
+          <p *ngIf="!searchQuery">Chưa có thuật ngữ nào.</p>
+        </div>
+
+      </nav>
+
+    </aside>
+
+    <!-- ═══════════════════════════════════════
+         COLUMN RIGHT — Term Detail
+         ═══════════════════════════════════════ -->
+    <main class="glossary__detail" aria-label="Chi tiết thuật ngữ" tabindex="-1">
+
+      <!-- Empty State: no term selected -->
+      <div *ngIf="!isLoading && !errorMessage && activeTermId === null" class="detail__empty">
+        <div class="detail__empty-icon" aria-hidden="true">
+          <i class="ti ti-book-2"></i>
+        </div>
+        <p class="detail__empty-text">Chọn một thuật ngữ để xem chi tiết</p>
+      </div>
+
+      <!-- Term Detail -->
+      <ng-container *ngIf="!isLoading && !errorMessage && activeTermId !== null">
+        <ng-container *ngFor="let term of filteredTerms; trackBy: trackByTermId">
+          <article
+            *ngIf="isActive(term)"
+            class="term-detail"
+            [attr.aria-label]="'Chi tiết: ' + term.term">
+
+            <!-- Detail Header -->
+            <header class="term-detail__header">
+              <h1 class="term-detail__title">{{ term.term }}</h1>
+              <div class="term-detail__tags" *ngIf="parseTags(term.tags).length > 0">
+                <span
+                  *ngFor="let tag of parseTags(term.tags)"
+                  class="tag-pill">
+                  {{ tag }}
+                </span>
+              </div>
+            </header>
+
+            <div class="term-detail__divider" aria-hidden="true"></div>
+
+            <!-- Definition -->
+            <section class="term-detail__section" [attr.aria-labelledby]="'def-label-' + term.id">
+              <div [id]="'def-label-' + term.id" class="section__label">Định nghĩa</div>
+              <div
+                class="section__body section__body--definition"
+                [innerHTML]="term.definitionVi">
+              </div>
+            </section>
+
+            <div class="term-detail__divider" aria-hidden="true"></div>
+
+            <!-- Example -->
+            <section
+              *ngIf="term.exampleVi"
+              class="term-detail__section"
+              [attr.aria-labelledby]="'ex-label-' + term.id">
+              <div [id]="'ex-label-' + term.id" class="section__label">Ví dụ thực tế</div>
+              <div class="section__body section__body--example">
+                <div class="example-box">
+                  <i class="ti ti-lightbulb" aria-hidden="true"></i>
+                  <p class="example-box__text">{{ term.exampleVi }}</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- Related Terms -->
+            <section
+              *ngIf="term.relatedTerms && term.relatedTerms.length > 0"
+              class="term-detail__section"
+              [attr.aria-labelledby]="'related-label-' + term.id">
+              <div [id]="'related-label-' + term.id" class="section__label">Liên quan</div>
+              <div class="section__body">
+                <div class="related-tags">
+                  <button
+                    *ngFor="let related of term.relatedTerms"
+                    type="button"
+                    class="related-tag"
+                    (click)="navigateToRelated(related)">
+                    {{ related }}
+                  </button>
+                </div>
+              </div>
+            </section>
+
+          </article>
+        </ng-container>
+      </ng-container>
+
+    </main>
   </div>
-</article>
+</div>

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { GuidesComponent } from './components/guides/guides';
 import { AiToolsComponent } from './components/ai-tools/ai-tools';
 import { GlossaryComponent } from './components/glossary/glossary';
 import { PromptsComponent } from './components/prompts/prompts';
+import { KeyboardNavigationService, SidebarModuleId } from './services/keyboard-navigation.service';
 
 export interface ModuleInfo {
   id: string;
@@ -36,15 +37,28 @@ export interface ModuleInfo {
   styleUrl: './app.css',
 })
 export class AppComponent implements OnInit, OnDestroy {
-  readonly modulesList: string[] = ['guides', 'explore', 'glossary', 'prompts', 'vibe-coding', 'ai-guidelines'];
+  private readonly router = inject(Router);
+  readonly keyboardNavigation = inject(KeyboardNavigationService);
+
+  readonly modulesList: SidebarModuleId[] = [
+    'guides',
+    'explore',
+    'glossary',
+    'prompts',
+    'ai-guidelines',
+    'vibe-coding',
+  ];
+  private readonly defaultModuleRoutes: Partial<Record<SidebarModuleId, string>> = {
+    'ai-guidelines': '/ai-guidelines/gemini',
+    'vibe-coding': '/vibe-coding/intro',
+  };
 
   activeModuleId: string = 'guides';
-  isLockedInsideModule: boolean = false;
   isHomePage: boolean = true;
 
   private routerSub?: Subscription;
 
-  constructor(private router: Router) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.syncFromUrl(this.router.url);
@@ -62,6 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     if (path === '/' || path === '') {
       this.isHomePage = true;
+      this.activeModuleId = this.keyboardNavigation.focusedSidebarModule();
       return;
     }
 
@@ -69,14 +84,19 @@ export class AppComponent implements OnInit, OnDestroy {
 
     if (path.startsWith('/ai-guidelines')) {
       this.activeModuleId = 'ai-guidelines';
+      this.keyboardNavigation.setFocusedSidebarModule('ai-guidelines');
     } else if (path.startsWith('/vibe-coding')) {
       this.activeModuleId = 'vibe-coding';
+      this.keyboardNavigation.setFocusedSidebarModule('vibe-coding');
+    } else {
+      this.keyboardNavigation.setFocusedSidebarModule(this.activeModuleId as SidebarModuleId);
     }
   }
 
   onModuleSelected(moduleId: string): void {
     this.activeModuleId = moduleId;
     this.isHomePage = false;
+    this.keyboardNavigation.setFocusedSidebarModule(moduleId as SidebarModuleId);
   }
 
   get isGuidesModule(): boolean {
@@ -103,6 +123,10 @@ export class AppComponent implements OnInit, OnDestroy {
     return this.activeModuleId === 'ai-guidelines';
   }
 
+  get isLockedInsideModule(): boolean {
+    return this.keyboardNavigation.isFocusLocked();
+  }
+
   get showHeroSection(): boolean {
     return (
       this.isHomePage &&
@@ -117,10 +141,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (this.isLockedInsideModule) {
-      if (event.key === 'Escape') {
+    if (this.keyboardNavigation.isFocusLocked()) {
+      if (this.keyboardNavigation.focusedSidebarModule() === 'ai-guidelines') {
+        return;
+      }
+
+      const key = event.key.toLowerCase();
+
+      if (key === 'escape') {
         event.preventDefault();
-        this.isLockedInsideModule = false;
+        this.keyboardNavigation.setFocusLocked(false);
         return;
       }
       return;
@@ -132,15 +162,26 @@ export class AppComponent implements OnInit, OnDestroy {
       event.preventDefault();
       const index = parseInt(key, 10) - 1;
       if (index < this.modulesList.length) {
-        this.activeModuleId = this.modulesList[index];
-        this.isHomePage = false;
+        const moduleId = this.modulesList[index];
+        this.selectModuleByShortcut(moduleId);
       }
       return;
     }
 
     if (key === 'Enter') {
       event.preventDefault();
-      this.isLockedInsideModule = true;
+      this.keyboardNavigation.setFocusLocked(true);
+    }
+  }
+
+  private selectModuleByShortcut(moduleId: SidebarModuleId): void {
+    this.activeModuleId = moduleId;
+    this.isHomePage = false;
+    this.keyboardNavigation.setFocusedSidebarModule(moduleId);
+
+    const targetRoute = this.defaultModuleRoutes[moduleId];
+    if (targetRoute && this.router.url !== targetRoute) {
+      this.router.navigateByUrl(targetRoute);
     }
   }
 

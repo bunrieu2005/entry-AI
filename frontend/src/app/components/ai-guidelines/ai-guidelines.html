@@ -5,17 +5,38 @@
 
 <div class="ai-guidelines">
 
+  <!-- Navigation Status Banner -->
+  <div
+    *ngIf="isFocusLocked"
+    class="nav-status-banner"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true">
+    <i class="ti ti-device-gamepad" aria-hidden="true"></i>
+    <ng-container *ngIf="currentZone === 'TABS'">
+      Dùng A/D chọn Trợ lý • Ấn S hoặc ↓ để xuống danh sách bài • ESC để thoát
+    </ng-container>
+    <ng-container *ngIf="currentZone === 'ITEMS'">
+      Dùng W/S chọn Bài • Ấn W tại Bài 1 để lên lại hàng chọn Trợ lý • Enter để mở xem • ESC để thoát
+    </ng-container>
+    <ng-container *ngIf="currentZone === 'DETAIL'">
+      Chế độ đọc: Dùng W/S để cuộn trang nội dung • Backspace để quay lại danh sách • ESC để thoát
+    </ng-container>
+  </div>
+
   <!-- ============================================
        AI Tab Bar
        ============================================ -->
   <div class="ai-tabs" role="tablist" aria-label="Chọn trợ lý AI">
     <button
-      *ngFor="let tab of aiTabs"
+      *ngFor="let tab of aiTabs; let i = index"
       type="button"
       class="ai-tab"
       role="tab"
       [class.ai-tab--active]="currentCategory === tab.id"
+      [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'TABS' && i === activeTabIndex"
       [attr.aria-selected]="currentCategory === tab.id"
+      [attr.aria-current]="isFocusLocked && currentZone === 'TABS' && i === activeTabIndex ? 'true' : null"
       (click)="changeCategory(tab.id)"
       (pointerup)="$event">
       <span class="ai-tab__icon" aria-hidden="true">
@@ -38,11 +59,12 @@
       </div>
 
       <ul class="ai-lessons__list" role="list">
-        <li *ngFor="let lesson of lessons" class="ai-lesson-item">
+        <li *ngFor="let lesson of lessons; let i = index" class="ai-lesson-item">
           <button
             type="button"
             class="ai-lesson-item__btn"
             [class.ai-lesson-item__btn--active]="currentLesson && currentLesson.id === lesson.id"
+            [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ITEMS' && i === highlightedIndex"
             (click)="selectLesson(lesson.id)"
             (pointerup)="$event">
             <span class="ai-lesson-item__number" aria-hidden="true">
@@ -71,7 +93,7 @@
     </aside>
 
     <!-- Lesson Detail (right panel) -->
-    <main class="ai-detail" aria-label="Chi tiết bài học" tabindex="-1">
+    <main #detailPanel class="ai-detail" aria-label="Chi tiết bài học" tabindex="-1">
 
       <!-- No lesson selected — welcome state -->
       <div *ngIf="!currentLesson" class="ai-detail__welcome">

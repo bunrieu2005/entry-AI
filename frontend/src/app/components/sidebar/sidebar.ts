@@ -1,7 +1,8 @@
-import { Component, Output, EventEmitter, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter, Subscription } from 'rxjs';
+import { SidebarModuleId } from '../../services/keyboard-navigation.service';
 
 export interface SidebarModule {
   id: string;
@@ -25,20 +26,15 @@ export interface SidebarModule {
 export class SidebarComponent implements OnInit, OnDestroy {
   @Output() moduleSelected = new EventEmitter<string>();
   @Input() activeId: string = '';
+  @Input() focusedModuleId: SidebarModuleId = 'guides';
+  @Input() isKeyboardLocked: boolean = false;
 
   modules: SidebarModule[] = [
     { id: 'guides', name: 'Hướng dẫn', desc: 'WCAG', icon: 'ti-device-gamepad' },
     { id: 'explore', name: 'Khám phá', desc: 'Bài báo - AI tools', icon: 'ti-compass' },
     { id: 'glossary', name: 'Thuật ngữ AI', desc: 'Từ điển - Ví dụ', icon: 'ti-book' },
     { id: 'prompts', name: 'Thư viện Prompt', desc: 'Theo lĩnh vực', icon: 'ti-terminal-2' },
-    {
-      id: 'ai-guidelines', name: 'Hướng dẫn AI', desc: 'Gemini · Claude · ChatGPT', icon: 'ti-sparkles',
-      children: [
-        { id: 'gemini', name: 'Gemini', path: '/ai-guidelines/gemini' },
-        { id: 'claude', name: 'Claude', path: '/ai-guidelines/claude' },
-        { id: 'chatgpt', name: 'ChatGPT', path: '/ai-guidelines/chatgpt' },
-      ]
-    },
+    { id: 'ai-guidelines', name: 'Hướng dẫn AI', desc: 'Gemini · Claude · ChatGPT', icon: 'ti-sparkles' },
     { id: 'vibe-coding', name: 'Vibe Coding', desc: 'Tạo web - Series', icon: 'ti-code', children: [
       { id: 'intro', name: 'Giới thiệu', path: '/vibe-coding/intro' },
       { id: 'series', name: 'Series Bài học', path: '/vibe-coding/series' }
@@ -73,8 +69,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   selectModule(moduleId: string): void {
     this.activeModuleId = moduleId;
+    if (moduleId === 'ai-guidelines') {
+      this.router.navigateByUrl('/ai-guidelines');
+    }
+
     if (this.modules.find(m => m.id === moduleId)?.children) {
-      this.toggleExpand(moduleId);
+      this.expandedIds.add(moduleId);
     } else {
       this.expandedIds.delete(moduleId);
     }
@@ -91,6 +91,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   hasActiveChild(mod: SidebarModule): boolean {
     return mod.children?.some(c => this.router.url.startsWith(c.path)) ?? false;
+  }
+
+  isFocused(moduleId: string): boolean {
+    return this.focusedModuleId === moduleId;
   }
 
   toggleExpand(moduleId: string, event?: Event): void {

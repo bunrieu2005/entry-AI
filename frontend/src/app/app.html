@@ -1,5 +1,10 @@
 <div class="app-wrapper">
-  <app-sidebar [activeId]="activeModuleId" (moduleSelected)="onModuleSelected($event)"></app-sidebar>
+  <app-sidebar
+    [activeId]="activeModuleId"
+    [focusedModuleId]="keyboardNavigation.focusedSidebarModule()"
+    [isKeyboardLocked]="keyboardNavigation.isFocusLocked()"
+    (moduleSelected)="onModuleSelected($event)">
+  </app-sidebar>
 
   <div class="app-content">
     <app-header></app-header>

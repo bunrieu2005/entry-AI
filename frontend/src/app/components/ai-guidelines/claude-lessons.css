@@ -1,14 +1,360 @@
 /* ============================================
-   Claude Lessons — Component Styles
+   Claude Lessons — Bento Box Layout
+   Giống cấu trúc gemini-lessons
    ============================================ */
 
+/* ── Container ── */
 .claude-lessons {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
 }
 
-/* ── Placeholder (bài 1–4) ── */
+/* ── Bento Lesson Wrapper ── */
+.bento-lesson {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* ── Phân khu (Section) ── */
+.bento-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.bento-section__title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0;
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 2px solid rgba(139, 110, 82, 0.3);
+}
+
+.bento-section__title.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* ── Card Base ── */
+.bento-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-card-padding, 20px);
+}
+
+.bento-card--wide .bento-card__text {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+/* ── Card Icon (Grid 4 cột) ── */
+.bento-card--icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.bento-card__icon-wrap {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(37, 24, 18, 0.08);
+  border-radius: var(--radius-md);
+  color: var(--color-secondary);
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.bento-card__label {
+  font-family: var(--font-label);
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--color-secondary);
+  line-height: 1.4;
+}
+
+/* ── Card Model ── */
+.bento-card--model {
+  padding: var(--spacing-md);
+}
+
+.bento-card__model-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.bento-card__model-name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.bento-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  background-color: rgba(139, 110, 82, 0.12);
+  color: var(--color-secondary);
+  font-family: var(--font-label);
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bento-card--model-active .bento-card__badge {
+  background-color: rgba(184, 59, 46, 0.15);
+  color: var(--color-tertiary);
+}
+
+.bento-card--model-active {
+  border-color: rgba(184, 59, 46, 0.4);
+}
+
+.bento-card--model .bento-card__text {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+/* ── Card Prompt ── */
+.bento-card--prompt {
+  padding: var(--spacing-md);
+  border-color: rgba(139, 110, 82, 0.4);
+}
+
+.bento-card__prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.bento-card__prompt-label {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.bento-card__prompt-text {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--color-primary);
+  margin: 0 0 var(--spacing-xs);
+}
+
+.bento-card__prompt-text:last-child {
+  margin-bottom: 0;
+}
+
+.bento-card__prompt-code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-primary);
+  background-color: rgba(37, 24, 18, 0.06);
+  border-left: 3px solid var(--color-tertiary);
+  padding: var(--spacing-sm);
+  border-radius: 0 var(--radius-sm, 6px) var(--radius-sm, 6px) 0;
+  margin: var(--spacing-xs) 0 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Card Note ── */
+.bento-card--note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: rgba(139, 110, 82, 0.05);
+  border-color: rgba(139, 110, 82, 0.35);
+}
+
+.bento-card__note-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(139, 110, 82, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--color-secondary);
+  font-size: 1rem;
+  margin-top: 2px;
+}
+
+.bento-card__note-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.bento-card__note-label {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.bento-card__note-list {
+  margin: 0;
+  padding-left: 18px;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: var(--color-primary);
+}
+
+/* ── Bento Grid Layouts ── */
+.bento-grid {
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.bento-grid--4col {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.bento-grid--3col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.bento-grid--2x2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.bento-grid--2col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ── Steps ── */
+.bento-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  list-style: none;
+  position: relative;
+}
+
+.bento-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  position: relative;
+}
+
+.bento-step:not(:last-child) {
+  padding-bottom: var(--spacing-md);
+}
+
+.bento-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 48px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, rgba(139, 110, 82, 0.4), rgba(139, 110, 82, 0.1));
+}
+
+.bento-step__circle {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-secondary);
+  color: var(--color-surface);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 800;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+}
+
+.bento-step__content {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--color-primary);
+  padding-top: 8px;
+}
+
+.bento-step__kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background-color: rgba(37, 24, 18, 0.08);
+  border: 1px solid rgba(139, 110, 82, 0.3);
+  border-radius: var(--radius-sm, 4px);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-primary);
+}
+
+.bento-step__sub-list {
+  margin: var(--spacing-xs) 0 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.bento-step__sub-list li {
+  position: relative;
+  padding-left: 12px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+
+.bento-step__sub-list li::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  color: var(--color-secondary);
+}
+
+/* ── Placeholder ── */
 .lesson-placeholder {
   display: flex;
   flex-direction: column;
@@ -49,4 +395,46 @@
   color: var(--color-secondary);
   max-width: 360px;
   margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .bento-grid--4col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bento-grid--2x2 {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-grid--3col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bento-grid--2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .bento-grid--4col,
+  .bento-grid--3col,
+  .bento-grid--2col {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-section__title {
+    font-size: 1.1rem;
+  }
+
+  .bento-step__circle {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 0.8rem;
+  }
+
+  .bento-step:not(:last-child)::after {
+    left: 17px;
+  }
 }
