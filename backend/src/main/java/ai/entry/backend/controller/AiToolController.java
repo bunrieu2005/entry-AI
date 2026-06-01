@@ -1,5 +1,6 @@
 package ai.entry.backend.controller;
 
+import ai.entry.backend.model.dto.GroupedAiToolDTO;
 import ai.entry.backend.model.entity.AiTool;
 import ai.entry.backend.service.AiToolService;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,9 @@ public class AiToolController {
     @GetMapping("/featured")
     public ResponseEntity<List<AiTool>> getFeaturedTools() {
         return ResponseEntity.ok(aiToolService.getFeaturedTools());
+    }
+    @GetMapping("/grouped")
+    public ResponseEntity<List<GroupedAiToolDTO>> getGroupedTools() {
+        return ResponseEntity.ok(aiToolService.getGroupedAiTools());
     }
 }

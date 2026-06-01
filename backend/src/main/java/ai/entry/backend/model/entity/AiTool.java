@@ -37,10 +37,11 @@ public class AiTool {
     @Column(name = "website_url", length = 300)
     private String websiteUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    // ĐÃ GỘP LẠI THÀNH 1 BIẾN DUY NHẤT: Dùng class AiToolCategory mới tạo
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // THÊM CHÍNH XÁC DÒNG NÀY
-    private Category category;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private AiToolCategory category;
 
     @Column(name = "use_case_tag", nullable = false, length = 120)
     private String useCaseTag;
