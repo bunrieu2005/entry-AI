@@ -17,6 +17,8 @@ export interface Prompt {
   compatibleTools: string[];
 }
 
+type Zone = 'ZONE_FILTERS' | 'ZONE_MAIN';
+
 @Component({
   selector: 'app-prompts',
   standalone: true,
@@ -37,24 +39,41 @@ export class PromptsComponent implements OnChanges {
 
   @Input() isFocusLocked: boolean = false;
 
+  // 4-Zone Spatial Navigation State
+  currentZone: Zone = 'ZONE_FILTERS';
+  highlightedIndex: number = 0;
+  private isKeyboardReady = false;
+
   activeCategoryId: number = 1;
   promptsList: Prompt[] = [];
   copiedPromptId: number | null = null;
-  activeCardIndex: number = 0;
-
   isLoading: boolean = true;
   errorMessage: string | null = null;
 
   constructor(private readonly http: HttpClient) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['isFocusLocked'] && !changes['isFocusLocked'].previousValue && changes['isFocusLocked'].currentValue) {
-      this.activeCardIndex = 0;
+    if (changes['isFocusLocked']) {
+      if (changes['isFocusLocked'].currentValue && !changes['isFocusLocked'].previousValue) {
+        this.resetKeyboardReady();
+      } else if (!changes['isFocusLocked'].currentValue) {
+        this.isKeyboardReady = false;
+      }
     }
+  }
+
+  private resetKeyboardReady(): void {
+    this.isKeyboardReady = false;
+    setTimeout(() => {
+      this.isKeyboardReady = true;
+      this.currentZone = 'ZONE_FILTERS';
+      this.highlightedIndex = 0;
+    }, 100);
   }
 
   ngOnInit(): void {
     this.loadPromptsByCategory(this.activeCategoryId);
+    this.resetKeyboardReady();
   }
 
   loadPromptsByCategory(categoryId: number): void {
@@ -66,11 +85,16 @@ export class PromptsComponent implements OnChanges {
     this.http.get<Prompt[]>(`${this.API_URL}/prompts/category/${categoryId}`).subscribe({
       next: (data: Prompt[]) => {
         this.promptsList = data;
-        this.activeCardIndex = 0;
+        this.highlightedIndex = 0;
         this.isLoading = false;
+        // Scroll to top when category changes
+        setTimeout(() => {
+          const gridContainer = document.querySelector('.prompts__grid-container');
+          if (gridContainer) gridContainer.scrollTop = 0;
+        }, 50);
       },
       error: (err: HttpErrorResponse) => {
-        this.errorMessage = 'Không thể tải danh sách prompt. Vui lòng thử lại sau.';
+        this.errorMessage = 'Không thể tải danh sách prompt.';
         this.isLoading = false;
         this.promptsList = [];
         console.error('Error loading prompts:', err);
@@ -80,43 +104,132 @@ export class PromptsComponent implements OnChanges {
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (!this.isFocusLocked || this.isLoading || this.promptsList.length === 0) {
-      return;
-    }
+    if (!this.isKeyboardReady || !this.isFocusLocked || this.isLoading) return;
 
     const key = event.key.toLowerCase();
 
-    if (key === 'd' || key === 'arrowright') {
+    // GLOBAL: ESC - Exit keyboard mode
+    if (key === 'escape') {
       event.preventDefault();
-      this.activeCardIndex = Math.min(this.activeCardIndex + 1, this.promptsList.length - 1);
+      event.stopPropagation();
+      (document.activeElement as HTMLElement)?.blur();
       return;
     }
 
-    if (key === 'a' || key === 'arrowleft') {
-      event.preventDefault();
-      this.activeCardIndex = Math.max(this.activeCardIndex - 1, 0);
-      return;
-    }
-
-    if (key === 'w' || key === 'arrowup') {
-      event.preventDefault();
-      this.activeCardIndex = Math.max(this.activeCardIndex - 1, 0);
-      return;
-    }
-
-    if (key === 's' || key === 'arrowdown') {
-      event.preventDefault();
-      this.activeCardIndex = Math.min(this.activeCardIndex + 1, this.promptsList.length - 1);
-      return;
-    }
-
-    if (key === 'enter') {
-      event.preventDefault();
-      const prompt = this.promptsList[this.activeCardIndex];
-      if (prompt) {
-        this.copyPromptContent(prompt.content, prompt.id);
+    // ZONE_FILTERS: Category tabs
+    if (this.currentZone === 'ZONE_FILTERS') {
+      // A / ←: Move left to previous category
+      if (key === 'a' || key === 'arrowleft') {
+        event.preventDefault();
+        event.stopPropagation();
+        const currentIdx = this.categories.findIndex(c => c.id === this.activeCategoryId);
+        if (currentIdx > 0) {
+          this.loadPromptsByCategory(this.categories[currentIdx - 1].id);
+        }
+        return;
       }
+
+      // D / →: Move right to next category
+      if (key === 'd' || key === 'arrowright') {
+        event.preventDefault();
+        event.stopPropagation();
+        const currentIdx = this.categories.findIndex(c => c.id === this.activeCategoryId);
+        if (currentIdx < this.categories.length - 1) {
+          this.loadPromptsByCategory(this.categories[currentIdx + 1].id);
+        }
+        return;
+      }
+
+      // S / ↓: Drop to ZONE_MAIN (first card)
+      if (key === 's' || key === 'arrowdown') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.promptsList.length > 0) {
+          this.highlightedIndex = 0;
+          this.currentZone = 'ZONE_MAIN';
+          setTimeout(() => {
+            const gridContainer = document.querySelector('.prompts__grid-container');
+            if (gridContainer) {
+              gridContainer.scrollTop = 0;
+            }
+            this.scrollActiveCardIntoView();
+          }, 50);
+        }
+        return;
+      }
+      return;
     }
+
+    // ZONE_MAIN: Prompt cards grid
+    if (this.currentZone === 'ZONE_MAIN') {
+      // W / ↑: Move up, or back to ZONE_FILTERS if at first card
+      if (key === 'w' || key === 'arrowup') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex === 0) {
+          this.currentZone = 'ZONE_FILTERS';
+        } else {
+          this.highlightedIndex--;
+          this.scrollActiveCardIntoView();
+        }
+        return;
+      }
+
+      // S / ↓: Move down (next card) - WITH SCROLL
+      if (key === 's' || key === 'arrowdown') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex < this.promptsList.length - 1) {
+          this.highlightedIndex++;
+          this.scrollActiveCardIntoView();
+        }
+        return;
+      }
+
+      // A / ←: Move to previous card
+      if (key === 'a' || key === 'arrowleft') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex > 0) {
+          this.highlightedIndex--;
+          this.scrollActiveCardIntoView();
+        }
+        return;
+      }
+
+      // D / →: Move to next card
+      if (key === 'd' || key === 'arrowright') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex < this.promptsList.length - 1) {
+          this.highlightedIndex++;
+          this.scrollActiveCardIntoView();
+        }
+        return;
+      }
+
+      // Enter: Copy prompt content
+      if (key === 'enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        const prompt = this.promptsList[this.highlightedIndex];
+        if (prompt) {
+          this.copyPromptContent(prompt.content, prompt.id);
+        }
+        return;
+      }
+      return;
+    }
+  }
+
+  private scrollActiveCardIntoView(): void {
+    setTimeout(() => {
+      const activeCard = document.querySelector('.prompt-card.is-keyboard-highlighted');
+      const gridContainer = document.querySelector('.prompts__grid-container');
+      if (activeCard && gridContainer) {
+        activeCard.scrollIntoView({ block: 'nearest', behavior: 'smooth', inline: 'nearest' });
+      }
+    }, 10);
   }
 
   copyPromptContent(content: string, promptId: number): void {

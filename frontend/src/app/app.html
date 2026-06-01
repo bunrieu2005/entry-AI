@@ -22,7 +22,7 @@
 
       <!-- Static module pages -->
       <app-guides *ngIf="isGuidesModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-guides>
-      <app-ai-tools *ngIf="isExploreModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-ai-tools>
+      <app-ai-tools *ngIf="isExploreModule && !isHomePage"></app-ai-tools>
       <app-glossary *ngIf="isGlossaryModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-glossary>
       <app-prompts *ngIf="isPromptsModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-prompts>
 

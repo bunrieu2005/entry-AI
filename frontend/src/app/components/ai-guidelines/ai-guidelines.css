@@ -2,52 +2,22 @@
    AI Guidelines — Container
    ============================================ */
 
+/* Keyboard Navigation Highlight - Dùng chung style với .ai-lesson-item__btn--active */
+.ai-lesson-item__btn.is-keyboard-highlighted {
+  /* Không cần thêm style vì dùng chung với .ai-lesson-item__btn--active */
+}
+
+.ai-detail.is-keyboard-highlighted {
+  /* Panel chi tiết - có thể thêm outline nhẹ nếu cần */
+  outline: 3px solid rgba(220, 53, 69, 0.5);
+  outline-offset: -3px;
+}
+
 .ai-guidelines {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
   height: 100%;
-}
-
-/* Navigation Status Banner */
-.nav-status-banner {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: 10px 16px;
-  background-color: var(--color-surface);
-  border: 2px solid var(--color-primary);
-  border-radius: var(--radius-lg);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  line-height: 1.4;
-  flex-shrink: 0;
-}
-
-.nav-status-banner i {
-  font-size: 1.1rem;
-  color: var(--color-tertiary);
-  flex-shrink: 0;
-}
-
-.nav-status-banner .keycap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 5px;
-  background-color: var(--color-neutral);
-  border: 1px solid rgba(139, 110, 82, 0.4);
-  border-bottom-width: 2px;
-  border-radius: 4px;
-  font-family: var(--font-label);
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: var(--color-primary);
-  line-height: 1;
 }
 
 /* ============================================
@@ -87,11 +57,6 @@
   color: var(--color-primary);
 }
 
-.ai-tab:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
 .ai-tab:active {
   transform: scale(0.98);
 }
@@ -106,19 +71,6 @@
   background-color: var(--color-primary);
   color: var(--color-on-primary);
 }
-
-.ai-tab--focused:not(.ai-tab--active) {
-  background-color: rgba(37, 24, 18, 0.12);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-.ai-tab.is-keyboard-highlighted:not(.ai-tab--active) {
-  background-color: rgba(37, 24, 18, 0.12);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
 
 .ai-tab__icon {
   display: flex;
@@ -219,16 +171,6 @@
 .ai-lesson-item__btn--active {
   background-color: rgba(184, 59, 46, 0.08);
   border-color: var(--color-tertiary);
-}
-
-.ai-lesson-item__btn--highlighted:not(.ai-lesson-item__btn--active) {
-  background-color: rgba(37, 24, 18, 0.1);
-  border-color: var(--color-primary);
-}
-
-.ai-lesson-item__btn.is-keyboard-highlighted:not(.ai-lesson-item__btn--active) {
-  background-color: rgba(37, 24, 18, 0.1);
-  border-color: var(--color-primary);
 }
 
 .ai-lesson-item__btn--active:hover {

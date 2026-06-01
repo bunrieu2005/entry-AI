@@ -8,23 +8,28 @@
     aria-live="polite"
     aria-atomic="true">
     <i class="ti ti-device-gamepad" aria-hidden="true"></i>
-    Chế độ WASD đang bật. Dùng <span class="keycap">A</span> / <span class="keycap">D</span> hoặc <span class="keycap">←</span> / <span class="keycap">→</span> để di chuyển &bull; <span class="keycap">Enter</span> để sao chép &bull; <span class="keycap">ESC</span> để thoát
+    <span *ngIf="currentZone === 'ZONE_FILTERS'">
+      <span class="keycap">←</span> <span class="keycap">→</span> chuyển danh mục &bull;
+      <span class="keycap">↓</span> xuống prompts &bull;
+      <span class="keycap">ESC</span> thoát
+    </span>
+    <span *ngIf="currentZone === 'ZONE_MAIN'">
+      <span class="keycap">↑</span> <span class="keycap">↓</span> <span class="keycap">←</span> <span class="keycap">→</span> di chuyển &bull;
+      <span class="keycap">Enter</span> sao chép &bull;
+      <span class="keycap">ESC</span> thoát
+    </span>
   </div>
 
-  <!-- Category Tabs -->
+  <!-- Category Tabs (ZONE_FILTERS) -->
   <nav class="prompts__tabs" aria-label="Lĩnh vực prompt" role="tablist">
     <button
-      *ngFor="let cat of categories"
+      *ngFor="let cat of categories; let i = index"
       role="tab"
       type="button"
       class="prompts__tab"
       [class.active]="cat.id === activeCategoryId"
       [attr.aria-selected]="cat.id === activeCategoryId"
-      [attr.aria-disabled]="isFocusLocked"
-      [class.prompts__tab--locked]="isFocusLocked"
-      (pointerup)="!isFocusLocked && loadPromptsByCategory(cat.id)"
-      (keydown.enter)="!isFocusLocked && loadPromptsByCategory(cat.id)"
-      (keydown.space)="!isFocusLocked && loadPromptsByCategory(cat.id); $event.preventDefault()"
+      (click)="loadPromptsByCategory(cat.id)"
     >
       <i class="{{ cat.icon }}" aria-hidden="true"></i>
       <span>{{ cat.name }}</span>
@@ -57,8 +62,7 @@
     <button
       type="button"
       class="retry-btn"
-      (pointerup)="loadPromptsByCategory(activeCategoryId)"
-      (keydown.enter)="loadPromptsByCategory(activeCategoryId)"
+      (click)="loadPromptsByCategory(activeCategoryId)"
     >
       <i class="ti ti-refresh" aria-hidden="true"></i>
       Thử lại
@@ -73,15 +77,17 @@
     <p class="empty-text">Chưa có prompt nào trong lĩnh vực này.</p>
   </div>
 
-  <!-- Prompt Grid -->
-  <div *ngIf="!isLoading && !errorMessage && promptsList.length > 0" class="prompts__grid" role="tabpanel">
+  <!-- Prompt Grid (ZONE_MAIN) -->
+  <div *ngIf="!isLoading && !errorMessage && promptsList.length > 0" class="prompts__grid-container">
+
+    <div class="prompts__grid" role="tabpanel">
 
     <article
       *ngFor="let prompt of promptsList; let i = index; trackBy: trackByPromptId"
       class="prompt-card"
-      [class.is-targeted]="isFocusLocked && i === activeCardIndex"
+      [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex"
       [attr.aria-label]="'Prompt: ' + prompt.titleVi"
-      [attr.aria-current]="isFocusLocked && i === activeCardIndex ? 'true' : null"
+      [attr.aria-current]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex ? 'true' : null"
     >
       <!-- Card Header -->
       <div class="prompt-card__header">
@@ -112,9 +118,7 @@
         [class.copied]="copiedPromptId === prompt.id"
         [attr.aria-label]="copiedPromptId === prompt.id ? 'Đã sao chép câu lệnh' : 'Sao chép câu lệnh: ' + prompt.titleVi"
         [attr.aria-pressed]="copiedPromptId === prompt.id"
-        (pointerup)="copyPromptContent(prompt.content, prompt.id)"
-        (keydown.enter)="copyPromptContent(prompt.content, prompt.id)"
-        (keydown.space)="copyPromptContent(prompt.content, prompt.id); $event.preventDefault()"
+        (click)="copyPromptContent(prompt.content, prompt.id)"
       >
         <i [class]="copiedPromptId === prompt.id ? 'ti ti-check' : 'ti ti-clipboard'" aria-hidden="true"></i>
         <span>{{ copiedPromptId === prompt.id ? 'Đã sao chép!' : 'Sao chép câu lệnh' }}</span>
@@ -122,6 +126,7 @@
 
     </article>
 
+    </div>
   </div>
 
 </section>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, HostListener, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -6,6 +6,8 @@ import { GeminiLessonsComponent } from './gemini-lessons';
 import { ClaudeLessonsComponent } from './claude-lessons';
 import { ChatgptLessonsComponent } from './chatgpt-lessons';
 import { KeyboardNavigationService } from '../../services/keyboard-navigation.service';
+
+type Zone = 'ZONE_FILTERS' | 'ZONE_MAIN' | 'ZONE_DETAIL';
 
 @Component({
   selector: 'app-ai-guidelines',
@@ -20,13 +22,23 @@ import { KeyboardNavigationService } from '../../services/keyboard-navigation.se
   templateUrl: './ai-guidelines.html',
   styleUrl: './ai-guidelines.css'
 })
-export class AiGuidelinesComponent implements OnInit {
+export class AiGuidelinesComponent implements OnInit, OnChanges {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private http = inject(HttpClient);
-  readonly keyboardNavigation = inject(KeyboardNavigationService);
-  @ViewChild('detailPanel') detailPanelRef?: ElementRef<HTMLElement>;
+  private keyboardNav = inject(KeyboardNavigationService);
 
+  // 4-Zone Spatial Navigation State
+  currentZone: Zone = 'ZONE_FILTERS';
+  highlightedIndex: number = 0;
+  private isKeyboardReady = false;
+
+  // Computed signals from service
+  get isFocusLocked(): boolean {
+    return this.keyboardNav.isFocusLocked();
+  }
+
+  // AI Tabs
   aiTabs = [
     { id: 'gemini', name: 'Gemini', icon: 'ti-database' },
     { id: 'claude', name: 'Claude', icon: 'ti-sparkles' },
@@ -34,41 +46,34 @@ export class AiGuidelinesComponent implements OnInit {
   ];
 
   currentCategory: string = 'gemini';
-  activeTabIndex: number = 0;
-  currentZone: 'TABS' | 'ITEMS' | 'DETAIL' = 'TABS';
-  highlightedIndex: number = 0;
   lessons: any[] = [];
   currentLesson: any = null;
-  private wasFocusLocked = false;
 
   get currentAiTab() {
     return this.aiTabs.find(t => t.id === this.currentCategory) ?? this.aiTabs[0];
   }
 
-  get isFocusLocked(): boolean {
-    return this.keyboardNavigation.isFocusLocked();
+  ngOnChanges(changes: SimpleChanges): void {
+    // Reactive to signal changes
   }
 
   ngOnInit() {
-    // Liên tục lắng nghe sự thay đổi của URL
     this.route.paramMap.subscribe(params => {
       const cat = params.get('category') || 'gemini';
       const no = params.get('lessonNo');
 
+      // Chỉ reset highlightedIndex khi chuyển category
+      if (this.currentCategory !== cat) {
+        this.highlightedIndex = 0;
+      }
       this.currentCategory = cat;
-      this.syncActiveTabIndex();
 
-      // API 1: Lấy danh sách bài của con AI đó
       this.http.get<any[]>(`http://localhost:8080/api/ai-guidelines/${cat}`)
         .subscribe({
-          next: (res) => {
-            this.lessons = res;
-            this.highlightedIndex = 0;
-          },
+          next: (res) => this.lessons = res,
           error: (err) => console.error('Lỗi tải danh sách bài:', err)
         });
 
-      // API 2: Nếu URL có số bài (ví dụ: /1) thì lấy chi tiết bài viết
       if (no) {
         this.http.get(`http://localhost:8080/api/ai-guidelines/${cat}/${no}`)
           .subscribe({
@@ -79,185 +84,185 @@ export class AiGuidelinesComponent implements OnInit {
             }
           });
       } else {
-        this.currentLesson = null; // Trở về màn hình chờ nếu chưa chọn bài cụ thể
+        this.currentLesson = null;
       }
     });
+
+    this.resetKeyboardReady();
+  }
+
+  private resetKeyboardReady(): void {
+    this.isKeyboardReady = false;
+    setTimeout(() => {
+      this.isKeyboardReady = true;
+      this.currentZone = 'ZONE_FILTERS';
+      this.highlightedIndex = 0;
+    }, 100);
   }
 
   changeCategory(catId: string) {
+    this.currentCategory = catId;
     this.router.navigate(['/ai-guidelines', catId]);
+    this.highlightedIndex = 0;
   }
 
   selectLesson(lessonId: string) {
     const no = lessonId.split('-')[1];
     this.router.navigate(['/ai-guidelines', this.currentCategory, no]);
+    // Sync highlightedIndex với lesson đang chọn
+    const idx = this.lessons.findIndex(l => l.id === lessonId);
+    if (idx !== -1) {
+      this.highlightedIndex = idx;
+    }
   }
 
-  private syncActiveTabIndex(): void {
-    const index = this.aiTabs.findIndex(tab => tab.id === this.currentCategory);
-    this.activeTabIndex = index >= 0 ? index : 0;
+  private scrollActiveLessonIntoView(): void {
+    setTimeout(() => {
+      const activeElement = document.querySelector('.ai-lesson-item__btn.is-keyboard-highlighted');
+      if (activeElement) {
+        activeElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }, 10);
   }
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (!this.isFocusLocked) {
-      this.wasFocusLocked = false;
-      return;
-    }
-
-    // Ignore the same Enter keystroke that just activated lock mode from Sidebar.
-    if (!this.wasFocusLocked) {
-      this.wasFocusLocked = true;
-      if (event.key.toLowerCase() === 'enter') {
-        event.preventDefault();
-        this.currentZone = 'TABS';
-        return;
-      }
-    }
+    if (!this.isKeyboardReady || !this.isFocusLocked) return;
 
     const key = event.key.toLowerCase();
-    const isAiGuidelinesZone = this.keyboardNavigation.focusedSidebarModule() === 'ai-guidelines';
-    if (!isAiGuidelinesZone) {
-      return;
-    }
 
+    // GLOBAL: ESC - Exit keyboard mode
     if (key === 'escape') {
       event.preventDefault();
-      if (this.currentZone === 'DETAIL') {
-        this.currentZone = 'ITEMS';
-        this.scrollHighlightedItemIntoView();
-        return;
-      }
-      this.currentZone = 'TABS';
-      this.keyboardNavigation.setFocusLocked(false);
+      event.stopPropagation();
+      (document.activeElement as HTMLElement)?.blur();
       return;
     }
 
-    if (this.currentZone === 'TABS') {
-      if (key === 'd' || key === 'arrowright') {
-        event.preventDefault();
-        this.moveTabFocus(1);
-        return;
-      }
-
+    // ZONE_FILTERS: AI Tabs
+    if (this.currentZone === 'ZONE_FILTERS') {
+      // A / ←: Move left to previous AI tab
       if (key === 'a' || key === 'arrowleft') {
         event.preventDefault();
-        this.moveTabFocus(-1);
+        event.stopPropagation();
+        const currentIdx = this.aiTabs.findIndex(t => t.id === this.currentCategory);
+        if (currentIdx > 0) {
+          this.changeCategory(this.aiTabs[currentIdx - 1].id);
+        }
         return;
       }
 
-      if (key === 's' || key === 'arrowdown' || key === 'enter') {
+      // D / →: Move right to next AI tab
+      if (key === 'd' || key === 'arrowright') {
         event.preventDefault();
-        this.currentZone = 'ITEMS';
-        this.highlightedIndex = 0;
-        this.scrollHighlightedItemIntoView();
-        return;
-      }
-      return;
-    }
-
-    if (this.currentZone === 'DETAIL') {
-      if (key === 'backspace') {
-        event.preventDefault();
-        this.currentZone = 'ITEMS';
-        this.scrollHighlightedItemIntoView();
+        event.stopPropagation();
+        const currentIdx = this.aiTabs.findIndex(t => t.id === this.currentCategory);
+        if (currentIdx < this.aiTabs.length - 1) {
+          this.changeCategory(this.aiTabs[currentIdx + 1].id);
+        }
         return;
       }
 
-      const detailContainer = this.getDetailContainer();
-      if (!detailContainer) {
-        return;
-      }
-
+      // S / ↓: Drop to ZONE_MAIN (first lesson)
       if (key === 's' || key === 'arrowdown') {
         event.preventDefault();
-        this.scrollDetailContent(50, detailContainer);
+        event.stopPropagation();
+        if (this.lessons.length > 0) {
+          this.highlightedIndex = 0;
+          this.selectLesson(this.lessons[0].id);
+          this.currentZone = 'ZONE_MAIN';
+          setTimeout(() => this.scrollActiveLessonIntoView(), 50);
+        }
         return;
       }
+      return;
+    }
 
+    // ZONE_MAIN: Lesson List
+    if (this.currentZone === 'ZONE_MAIN') {
+      // W / ↑: Move up
       if (key === 'w' || key === 'arrowup') {
         event.preventDefault();
-        this.scrollDetailContent(-50, detailContainer);
+        event.stopPropagation();
+        if (this.highlightedIndex === 0) {
+          this.currentZone = 'ZONE_FILTERS';
+        } else {
+          this.highlightedIndex--;
+          if (this.lessons[this.highlightedIndex]) {
+            this.selectLesson(this.lessons[this.highlightedIndex].id);
+            this.scrollActiveLessonIntoView();
+          }
+        }
         return;
       }
 
-      return;
-    }
-
-    if (this.lessons.length === 0) {
-      return;
-    }
-
-    if (key === 'w' || key === 'arrowup') {
-      event.preventDefault();
-      if (this.highlightedIndex === 0) {
-        this.currentZone = 'TABS';
+      // S / ↓: Move down
+      if (key === 's' || key === 'arrowdown') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex < this.lessons.length - 1) {
+          this.highlightedIndex++;
+          if (this.lessons[this.highlightedIndex]) {
+            this.selectLesson(this.lessons[this.highlightedIndex].id);
+            this.scrollActiveLessonIntoView();
+          }
+        }
         return;
       }
-      this.highlightedIndex = Math.max(this.highlightedIndex - 1, 0);
-      this.scrollHighlightedItemIntoView();
-      return;
-    }
 
-    if (key === 's' || key === 'arrowdown') {
-      event.preventDefault();
-      this.highlightedIndex = Math.min(this.highlightedIndex + 1, this.lessons.length - 1);
-      this.scrollHighlightedItemIntoView();
-      return;
-    }
-
-    if (key === 'backspace') {
-      event.preventDefault();
-      this.currentZone = 'TABS';
-      return;
-    }
-
-    if (key === 'enter') {
-      event.preventDefault();
-      const targetedLesson = this.lessons[this.highlightedIndex];
-      if (targetedLesson) {
-        this.selectLesson(targetedLesson.id);
-        this.currentZone = 'DETAIL';
-        this.focusDetailPanel();
+      // D / →: Go to ZONE_DETAIL
+      if (key === 'd' || key === 'arrowright') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.currentLesson) {
+          this.currentZone = 'ZONE_DETAIL';
+          const detailPane = document.querySelector('.ai-detail');
+          if (detailPane instanceof HTMLElement) {
+            detailPane.focus();
+          }
+        }
+        return;
       }
-    }
-  }
 
-  private moveTabFocus(delta: number): void {
-    const nextIndex = Math.max(0, Math.min(this.activeTabIndex + delta, this.aiTabs.length - 1));
-    if (nextIndex === this.activeTabIndex) {
+      // A / ←: Back to ZONE_FILTERS
+      if (key === 'a' || key === 'arrowleft') {
+        event.preventDefault();
+        event.stopPropagation();
+        this.currentZone = 'ZONE_FILTERS';
+        return;
+      }
       return;
     }
 
-    this.activeTabIndex = nextIndex;
-    const nextTab = this.aiTabs[this.activeTabIndex];
-    if (nextTab && nextTab.id !== this.currentCategory) {
-      this.changeCategory(nextTab.id);
-    }
-  }
+    // ZONE_DETAIL: Lesson Detail (scroll content)
+    if (this.currentZone === 'ZONE_DETAIL') {
+      // W / ↑: Scroll up
+      if (key === 'w' || key === 'arrowup') {
+        event.preventDefault();
+        event.stopPropagation();
+        const detailPane = document.querySelector('.ai-detail');
+        if (detailPane) detailPane.scrollTop -= 60;
+        return;
+      }
 
-  private focusDetailPanel(): void {
-    const detailContainer = this.getDetailContainer();
-    if (!detailContainer) {
+      // S / ↓: Scroll down
+      if (key === 's' || key === 'arrowdown') {
+        event.preventDefault();
+        event.stopPropagation();
+        const detailPane = document.querySelector('.ai-detail');
+        if (detailPane) detailPane.scrollTop += 60;
+        return;
+      }
+
+      // A / ← or Backspace: Back to ZONE_MAIN
+      if (key === 'a' || key === 'arrowleft' || key === 'backspace') {
+        event.preventDefault();
+        event.stopPropagation();
+        this.currentZone = 'ZONE_MAIN';
+        this.scrollActiveLessonIntoView();
+        return;
+      }
       return;
     }
-
-    // Wait for next frame so route/content updates settle before moving focus.
-    requestAnimationFrame(() => detailContainer.focus());
-  }
-
-  private getDetailContainer(): HTMLElement | null {
-    return this.detailPanelRef?.nativeElement ?? document.querySelector('.ai-detail');
-  }
-
-  private scrollHighlightedItemIntoView(): void {
-    const listItems = document.querySelectorAll('.ai-lesson-item');
-    const item = listItems[this.highlightedIndex] as HTMLElement | undefined;
-    item?.scrollIntoView({ block: 'nearest' });
-  }
-
-  private scrollDetailContent(delta: number, detailContainer: HTMLElement): void {
-    detailContainer.scrollBy({ top: delta, behavior: 'smooth' });
-    detailContainer.scrollTop += delta;
   }
 }

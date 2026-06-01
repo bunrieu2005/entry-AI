@@ -8,11 +8,28 @@
     aria-live="polite"
     aria-atomic="true">
     <i class="ti ti-device-gamepad" aria-hidden="true"></i>
-    Chế độ duyệt đang bật. Dùng
-    <span class="keycap">W</span> / <span class="keycap">S</span> hoặc
-    <span class="keycap">↑</span> / <span class="keycap">↓</span> để di chuyển &bull;
-    <span class="keycap">Enter</span> để chọn &bull;
-    <span class="keycap">ESC</span> để thoát
+    <span *ngIf="currentZone === 'ZONE_FILTERS'">
+      <span class="filter-mode-badge">Lọc</span>
+      <span class="keycap">←</span> <span class="keycap">→</span> chuyển &bull;
+      <span class="keycap">↑</span> tìm kiếm &bull;
+      <span class="keycap">↓</span> danh sách &bull;
+      <span class="keycap">ESC</span> thoát
+    </span>
+    <span *ngIf="currentZone === 'ZONE_INPUT'">
+      <span class="search-mode-badge">Tìm</span> gõ từ khóa &bull;
+      <span class="keycap">↓</span> quay lại bộ lọc &bull;
+      <span class="keycap">ESC</span> thoát
+    </span>
+    <span *ngIf="currentZone === 'ZONE_MAIN'">
+      <span class="keycap">↑</span> <span class="keycap">↓</span> chọn thuật ngữ &bull;
+      <span class="keycap">→</span> xem chi tiết &bull;
+      <span class="keycap">ESC</span> thoát
+    </span>
+    <span *ngIf="currentZone === 'ZONE_DETAIL'">
+      <span class="keycap">↑</span> <span class="keycap">↓</span> cuộn &bull;
+      <span class="keycap">←</span> quay lại &bull;
+      <span class="keycap">ESC</span> thoát
+    </span>
   </div>
 
   <!-- ── TWO-COLUMN LAYOUT ── -->
@@ -23,8 +40,8 @@
          ═══════════════════════════════════════ -->
     <aside class="glossary__sidebar" aria-label="Danh sách thuật ngữ">
 
-      <!-- Search Box -->
-      <div class="sidebar__search">
+      <!-- ZONE_INPUT: Search Box -->
+      <div class="sidebar__search" [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_INPUT'">
         <label for="glossary-search" class="visually-hidden">Tìm thuật ngữ</label>
         <div class="search-box">
           <span class="search-box__icon" aria-hidden="true">
@@ -39,7 +56,6 @@
             (ngModelChange)="filterTerms()"
             autocomplete="off"
             aria-label="Tìm thuật ngữ AI"
-            [attr.aria-disabled]="isFocusLocked"
           />
           <button
             *ngIf="searchQuery"
@@ -52,14 +68,14 @@
         </div>
       </div>
 
-      <!-- Group Filter Pills -->
+      <!-- ZONE_FILTERS: Group Filter Pills -->
       <div class="sidebar__filters" role="group" aria-label="Lọc nhóm thuật ngữ">
         <button
-          *ngFor="let g of filterGroups"
+          *ngFor="let g of filterGroups; let i = index"
           type="button"
           class="filter-pill"
           [class.filter-pill--active]="activeGroup === g.key"
-          (click)="setGroup(g.key)"
+          (click)="setGroup(g.key); highlightedIndex = i"
           [attr.aria-pressed]="activeGroup === g.key">
           {{ g.label }}
         </button>
@@ -79,7 +95,7 @@
         </button>
       </div>
 
-      <!-- Term List -->
+      <!-- ZONE_MAIN: Term List -->
       <nav
         *ngIf="!isLoading && !errorMessage"
         class="sidebar__list"
@@ -91,13 +107,13 @@
             <div class="term-group__label" aria-hidden="true">{{ group.label }}</div>
             <ul class="term-group__items" role="list">
               <li
-                *ngFor="let term of group.terms; trackBy: trackByTermId"
+                *ngFor="let term of group.terms; trackBy: trackByTermId; let i = index"
                 role="listitem">
                 <button
                   type="button"
                   class="term-row"
                   [class.term-row--active]="isActive(term)"
-                  [class.is-focused]="isFocusLocked && filteredTerms[activeItemIndex]?.id === term.id"
+                  [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && highlightedIndex === i"
                   (click)="selectTerm(term)"
                   [attr.aria-current]="isActive(term) ? 'page' : null">
                   <span class="term-row__name">{{ term.term }}</span>
@@ -116,13 +132,13 @@
         <ng-container *ngIf="activeGroup !== 'all' || groupedTerms.length === 0">
           <ul class="term-list-flat" role="list">
             <li
-              *ngFor="let term of filteredTerms; trackBy: trackByTermId"
+              *ngFor="let term of filteredTerms; trackBy: trackByTermId; let i = index"
               role="listitem">
               <button
                 type="button"
                 class="term-row"
                 [class.term-row--active]="isActive(term)"
-                [class.is-focused]="isFocusLocked && filteredTerms[activeItemIndex]?.id === term.id"
+                [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && highlightedIndex === i"
                 (click)="selectTerm(term)"
                 [attr.aria-current]="isActive(term) ? 'page' : null">
                 <span class="term-row__name">{{ term.term }}</span>
@@ -148,9 +164,14 @@
     </aside>
 
     <!-- ═══════════════════════════════════════
-         COLUMN RIGHT — Term Detail
+         COLUMN RIGHT — Term Detail (ZONE_DETAIL)
          ═══════════════════════════════════════ -->
-    <main class="glossary__detail" aria-label="Chi tiết thuật ngữ" tabindex="-1">
+    <main
+      class="glossary__detail"
+      id="glossary-detail-pane"
+      [class.is-zone-focused]="isFocusLocked && currentZone === 'ZONE_DETAIL'"
+      aria-label="Chi tiết thuật ngữ"
+      tabindex="-1">
 
       <!-- Empty State: no term selected -->
       <div *ngIf="!isLoading && !errorMessage && activeTermId === null" class="detail__empty">

@@ -1,87 +1,73 @@
-<article class="ai-tools" aria-labelledby="ai-tools-title">
-  <!-- Navigation Status Banner -->
-  <div
-    *ngIf="isFocusLocked"
-    class="navigation-status-banner"
-    role="status"
-    aria-live="polite"
-    aria-atomic="true">
-    <i class="ti ti-device-gamepad" aria-hidden="true"></i>
-    Chế độ WASD đang bật. Dùng <span class="keycap">A</span> / <span class="keycap">D</span> hoặc <span class="keycap">←</span> / <span class="keycap">→</span> để di chuyển &bull; <span class="keycap">Enter</span> để truy cập &bull; <span class="keycap">ESC</span> để thoát
+<article class="ai-tools">
+
+  <div *ngIf="isFocusLocked" class="nav-banner">
+    <i class="ti ti-device-gamepad"></i>
+    <span *ngIf="currentZone === 'ZONE_FILTERS'">
+      Dùng <kbd>A</kbd><kbd>D</kbd> lướt thẻ &bull; <kbd>S</kbd> xuống Grid &bull; <kbd>ESC</kbd> thoát
+    </span>
+    <span *ngIf="currentZone === 'ZONE_MAIN'">
+      Dùng <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> lướt &bull; <kbd>W</kbd> ở đầu để lên thẻ &bull; <kbd>Enter</kbd> truy cập
+    </span>
   </div>
 
-  <header class="ai-tools__header">
-    <h1 id="ai-tools-title" class="ai-tools__title">Khám Phá AI Tools</h1>
-    <p class="ai-tools__subtitle">Danh sách các công cụ AI hàng đầu được tuyển chọn</p>
+  <header>
+    <h1 class="ai-tools__title">Khám Phá AI</h1>
+    <p class="ai-tools__subtitle">Kho công cụ AI tốt nhất được tuyển chọn cẩn thận.</p>
   </header>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="ai-tools__loading" role="status" aria-live="polite">
-    <div class="loading-spinner"></div>
-    <span class="loading-text">Đang tải danh sách công cụ AI...</span>
+  <div *ngIf="isLoading" class="state-box">
+    <div class="spinner"></div>
+    <span>Đang tải kho chứa...</span>
   </div>
 
-  <!-- Error State -->
-  <div *ngIf="errorMessage && !isLoading" class="ai-tools__error" role="alert">
-    <div class="error-icon">
-      <i class="ti ti-alert-circle"></i>
-    </div>
-    <p class="error-message">{{ errorMessage }}</p>
-    <button type="button" class="retry-btn" (pointerup)="loadTools()">
-      <i class="ti ti-refresh" aria-hidden="true"></i>
-      <span>Thử lại</span>
+  <div class="tabs" *ngIf="!isLoading && groupedTools.length > 0">
+    <button 
+      class="tab"
+      *ngFor="let group of groupedTools; let i = index; trackBy: trackByCategoryId"
+      [class.active]="i === activeCategoryIndex"
+      [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_FILTERS' && i === highlightedIndex"
+      (click)="selectCategory(i)"
+      tabindex="-1"> 
+      <span>{{ group.category.name }}</span>
+      <span class="tab-badge">{{ group.tools.length }}</span>
     </button>
   </div>
 
-  <!-- Tools Grid -->
-  <div *ngIf="!isLoading && !errorMessage" class="ai-tools__grid">
-    <article
-      *ngFor="let tool of tools; let i = index; trackBy: trackByToolId"
-      class="tool-card"
-      [class.is-targeted]="isFocusLocked && i === activeCardIndex"
-      [attr.aria-label]="'Công cụ ' + tool.name"
-      [attr.aria-current]="isFocusLocked && i === activeCardIndex ? 'true' : null">
-      <!-- Logo Placeholder -->
-      <div class="tool-card__logo-wrapper">
-        <div *ngIf="!tool.logoUrl" class="tool-logo-placeholder">
-          <span class="tool-logo-placeholder__text">{{ tool.name.charAt(0).toUpperCase() }}</span>
+  <div class="grid" *ngIf="!isLoading && currentTools.length > 0">
+    
+    <div 
+      class="card-wrap"
+      *ngFor="let tool of currentTools; let i = index; trackBy: trackByToolId"
+      [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex">
+      
+      <article class="card">
+        
+        <div class="card-head">
+          <div class="card-logo" *ngIf="tool.logoUrl; else noLogo">
+            <img [src]="tool.logoUrl" [alt]="tool.name" onerror="this.src='/assets/logos/default.png'">
+          </div>
+          <ng-template #noLogo>
+            <div class="logo-text">{{ tool.name.charAt(0).toUpperCase() }}</div>
+          </ng-template>
+
+          <div class="card-info">
+            <h3 class="card-title">{{ tool.name }}</h3>
+            <span class="card-tag">{{ tool.useCaseTag }}</span>
+          </div>
         </div>
-        <img
-          *ngIf="tool.logoUrl"
-          [src]="tool.logoUrl"
-          [alt]="tool.name + ' logo'"
-          class="tool-card__logo"
-          loading="lazy"
-        />
-      </div>
 
-      <!-- Tool Name -->
-      <h2 class="tool-card__name">{{ tool.name }}</h2>
+        <p class="card-desc-short">{{ tool.taglineVi }}</p>
 
-      <!-- Tagline -->
-      <p class="tool-card__tagline">{{ tool.taglineVi }}</p>
+        <div class="card-body">
+          <div class="card-desc-full" [innerHTML]="tool.descriptionVi"></div>
+          <button class="btn" (click)="openToolWebsite(tool.websiteUrl)" tabindex="-1">
+            <i class="ti ti-external-link"></i> Truy cập công cụ
+          </button>
+        </div>
 
-      <!-- Description with HTML support -->
-      <div class="tool-card__description" [innerHTML]="tool.descriptionVi"></div>
-
-      <!-- Access Button -->
-      <button
-        type="button"
-        class="tool-card__btn"
-        (pointerup)="openToolWebsite(tool.websiteUrl)"
-        [attr.aria-label]="'Truy cập ' + tool.name"
-        [disabled]="!tool.websiteUrl">
-        <i class="ti ti-external-link" aria-hidden="true"></i>
-        <span>Truy cập</span>
-      </button>
-    </article>
-  </div>
-
-  <!-- Empty State -->
-  <div *ngIf="!isLoading && !errorMessage && tools.length === 0" class="ai-tools__empty" role="status">
-    <div class="empty-icon">
-      <i class="ti ti-search"></i>
+      </article>
     </div>
-    <p class="empty-text">Chưa có công cụ AI nào được thêm vào.</p>
+
   </div>
+
 </article>

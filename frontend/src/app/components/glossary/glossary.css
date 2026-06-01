@@ -54,6 +54,28 @@
   line-height: 1;
 }
 
+.nav-status-banner .search-mode-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background-color: #d4a853;
+  color: #ffffff;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.nav-status-banner .filter-mode-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
 /* ── TWO-COLUMN LAYOUT ── */
 .glossary__layout {
   display: grid;
@@ -182,6 +204,21 @@
 .filter-pill--active:hover {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
+}
+
+/* Keyboard highlight for term rows in ZONE_MAIN */
+.term-row.is-keyboard-highlighted {
+  outline: 3px solid #dc3545;
+  outline-offset: -1px;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.3);
+  border-color: #dc3545 !important;
+  background-color: rgba(220, 53, 69, 0.08);
+}
+
+/* Search box keyboard highlight in ZONE_INPUT */
+.sidebar__search.is-keyboard-highlighted .search-box {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
 }
 
 /* ── Term List (scrollable) ── */
@@ -368,6 +405,12 @@
   border: 1px solid rgba(139, 110, 82, 0.3);
   border-radius: var(--radius-lg);
   padding: var(--spacing-xl);
+  outline: none;
+}
+
+.glossary__detail.is-zone-focused {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(139, 110, 82, 0.15);
 }
 
 /* Empty state */

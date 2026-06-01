@@ -17,6 +17,7 @@ export interface GlossaryTerm {
 }
 
 type FilterGroup = 'all' | 'basic' | 'hot';
+type Zone = 'ZONE_FILTERS' | 'ZONE_INPUT' | 'ZONE_MAIN' | 'ZONE_DETAIL';
 
 interface GroupedTerms {
   label: string;
@@ -36,11 +37,15 @@ export class GlossaryComponent implements OnInit, OnChanges {
 
   @Input() isFocusLocked: boolean = false;
 
+  // 4-Zone Spatial Navigation State
+  currentZone: Zone = 'ZONE_FILTERS';
+  highlightedIndex: number = 0;
+  private isKeyboardReady = false;
+
   terms: GlossaryTerm[] = [];
   filteredTerms: GlossaryTerm[] = [];
   searchQuery: string = '';
   activeTermId: number | null = null;
-  activeItemIndex: number = 0;
   isLoading: boolean = true;
   isGroupLoading: boolean = false;
   errorMessage: string | null = null;
@@ -55,13 +60,25 @@ export class GlossaryComponent implements OnInit, OnChanges {
   constructor(private readonly http: HttpClient) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['isFocusLocked'] && !changes['isFocusLocked'].previousValue && changes['isFocusLocked'].currentValue) {
-      this.activeItemIndex = 0;
+    if (changes['isFocusLocked']) {
+      if (changes['isFocusLocked'].currentValue && !changes['isFocusLocked'].previousValue) {
+        this.resetKeyboardReady();
+      } else if (!changes['isFocusLocked'].currentValue) {
+        this.isKeyboardReady = false;
+      }
     }
   }
 
   ngOnInit(): void {
     this.loadTerms();
+    this.resetKeyboardReady();
+  }
+
+  private resetKeyboardReady(): void {
+    this.isKeyboardReady = false;
+    setTimeout(() => {
+      this.isKeyboardReady = true;
+    }, 100);
   }
 
   loadTerms(): void {
@@ -76,7 +93,7 @@ export class GlossaryComponent implements OnInit, OnChanges {
         this.selectFirstIfNeeded();
       },
       error: (err: HttpErrorResponse): void => {
-        this.errorMessage = 'Không thể tải danh sách thuật ngữ. Vui lòng thử lại sau.';
+        this.errorMessage = 'Không thể tải danh sách thuật ngữ.';
         this.isLoading = false;
         console.error('Error loading glossary terms:', err);
       }
@@ -87,7 +104,6 @@ export class GlossaryComponent implements OnInit, OnChanges {
     if (this.activeGroup === group && !this.isGroupLoading) return;
     this.activeGroup = group;
     this.searchQuery = '';
-    this.activeItemIndex = 0;
 
     this.isGroupLoading = true;
     this.isLoading = true;
@@ -100,7 +116,7 @@ export class GlossaryComponent implements OnInit, OnChanges {
         this.selectFirstIfNeeded();
       },
       error: (err: HttpErrorResponse): void => {
-        this.errorMessage = 'Không thể lọc thuật ngữ. Vui lòng thử lại.';
+        this.errorMessage = 'Không thể lọc thuật ngữ.';
         this.isLoading = false;
         this.isGroupLoading = false;
         console.error('Error filtering glossary terms:', err);
@@ -112,19 +128,15 @@ export class GlossaryComponent implements OnInit, OnChanges {
     const query = this.searchQuery.trim().toLowerCase();
 
     if (!query) {
-      // Restore full group list
       this.setGroup(this.activeGroup);
       return;
     }
 
-    // Client-side search within already-loaded terms
     this.filteredTerms = this.terms.filter((term: GlossaryTerm): boolean => {
       const termMatch = term.term.toLowerCase().includes(query);
       const tagsMatch = term.tags ? term.tags.toLowerCase().includes(query) : false;
       return termMatch || tagsMatch;
     });
-
-    this.activeItemIndex = 0;
   }
 
   private selectFirstIfNeeded(): void {
@@ -135,8 +147,6 @@ export class GlossaryComponent implements OnInit, OnChanges {
 
   selectTerm(term: GlossaryTerm): void {
     this.activeTermId = term.id;
-    const idx = this.filteredTerms.findIndex(t => t.id === term.id);
-    if (idx !== -1) this.activeItemIndex = idx;
   }
 
   isActive(term: GlossaryTerm): boolean {
@@ -188,38 +198,180 @@ export class GlossaryComponent implements OnInit, OnChanges {
     return term.id;
   }
 
+  private scrollActiveItemIntoView(): void {
+    setTimeout(() => {
+      const activeElement = document.querySelector('.term-row.is-keyboard-highlighted');
+      if (activeElement) {
+        activeElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }, 10);
+  }
+
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (!this.isFocusLocked || this.isLoading || this.filteredTerms.length === 0) {
-      return;
-    }
+    if (!this.isKeyboardReady || !this.isFocusLocked || this.isLoading) return;
 
     const key = event.key.toLowerCase();
 
-    if (key === 's' || key === 'arrowdown') {
+    // ================================
+    // GLOBAL: ESC - Exit keyboard mode
+    // ================================
+    if (key === 'escape') {
       event.preventDefault();
-      if (this.activeItemIndex < this.filteredTerms.length - 1) {
-        this.activeItemIndex++;
-        this.selectTerm(this.filteredTerms[this.activeItemIndex]);
+      event.stopPropagation();
+      (document.activeElement as HTMLElement)?.blur();
+      return;
+    }
+
+    // ================================
+    // ZONE_FILTERS: Horizontal filter tabs
+    // ================================
+    if (this.currentZone === 'ZONE_FILTERS') {
+      // A / ←: Move left to previous filter (instant trigger)
+      if (key === 'a' || key === 'arrowleft') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex > 0) {
+          this.highlightedIndex--;
+          this.setGroup(this.filterGroups[this.highlightedIndex].key);
+        }
+        return;
+      }
+
+      // D / →: Move right to next filter (instant trigger)
+      if (key === 'd' || key === 'arrowright') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex < this.filterGroups.length - 1) {
+          this.highlightedIndex++;
+          this.setGroup(this.filterGroups[this.highlightedIndex].key);
+        }
+        return;
+      }
+
+      // W / ↑: Go to ZONE_INPUT (search)
+      if (key === 'w' || key === 'arrowup') {
+        event.preventDefault();
+        event.stopPropagation();
+        this.currentZone = 'ZONE_INPUT';
+        setTimeout(() => {
+          const searchInput = document.getElementById('glossary-search') as HTMLInputElement;
+          if (searchInput) searchInput.focus();
+        }, 0);
+        return;
+      }
+
+      // S / ↓: Drop to ZONE_MAIN (first item)
+      if (key === 's' || key === 'arrowdown') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.filteredTerms.length > 0) {
+          this.highlightedIndex = 0;
+          this.selectTerm(this.filteredTerms[0]);
+          this.currentZone = 'ZONE_MAIN';
+        }
+        return;
       }
       return;
     }
 
-    if (key === 'w' || key === 'arrowup') {
-      event.preventDefault();
-      if (this.activeItemIndex > 0) {
-        this.activeItemIndex--;
-        this.selectTerm(this.filteredTerms[this.activeItemIndex]);
+    // ================================
+    // ZONE_INPUT: Search input
+    // ================================
+    if (this.currentZone === 'ZONE_INPUT') {
+      // S / ↓: Go back to ZONE_FILTERS
+      if (key === 's' || key === 'arrowdown') {
+        event.preventDefault();
+        event.stopPropagation();
+        const searchInput = document.getElementById('glossary-search') as HTMLInputElement;
+        if (searchInput) searchInput.blur();
+        this.currentZone = 'ZONE_FILTERS';
+        return;
       }
       return;
     }
 
-    if (key === 'enter') {
-      event.preventDefault();
-      const term = this.filteredTerms[this.activeItemIndex];
-      if (term) {
-        this.selectTerm(term);
+    // ================================
+    // ZONE_MAIN: Main scrollable list
+    // ================================
+    if (this.currentZone === 'ZONE_MAIN') {
+      // W / ↑: Move up
+      if (key === 'w' || key === 'arrowup') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex === 0) {
+          this.currentZone = 'ZONE_FILTERS';
+        } else {
+          this.highlightedIndex--;
+          this.selectTerm(this.filteredTerms[this.highlightedIndex]);
+          this.scrollActiveItemIntoView();
+        }
+        return;
       }
+
+      // S / ↓: Move down
+      if (key === 's' || key === 'arrowdown') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex < this.filteredTerms.length - 1) {
+          this.highlightedIndex++;
+          this.selectTerm(this.filteredTerms[this.highlightedIndex]);
+          this.scrollActiveItemIntoView();
+        }
+        return;
+      }
+
+      // D / →: Activate ZONE_DETAIL
+      if (key === 'd' || key === 'arrowright') {
+        event.preventDefault();
+        event.stopPropagation();
+        this.currentZone = 'ZONE_DETAIL';
+        const pane = document.getElementById('glossary-detail-pane');
+        if (pane) pane.focus();
+        return;
+      }
+
+      // A / ←: Jump back to ZONE_FILTERS
+      if (key === 'a' || key === 'arrowleft') {
+        event.preventDefault();
+        event.stopPropagation();
+        this.currentZone = 'ZONE_FILTERS';
+        return;
+      }
+      return;
+    }
+
+    // ================================
+    // ZONE_DETAIL: Detail panel (scroll content)
+    // ================================
+    if (this.currentZone === 'ZONE_DETAIL') {
+      const pane = document.getElementById('glossary-detail-pane');
+
+      // W / ↑: Scroll up
+      if (key === 'w' || key === 'arrowup') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (pane) pane.scrollTop -= 60;
+        return;
+      }
+
+      // S / ↓: Scroll down
+      if (key === 's' || key === 'arrowdown') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (pane) pane.scrollTop += 60;
+        return;
+      }
+
+      // A / ← or Backspace: Back to ZONE_MAIN
+      if (key === 'a' || key === 'arrowleft' || key === 'backspace') {
+        event.preventDefault();
+        event.stopPropagation();
+        this.currentZone = 'ZONE_MAIN';
+        this.scrollActiveItemIntoView();
+        return;
+      }
+      return;
     }
   }
 }

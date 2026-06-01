@@ -3,6 +3,23 @@
    Kraft Paper Design System Compliance
    ============================================ */
 
+/* Keyboard Navigation Highlight */
+.is-keyboard-highlighted {
+  outline: 3px solid #dc3545;
+  outline-offset: 2px;
+}
+
+.prompts__tab.is-keyboard-highlighted {
+  background-color: rgba(220, 53, 69, 0.15);
+  border-color: #dc3545 !important;
+  color: #dc3545;
+}
+
+.prompt-card.is-keyboard-highlighted {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.3), 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
 .prompts {
   padding: var(--spacing-xl);
   max-width: 1400px;
@@ -261,6 +278,12 @@
 /* ============================================
    Prompt Grid
    ============================================ */
+
+.prompts__grid-container {
+  max-height: calc(100vh - 320px);
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
 
 .prompts__grid {
   display: grid;
