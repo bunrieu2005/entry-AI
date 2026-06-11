@@ -1,132 +1,175 @@
 <section class="prompts" aria-labelledby="prompts-heading">
 
-  <!-- Navigation Status Banner -->
+  <!-- Keyboard Navigation Banner -->
   <div
     *ngIf="isFocusLocked"
-    class="navigation-status-banner"
+    class="nav-banner"
     role="status"
     aria-live="polite"
     aria-atomic="true">
     <i class="ti ti-device-gamepad" aria-hidden="true"></i>
     <span *ngIf="currentZone === 'ZONE_FILTERS'">
-      <span class="keycap">←</span> <span class="keycap">→</span> chuyển danh mục &bull;
-      <span class="keycap">↓</span> xuống prompts &bull;
-      <span class="keycap">ESC</span> thoát
+      <kbd class="keycap">←</kbd><kbd class="keycap">→</kbd> chuyển danh mục &bull;
+      <kbd class="keycap">↓</kbd> xuống prompts &bull;
+      <kbd class="keycap">ESC</kbd> thoát
     </span>
     <span *ngIf="currentZone === 'ZONE_MAIN'">
-      <span class="keycap">↑</span> <span class="keycap">↓</span> <span class="keycap">←</span> <span class="keycap">→</span> di chuyển &bull;
-      <span class="keycap">Enter</span> sao chép &bull;
-      <span class="keycap">ESC</span> thoát
+      <kbd class="keycap">↑↓←→</kbd> di chuyển &bull;
+      <kbd class="keycap">Enter</kbd> sao chép &bull;
+      <kbd class="keycap">ESC</kbd> thoát
     </span>
   </div>
 
-  <!-- Category Tabs (ZONE_FILTERS) -->
-  <nav class="prompts__tabs" aria-label="Lĩnh vực prompt" role="tablist">
-    <button
-      *ngFor="let cat of categories; let i = index"
-      role="tab"
-      type="button"
-      class="prompts__tab"
-      [class.active]="cat.id === activeCategoryId"
-      [attr.aria-selected]="cat.id === activeCategoryId"
-      (click)="loadPromptsByCategory(cat.id)"
-    >
-      <i class="{{ cat.icon }}" aria-hidden="true"></i>
-      <span>{{ cat.name }}</span>
-    </button>
-  </nav>
-
-  <!-- Section Header -->
-  <header class="prompts__header">
-    <h1 id="prompts-heading" class="prompts__title">
-      Thư viện Prompt
-    </h1>
-    <p class="prompts__subtitle">
-      Khám phá các câu lệnh AI được tuyển chọn cho lĩnh vực
-      <strong>{{ getCategoryName(activeCategoryId) }}</strong>.
-    </p>
-  </header>
-
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="prompts__state prompts__loading" role="status" aria-live="polite">
-    <div class="loading-spinner" aria-hidden="true"></div>
-    <span class="loading-text">Đang tải câu lệnh...</span>
+  <!-- Loading hierarchy -->
+  <div *ngIf="isLoadingHierarchy" class="state-block" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <span>Đang tải danh mục...</span>
   </div>
 
-  <!-- Error State -->
-  <div *ngIf="!isLoading && errorMessage" class="prompts__state prompts__error" role="alert">
-    <div class="error-icon" aria-hidden="true">
-      <i class="ti ti-alert-circle"></i>
-    </div>
-    <p class="error-message">{{ errorMessage }}</p>
-    <button
-      type="button"
-      class="retry-btn"
-      (click)="loadPromptsByCategory(activeCategoryId)"
-    >
-      <i class="ti ti-refresh" aria-hidden="true"></i>
-      Thử lại
-    </button>
-  </div>
+  <ng-container *ngIf="!isLoadingHierarchy">
 
-  <!-- Empty State -->
-  <div *ngIf="!isLoading && !errorMessage && promptsList.length === 0" class="prompts__state prompts__empty" role="status">
-    <div class="empty-icon" aria-hidden="true">
-      <i class="ti ti-inbox"></i>
-    </div>
-    <p class="empty-text">Chưa có prompt nào trong lĩnh vực này.</p>
-  </div>
-
-  <!-- Prompt Grid (ZONE_MAIN) -->
-  <div *ngIf="!isLoading && !errorMessage && promptsList.length > 0" class="prompts__grid-container">
-
-    <div class="prompts__grid" role="tabpanel">
-
-    <article
-      *ngFor="let prompt of promptsList; let i = index; trackBy: trackByPromptId"
-      class="prompt-card"
-      [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex"
-      [attr.aria-label]="'Prompt: ' + prompt.titleVi"
-      [attr.aria-current]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex ? 'true' : null"
-    >
-      <!-- Card Header -->
-      <div class="prompt-card__header">
-        <h2 class="prompt-card__title">{{ prompt.titleVi }}</h2>
-        <span class="prompt-card__copy-count" aria-label="Số lần sao chép">
-          <i class="ti ti-copy" aria-hidden="true"></i>
-          {{ prompt.copyCount }} lần
-        </span>
-      </div>
-
-      <!-- Prompt Content Box -->
-      <div class="prompt-card__content" role="region" aria-label="Nội dung prompt">
-        <pre class="prompt-card__text">{{ prompt.content }}</pre>
-      </div>
-
-      <!-- Compatible Tools Badges -->
-      <div class="prompt-card__tools" aria-label="Công cụ tương thích" *ngIf="prompt.compatibleTools && prompt.compatibleTools.length > 0">
-        <span
-          *ngFor="let tool of prompt.compatibleTools"
-          class="tool-badge"
-        >{{ tool }}</span>
-      </div>
-
-      <!-- Copy Button -->
+    <!-- Category Tabs -->
+    <nav class="prompts__tabs" aria-label="Lĩnh vực prompt" role="tablist">
       <button
+        *ngFor="let cat of categories"
+        role="tab"
         type="button"
-        class="prompt-card__copy-btn"
-        [class.copied]="copiedPromptId === prompt.id"
-        [attr.aria-label]="copiedPromptId === prompt.id ? 'Đã sao chép câu lệnh' : 'Sao chép câu lệnh: ' + prompt.titleVi"
-        [attr.aria-pressed]="copiedPromptId === prompt.id"
-        (click)="copyPromptContent(prompt.content, prompt.id)"
-      >
-        <i [class]="copiedPromptId === prompt.id ? 'ti ti-check' : 'ti ti-clipboard'" aria-hidden="true"></i>
-        <span>{{ copiedPromptId === prompt.id ? 'Đã sao chép!' : 'Sao chép câu lệnh' }}</span>
+        class="prompts__tab"
+        [class.active]="cat.id === activeCategoryId"
+        [attr.aria-selected]="cat.id === activeCategoryId"
+        (click)="selectCategory(cat)">
+        <i class="ti {{ cat.icon }}" aria-hidden="true"></i>
+        <span>{{ cat.name }}</span>
       </button>
+    </nav>
 
-    </article>
+    <!-- Page Header -->
+    <header class="prompts__header">
+      <h1 id="prompts-heading" class="prompts__title">Thư viện Prompt</h1>
+      <p class="prompts__subtitle">
+        Khám phá các câu lệnh AI được tuyển chọn cho lĩnh vực
+        <strong>{{ activeCategoryName }}</strong>.
+      </p>
+    </header>
 
-    </div>
-  </div>
+    <!-- Body: Sidebar + Grid -->
+    <div class="prompts__body">
+
+      <!-- Sub-category Sidebar -->
+      <aside class="prompts__sidebar" aria-label="Danh mục con">
+        <button
+          *ngFor="let sub of activeSubs"
+          type="button"
+          class="sub-btn"
+          [class.active]="sub.id === activeSubId"
+          (click)="loadPromptsBySubcategory(sub.id)">
+          {{ sub.name }}
+        </button>
+      </aside>
+
+      <!-- Divider -->
+      <div class="prompts__divider" aria-hidden="true"></div>
+
+      <!-- Prompt Content Area -->
+      <div class="prompts__content">
+
+        <!-- Loading prompts -->
+        <div *ngIf="isLoadingPrompts" class="state-block" role="status" aria-live="polite">
+          <div class="spinner" aria-hidden="true"></div>
+          <span>Đang tải câu lệnh...</span>
+        </div>
+
+        <!-- Error -->
+        <div *ngIf="!isLoadingPrompts && errorMessage" class="state-block state-block--error" role="alert">
+          <div class="state-icon"><i class="ti ti-alert-circle"></i></div>
+          <p>{{ errorMessage }}</p>
+          <button type="button" class="retry-btn" (click)="loadPromptsBySubcategory(activeSubId)">
+            <i class="ti ti-refresh" aria-hidden="true"></i> Thử lại
+          </button>
+        </div>
+
+        <!-- Empty -->
+        <div *ngIf="!isLoadingPrompts && !errorMessage && promptsList.length === 0" class="state-block" role="status">
+          <div class="state-icon"><i class="ti ti-inbox"></i></div>
+          <p>Chưa có prompt nào trong danh mục này.</p>
+        </div>
+
+        <!-- Prompt Grid -->
+        <div
+          *ngIf="!isLoadingPrompts && !errorMessage && promptsList.length > 0"
+          class="prompts__grid-container"
+          role="tabpanel"
+          [attr.aria-label]="activeSubName">
+
+          <div class="prompts__grid">
+            <article
+              *ngFor="let prompt of promptsList; let i = index; trackBy: trackByPromptId"
+              class="prompt-card"
+              [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex"
+              [attr.aria-label]="'Prompt: ' + prompt.titleVi"
+              [attr.aria-current]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex ? 'true' : null">
+
+              <!-- Accent stripe theo tool đầu tiên -->
+              <span
+                class="card-stripe"
+                [class.stripe--claude]="prompt.compatibleTools[0] === 'Claude'"
+                [class.stripe--chatgpt]="prompt.compatibleTools[0] === 'ChatGPT'"
+                [class.stripe--gemini]="prompt.compatibleTools[0] === 'Gemini'"
+                aria-hidden="true"></span>
+
+              <div class="card-inner">
+
+                <!-- Header -->
+                <div class="card-header">
+                  <span class="card-index" aria-hidden="true">#{{ (i + 1).toString().padStart(2, '0') }}</span>
+                  <div class="card-title-block">
+                    <h2 class="card-title">{{ prompt.titleVi }}</h2>
+                    <span class="card-meta" aria-label="{{ prompt.copyCount }} lần sao chép">
+                      <i class="ti ti-copy" aria-hidden="true"></i>
+                      {{ prompt.copyCount }} lần
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Content -->
+                <div class="card-content" role="region" [attr.aria-label]="'Nội dung: ' + prompt.titleVi">
+                  <pre class="card-text">{{ prompt.content }}</pre>
+                </div>
+
+                <!-- Footer: tools + button -->
+                <div class="card-footer">
+                  <div class="card-tools" aria-label="Công cụ tương thích" *ngIf="prompt.compatibleTools?.length">
+                    <span
+                      *ngFor="let tool of prompt.compatibleTools"
+                      class="tool-tag"
+                      [class.tool-tag--claude]="tool === 'Claude'"
+                      [class.tool-tag--chatgpt]="tool === 'ChatGPT'"
+                      [class.tool-tag--gemini]="tool === 'Gemini'">
+                      {{ tool }}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-copy"
+                    [class.copied]="copiedPromptId === prompt.id"
+                    [attr.aria-label]="copiedPromptId === prompt.id ? 'Đã sao chép' : 'Sao chép: ' + prompt.titleVi"
+                    [attr.aria-pressed]="copiedPromptId === prompt.id"
+                    (click)="copyPromptContent(prompt.content, prompt.id)">
+                    <i
+                      [class]="copiedPromptId === prompt.id ? 'ti ti-check' : 'ti ti-clipboard'"
+                      aria-hidden="true"></i>
+                    <span>{{ copiedPromptId === prompt.id ? 'Đã sao chép!' : 'Sao chép' }}</span>
+                  </button>
+                </div>
+
+              </div><!-- /card-inner -->
+            </article>
+          </div><!-- /prompts__grid -->
+
+        </div><!-- /prompts__grid-container -->
+      </div><!-- /prompts__content -->
+    </div><!-- /prompts__body -->
+
+  </ng-container>
 
 </section>

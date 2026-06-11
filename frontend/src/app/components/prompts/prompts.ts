@@ -1,20 +1,39 @@
-import { Component, HostListener, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-export interface Category {
+// ── DTOs khớp với API /hierarchy ──────────────────────────────────────────────
+export interface SubCategoryDto {
   id: number;
   name: string;
-  icon: string;
+  slug: string;
 }
 
+export interface CategoryHierarchyDto {
+  id: number;
+  name: string;
+  slug: string;
+  icon: string;
+  subs: SubCategoryDto[];
+}
+
+// ── Entity Prompt khớp với API /subcategory/{id} ──────────────────────────────
 export interface Prompt {
   id: number;
+  subcategoryId: number;
   slug: string;
   titleVi: string;
   content: string;
   copyCount: number;
   compatibleTools: string[];
+  isFeatured: boolean;
 }
 
 type Zone = 'ZONE_FILTERS' | 'ZONE_MAIN';
@@ -26,35 +45,42 @@ type Zone = 'ZONE_FILTERS' | 'ZONE_MAIN';
   templateUrl: './prompts.html',
   styleUrl: './prompts.css',
 })
-export class PromptsComponent implements OnChanges {
+export class PromptsComponent implements OnInit, OnChanges {
   private readonly API_URL = 'http://localhost:8080/api';
 
-  readonly categories: Category[] = [
-    { id: 1, name: 'Marketing', icon: 'ti ti-speakerphone' },
-    { id: 2, name: 'Viết bài', icon: 'ti ti-edit' },
-    { id: 3, name: 'Giáo dục', icon: 'ti ti-school' },
-    { id: 4, name: 'Lập trình', icon: 'ti ti-code' },
-    { id: 11, name: 'Kinh doanh', icon: 'ti ti-briefcase' },
-  ];
+  // ── Dữ liệu từ API ────────────────────────────────────────────────────────
+  categories: CategoryHierarchyDto[] = [];
+  activeCategoryId: number = 0;
 
+  activeSubId: number = 0;
+  promptsList: Prompt[] = [];
+  copiedPromptId: number | null = null;
+
+  isLoadingHierarchy = true;
+  isLoadingPrompts = false;
+  errorMessage: string | null = null;
+
+  // ── Keyboard navigation ───────────────────────────────────────────────────
   @Input() isFocusLocked: boolean = false;
 
-  // 4-Zone Spatial Navigation State
   currentZone: Zone = 'ZONE_FILTERS';
   highlightedIndex: number = 0;
   private isKeyboardReady = false;
 
-  activeCategoryId: number = 1;
-  promptsList: Prompt[] = [];
-  copiedPromptId: number | null = null;
-  isLoading: boolean = true;
-  errorMessage: string | null = null;
-
   constructor(private readonly http: HttpClient) {}
+
+  // ── Lifecycle ─────────────────────────────────────────────────────────────
+  ngOnInit(): void {
+    this.loadHierarchy();
+    this.resetKeyboardReady();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['isFocusLocked']) {
-      if (changes['isFocusLocked'].currentValue && !changes['isFocusLocked'].previousValue) {
+      if (
+        changes['isFocusLocked'].currentValue &&
+        !changes['isFocusLocked'].previousValue
+      ) {
         this.resetKeyboardReady();
       } else if (!changes['isFocusLocked'].currentValue) {
         this.isKeyboardReady = false;
@@ -71,44 +97,124 @@ export class PromptsComponent implements OnChanges {
     }, 100);
   }
 
-  ngOnInit(): void {
-    this.loadPromptsByCategory(this.activeCategoryId);
-    this.resetKeyboardReady();
+  // ── API calls ─────────────────────────────────────────────────────────────
+
+  /** Load cây danh mục, sau đó tự động load subcategory đầu tiên */
+  loadHierarchy(): void {
+    this.isLoadingHierarchy = true;
+    this.http
+      .get<CategoryHierarchyDto[]>(`${this.API_URL}/prompts/hierarchy`)
+      .subscribe({
+        next: (data) => {
+          this.categories = data;
+          this.isLoadingHierarchy = false;
+
+          if (data.length > 0) {
+            this.activeCategoryId = data[0].id;
+            const firstSub = data[0].subs[0];
+            if (firstSub) {
+              this.loadPromptsBySubcategory(firstSub.id);
+            }
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          this.isLoadingHierarchy = false;
+          this.errorMessage = 'Không thể tải danh mục.';
+          console.error('Hierarchy error:', err);
+        },
+      });
   }
 
-  loadPromptsByCategory(categoryId: number): void {
-    this.activeCategoryId = categoryId;
-    this.isLoading = true;
+  /** Load prompt theo subcategoryId */
+  loadPromptsBySubcategory(subcategoryId: number): void {
+    this.activeSubId = subcategoryId;
+    this.isLoadingPrompts = true;
     this.errorMessage = null;
     this.copiedPromptId = null;
 
-    this.http.get<Prompt[]>(`${this.API_URL}/prompts/category/${categoryId}`).subscribe({
-      next: (data: Prompt[]) => {
-        this.promptsList = data;
-        this.highlightedIndex = 0;
-        this.isLoading = false;
-        // Scroll to top when category changes
-        setTimeout(() => {
-          const gridContainer = document.querySelector('.prompts__grid-container');
-          if (gridContainer) gridContainer.scrollTop = 0;
-        }, 50);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.errorMessage = 'Không thể tải danh sách prompt.';
-        this.isLoading = false;
-        this.promptsList = [];
-        console.error('Error loading prompts:', err);
-      },
-    });
+    this.http
+      .get<Prompt[]>(`${this.API_URL}/prompts/subcategory/${subcategoryId}`)
+      .subscribe({
+        next: (data) => {
+          this.promptsList = data;
+          this.highlightedIndex = 0;
+          this.isLoadingPrompts = false;
+          setTimeout(() => {
+            const grid = document.querySelector('.prompts__grid-container');
+            if (grid) grid.scrollTop = 0;
+          }, 50);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorMessage = 'Không thể tải danh sách prompt.';
+          this.isLoadingPrompts = false;
+          this.promptsList = [];
+          console.error('Prompts error:', err);
+        },
+      });
   }
 
+  /** Khi click tab category — chuyển category, load sub đầu tiên */
+  selectCategory(cat: CategoryHierarchyDto): void {
+    this.activeCategoryId = cat.id;
+    if (cat.subs.length > 0) {
+      this.loadPromptsBySubcategory(cat.subs[0].id);
+    } else {
+      this.promptsList = [];
+    }
+  }
+
+  /** Lấy danh sách sub của category đang active */
+  get activeSubs(): SubCategoryDto[] {
+    return (
+      this.categories.find((c) => c.id === this.activeCategoryId)?.subs ?? []
+    );
+  }
+
+  /** Tên category đang active */
+  get activeCategoryName(): string {
+    return (
+      this.categories.find((c) => c.id === this.activeCategoryId)?.name ?? ''
+    );
+  }
+
+  /** Tên sub đang active */
+  get activeSubName(): string {
+    for (const cat of this.categories) {
+      const sub = cat.subs.find((s) => s.id === this.activeSubId);
+      if (sub) return sub.name;
+    }
+    return '';
+  }
+
+  // ── Copy ──────────────────────────────────────────────────────────────────
+  copyPromptContent(content: string, promptId: number): void {
+    const fallback = (): void => {
+      const ta = document.createElement('textarea');
+      ta.value = content;
+      ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    };
+
+    navigator.clipboard.writeText(content).catch(() => fallback());
+    this.copiedPromptId = promptId;
+    setTimeout(() => (this.copiedPromptId = null), 3000);
+  }
+
+  trackByPromptId(_: number, prompt: Prompt): number {
+    return prompt.id;
+  }
+
+  // ── Keyboard Navigation ───────────────────────────────────────────────────
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    if (!this.isKeyboardReady || !this.isFocusLocked || this.isLoading) return;
+    if (!this.isKeyboardReady || !this.isFocusLocked || this.isLoadingPrompts)
+      return;
 
     const key = event.key.toLowerCase();
 
-    // GLOBAL: ESC - Exit keyboard mode
     if (key === 'escape') {
       event.preventDefault();
       event.stopPropagation();
@@ -116,31 +222,27 @@ export class PromptsComponent implements OnChanges {
       return;
     }
 
-    // ZONE_FILTERS: Category tabs
+    // ── ZONE_FILTERS: Tab category ngang ──────────────────────────────────
     if (this.currentZone === 'ZONE_FILTERS') {
-      // A / ←: Move left to previous category
       if (key === 'a' || key === 'arrowleft') {
         event.preventDefault();
         event.stopPropagation();
-        const currentIdx = this.categories.findIndex(c => c.id === this.activeCategoryId);
-        if (currentIdx > 0) {
-          this.loadPromptsByCategory(this.categories[currentIdx - 1].id);
-        }
+        const idx = this.categories.findIndex(
+          (c) => c.id === this.activeCategoryId
+        );
+        if (idx > 0) this.selectCategory(this.categories[idx - 1]);
         return;
       }
-
-      // D / →: Move right to next category
       if (key === 'd' || key === 'arrowright') {
         event.preventDefault();
         event.stopPropagation();
-        const currentIdx = this.categories.findIndex(c => c.id === this.activeCategoryId);
-        if (currentIdx < this.categories.length - 1) {
-          this.loadPromptsByCategory(this.categories[currentIdx + 1].id);
-        }
+        const idx = this.categories.findIndex(
+          (c) => c.id === this.activeCategoryId
+        );
+        if (idx < this.categories.length - 1)
+          this.selectCategory(this.categories[idx + 1]);
         return;
       }
-
-      // S / ↓: Drop to ZONE_MAIN (first card)
       if (key === 's' || key === 'arrowdown') {
         event.preventDefault();
         event.stopPropagation();
@@ -148,10 +250,9 @@ export class PromptsComponent implements OnChanges {
           this.highlightedIndex = 0;
           this.currentZone = 'ZONE_MAIN';
           setTimeout(() => {
-            const gridContainer = document.querySelector('.prompts__grid-container');
-            if (gridContainer) {
-              gridContainer.scrollTop = 0;
-            }
+            document.querySelector('.prompts__grid-container')?.scrollTo({
+              top: 0,
+            });
             this.scrollActiveCardIntoView();
           }, 50);
         }
@@ -160,9 +261,8 @@ export class PromptsComponent implements OnChanges {
       return;
     }
 
-    // ZONE_MAIN: Prompt cards grid
+    // ── ZONE_MAIN: Grid prompt ─────────────────────────────────────────────
     if (this.currentZone === 'ZONE_MAIN') {
-      // W / ↑: Move up, or back to ZONE_FILTERS if at first card
       if (key === 'w' || key === 'arrowup') {
         event.preventDefault();
         event.stopPropagation();
@@ -174,8 +274,6 @@ export class PromptsComponent implements OnChanges {
         }
         return;
       }
-
-      // S / ↓: Move down (next card) - WITH SCROLL
       if (key === 's' || key === 'arrowdown') {
         event.preventDefault();
         event.stopPropagation();
@@ -185,8 +283,6 @@ export class PromptsComponent implements OnChanges {
         }
         return;
       }
-
-      // A / ←: Move to previous card
       if (key === 'a' || key === 'arrowleft') {
         event.preventDefault();
         event.stopPropagation();
@@ -196,8 +292,6 @@ export class PromptsComponent implements OnChanges {
         }
         return;
       }
-
-      // D / →: Move to next card
       if (key === 'd' || key === 'arrowright') {
         event.preventDefault();
         event.stopPropagation();
@@ -207,55 +301,21 @@ export class PromptsComponent implements OnChanges {
         }
         return;
       }
-
-      // Enter: Copy prompt content
       if (key === 'enter') {
         event.preventDefault();
         event.stopPropagation();
         const prompt = this.promptsList[this.highlightedIndex];
-        if (prompt) {
-          this.copyPromptContent(prompt.content, prompt.id);
-        }
+        if (prompt) this.copyPromptContent(prompt.content, prompt.id);
         return;
       }
-      return;
     }
   }
 
   private scrollActiveCardIntoView(): void {
     setTimeout(() => {
-      const activeCard = document.querySelector('.prompt-card.is-keyboard-highlighted');
-      const gridContainer = document.querySelector('.prompts__grid-container');
-      if (activeCard && gridContainer) {
-        activeCard.scrollIntoView({ block: 'nearest', behavior: 'smooth', inline: 'nearest' });
-      }
+      const card = document.querySelector('.prompt-card.is-keyboard-highlighted');
+      if (card)
+        card.scrollIntoView({ block: 'nearest', behavior: 'smooth', inline: 'nearest' });
     }, 10);
-  }
-
-  copyPromptContent(content: string, promptId: number): void {
-    const fallbackCopy = (): void => {
-      const textarea = document.createElement('textarea');
-      textarea.value = content;
-      textarea.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-    };
-
-    navigator.clipboard.writeText(content).catch(() => fallbackCopy());
-
-    this.copiedPromptId = promptId;
-    setTimeout(() => {
-      this.copiedPromptId = null;
-    }, 3000);
-  }
-
-  trackByPromptId(index: number, prompt: Prompt): number {
-    return prompt.id;
-  }
-
-  getCategoryName(categoryId: number): string {
-    return this.categories.find((c) => c.id === categoryId)?.name ?? '';
   }
 }
