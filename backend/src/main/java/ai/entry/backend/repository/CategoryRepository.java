@@ -9,6 +9,9 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    // Lấy danh sách các danh mục đang hoạt động và sắp xếp theo thứ tự hiển thị
     List<Category> findAllByIsActiveTrueOrderBySortOrderAsc();
+
+    // (Nếu sếp có dùng thêm hàm lọc theo "type" thì khai báo thêm dòng này)
+    List<Category> findByTypeAndIsActiveTrueOrderBySortOrderAsc(String type);
+
 }

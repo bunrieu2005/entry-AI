@@ -14,7 +14,8 @@ public class Prompt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "subcategory_id")
+    private Long subcategoryId;
     @Column(nullable = false, unique = true)
     private String slug;
 

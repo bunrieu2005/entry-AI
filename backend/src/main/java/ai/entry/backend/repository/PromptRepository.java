@@ -8,10 +8,8 @@ import java.util.List;
 
 @Repository
 public interface PromptRepository extends JpaRepository<Prompt, Long> {
-
-    // Lọc danh sách Prompt theo ID danh mục
-    List<Prompt> findByCategoryId(Long categoryId);
-
-    // Lấy danh sách Prompt nổi bật
+    // Lấy các prompt được đánh dấu nổi bật
     List<Prompt> findByIsFeaturedTrue();
+
+    List<Prompt> findBySubcategoryId(Long subcategoryId);
 }

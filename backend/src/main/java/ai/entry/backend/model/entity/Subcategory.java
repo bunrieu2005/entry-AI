@@ -1,41 +1,36 @@
 package ai.entry.backend.model.entity;
 
-import ai.entry.backend.model.enums.CategoryType;
 import jakarta.persistence.*;
-import lombok.*;
 
-import java.time.LocalDateTime;
 @Entity
-@Table(name = "categories")
-public class Category {
+@Table(name = "subcategories")
+public class Subcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "category_id")
+    private Long categoryId;
 
     private String slug;
 
     @Column(name = "name_vi")
     private String nameVi;
 
-    private String icon;
-    private String type;
-
     @Column(name = "sort_order")
     private Integer sortOrder;
-
+    
     @Column(name = "is_active")
     private Boolean isActive;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
     public String getSlug() { return slug; }
     public void setSlug(String slug) { this.slug = slug; }
     public String getNameVi() { return nameVi; }
     public void setNameVi(String nameVi) { this.nameVi = nameVi; }
-    public String getIcon() { return icon; }
-    public void setIcon(String icon) { this.icon = icon; }
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
     public Integer getSortOrder() { return sortOrder; }
     public void setSortOrder(Integer sortOrder) { this.sortOrder = sortOrder; }
     public Boolean getIsActive() { return isActive; }
