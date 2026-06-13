@@ -34,11 +34,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { id: 'explore', name: 'Khám phá', desc: 'Bài báo - AI tools', icon: 'ti-compass' },
     { id: 'glossary', name: 'Thuật ngữ AI', desc: 'Từ điển - Ví dụ', icon: 'ti-book' },
     { id: 'prompts', name: 'Thư viện Prompt', desc: 'Theo lĩnh vực', icon: 'ti-terminal-2' },
+    { id: 'favorite-prompts', name: 'Yêu thích', desc: 'Prompt đã lưu', icon: 'ti-heart' },
     { id: 'ai-guidelines', name: 'Hướng dẫn AI', desc: 'Gemini · Claude · ChatGPT', icon: 'ti-sparkles' },
-    { id: 'vibe-coding', name: 'Vibe Coding', desc: 'Tạo web - Series', icon: 'ti-code', children: [
-      { id: 'intro', name: 'Giới thiệu', path: '/vibe-coding/intro' },
-      { id: 'series', name: 'Series Bài học', path: '/vibe-coding/series' }
-    ] },
   ]
 
   activeModuleId: string = 'guides';

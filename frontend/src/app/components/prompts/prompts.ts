@@ -3,11 +3,16 @@ import {
   HostListener,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+
+import { FavoriteService } from '../../services/favorite.service';
+import { AuthModalService } from '../../services/auth-modal.service';
 
 // ── DTOs khớp với API /hierarchy ──────────────────────────────────────────────
 export interface SubCategoryDto {
@@ -45,7 +50,7 @@ type Zone = 'ZONE_FILTERS' | 'ZONE_MAIN';
   templateUrl: './prompts.html',
   styleUrl: './prompts.css',
 })
-export class PromptsComponent implements OnInit, OnChanges {
+export class PromptsComponent implements OnInit, OnChanges, OnDestroy {
   private readonly API_URL = 'http://localhost:8080/api';
 
   // ── Dữ liệu từ API ────────────────────────────────────────────────────────
@@ -60,6 +65,10 @@ export class PromptsComponent implements OnInit, OnChanges {
   isLoadingPrompts = false;
   errorMessage: string | null = null;
 
+  // ── Favorites ──────────────────────────────────────────────────────────────
+  favoriteIds: Set<number> = new Set();
+  private favSub?: Subscription;
+
   // ── Keyboard navigation ───────────────────────────────────────────────────
   @Input() isFocusLocked: boolean = false;
 
@@ -67,12 +76,19 @@ export class PromptsComponent implements OnInit, OnChanges {
   highlightedIndex: number = 0;
   private isKeyboardReady = false;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly favoriteService: FavoriteService,
+    private readonly authModalService: AuthModalService,
+  ) {}
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
   ngOnInit(): void {
     this.loadHierarchy();
     this.resetKeyboardReady();
+    this.favSub = this.favoriteService.favoriteIds$.subscribe((ids) => {
+      this.favoriteIds = ids;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -86,6 +102,10 @@ export class PromptsComponent implements OnInit, OnChanges {
         this.isKeyboardReady = false;
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.favSub?.unsubscribe();
   }
 
   private resetKeyboardReady(): void {
@@ -201,6 +221,22 @@ export class PromptsComponent implements OnInit, OnChanges {
     navigator.clipboard.writeText(content).catch(() => fallback());
     this.copiedPromptId = promptId;
     setTimeout(() => (this.copiedPromptId = null), 3000);
+  }
+
+  // ── Favorites ─────────────────────────────────────────────────────────────
+  toggleFavorite(promptId: number, event?: Event): void {
+    event?.stopPropagation();
+    this.favoriteService.toggleFavorite(promptId).subscribe({
+      error: (err) => {
+        if (err?.status === 401) {
+          this.authModalService.open('login');
+        }
+      },
+    });
+  }
+
+  isFavorited(promptId: number): boolean {
+    return this.favoriteIds.has(promptId);
   }
 
   trackByPromptId(_: number, prompt: Prompt): number {

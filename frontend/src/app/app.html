@@ -11,7 +11,6 @@
 
     <main class="main-content" role="main">
 
-      <!-- Home page: show Hero Section -->
       <app-hero-section
         *ngIf="isHomePage"
         [title]="getHeroTitle()"
@@ -20,14 +19,13 @@
         (cardSelected)="onModuleSelected($event)">
       </app-hero-section>
 
-      <!-- Static module pages -->
       <app-guides *ngIf="isGuidesModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-guides>
       <app-ai-tools *ngIf="isExploreModule && !isHomePage"></app-ai-tools>
       <app-glossary *ngIf="isGlossaryModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-glossary>
       <app-prompts *ngIf="isPromptsModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-prompts>
+      <app-favorite-prompts *ngIf="isFavoritePromptsModule && !isHomePage"></app-favorite-prompts>
 
-      <!-- Router-driven sub-pages: Vibe Coding & AI Guidelines -->
-      <router-outlet *ngIf="isVibeModule || isAiGuidelinesModule"></router-outlet>
+      <router-outlet *ngIf="isAiGuidelinesModule"></router-outlet>
 
     </main>
   </div>

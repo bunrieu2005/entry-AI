@@ -10,6 +10,7 @@ import { GuidesComponent } from './components/guides/guides';
 import { AiToolsComponent } from './components/ai-tools/ai-tools';
 import { GlossaryComponent } from './components/glossary/glossary';
 import { PromptsComponent } from './components/prompts/prompts';
+import { FavoritePromptsComponent } from './components/favorite-prompts/favorite-prompts';
 import { KeyboardNavigationService, SidebarModuleId } from './services/keyboard-navigation.service';
 
 export interface ModuleInfo {
@@ -29,6 +30,7 @@ export interface ModuleInfo {
     HeaderComponent,
     HeroSectionComponent,
     PromptsComponent,
+    FavoritePromptsComponent,
     GuidesComponent,
     AiToolsComponent,
     GlossaryComponent,
@@ -45,12 +47,12 @@ export class AppComponent implements OnInit, OnDestroy {
     'explore',
     'glossary',
     'prompts',
-    'ai-guidelines',
-    'vibe-coding',
+    'favorite-prompts',
+    'ai-guidelines'
   ];
+  
   private readonly defaultModuleRoutes: Partial<Record<SidebarModuleId, string>> = {
-    'ai-guidelines': '/ai-guidelines/gemini',
-    'vibe-coding': '/vibe-coding/intro',
+    'ai-guidelines': '/ai-guidelines/gemini'
   };
 
   activeModuleId: string = 'guides';
@@ -85,9 +87,6 @@ export class AppComponent implements OnInit, OnDestroy {
     if (path.startsWith('/ai-guidelines')) {
       this.activeModuleId = 'ai-guidelines';
       this.keyboardNavigation.setFocusedSidebarModule('ai-guidelines');
-    } else if (path.startsWith('/vibe-coding')) {
-      this.activeModuleId = 'vibe-coding';
-      this.keyboardNavigation.setFocusedSidebarModule('vibe-coding');
     } else {
       this.keyboardNavigation.setFocusedSidebarModule(this.activeModuleId as SidebarModuleId);
     }
@@ -115,8 +114,8 @@ export class AppComponent implements OnInit, OnDestroy {
     return this.activeModuleId === 'prompts';
   }
 
-  get isVibeModule(): boolean {
-    return this.activeModuleId === 'vibe-coding';
+  get isFavoritePromptsModule(): boolean {
+    return this.activeModuleId === 'favorite-prompts';
   }
 
   get isAiGuidelinesModule(): boolean {
@@ -134,13 +133,22 @@ export class AppComponent implements OnInit, OnDestroy {
       !this.isExploreModule &&
       !this.isGlossaryModule &&
       !this.isPromptsModule &&
-      !this.isVibeModule &&
+      !this.isFavoritePromptsModule &&
       !this.isAiGuidelinesModule
     );
   }
 
+  // ==========================================
+  //  SỬA LỖI INPUT)
+  // ==========================================
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
+  
+    const target = event.target as HTMLElement;
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+      return;
+    }
+
     if (this.keyboardNavigation.isFocusLocked()) {
       if (this.keyboardNavigation.focusedSidebarModule() === 'ai-guidelines') {
         return;
@@ -195,8 +203,6 @@ export class AppComponent implements OnInit, OnDestroy {
         return 'Thuật Ngữ AI';
       case 'prompts':
         return 'Thư Viện Prompt';
-      case 'vibe-coding':
-        return 'Vibe Coding';
       case 'ai-guidelines':
         return 'Hướng Dẫn AI';
       default:
@@ -214,8 +220,6 @@ export class AppComponent implements OnInit, OnDestroy {
         return 'Từ điển thuật ngữ AI với ví dụ minh hoạ trực quan';
       case 'prompts':
         return 'Kho prompt mẫu phân loại theo lĩnh vực, sẵn sàng sao chép';
-      case 'vibe-coding':
-        return 'Series hướng dẫn tạo web từ ý tưởng đến sản phẩm';
       case 'ai-guidelines':
         return 'Hướng dẫn chi tiết sử dụng Gemini, Claude và ChatGPT';
       default:

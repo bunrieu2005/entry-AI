@@ -5,8 +5,8 @@ export type SidebarModuleId =
   | 'explore'
   | 'glossary'
   | 'prompts'
-  | 'ai-guidelines'
-  | 'vibe-coding';
+  | 'favorite-prompts'
+  | 'ai-guidelines';
 
 export type AiGuidelineSubCategory = 'gemini' | 'claude' | 'chatgpt';
 
