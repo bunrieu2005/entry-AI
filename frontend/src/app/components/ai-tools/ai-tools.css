@@ -1,30 +1,78 @@
 /* ============================================
-   AI Tools - Kraft Paper Design
+   AI TOOLS — Editorial Style (khớp Hero Section)
    ============================================ */
 
    .ai-tools {
-    padding: 32px;
+    padding: 48px 48px 80px;
     max-width: 1400px;
     margin: 0 auto;
   }
   
+  /* ===== HEADER BLOCK ===== */
+  .ai-tools__header {
+    display: block;
+    padding: 28px;
+    margin-bottom: 36px;
+    border: 2px solid #251812;
+    border-radius: 14px;
+    background: #F4E9D2;
+    box-shadow: 5px 5px 0px 0px #251812;
+  }
+  
+  .ai-tools__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #8B6E52;
+    margin-bottom: 20px;
+    padding: 6px 14px 6px 10px;
+    border: 1px solid #8B6E52;
+    border-radius: 999px;
+  }
+  
+  .ai-tools__badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #C99A4B;
+    flex-shrink: 0;
+    animation: badge-pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes badge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,154,75,0.5); }
+    50%       { box-shadow: 0 0 0 5px rgba(201,154,75,0); }
+  }
+  
   .ai-tools__title {
-    font-size: 2.25rem;
-    font-weight: 800;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
     color: #251812;
-    margin: 0 0 4px;
+    margin: 0 0 20px;
+    text-transform: uppercase;
+  }
+  
+  .ai-tools__title .highlight {
+    color: #C99A4B;
   }
   
   .ai-tools__subtitle {
+    font-size: 15px;
     color: #8B6E52;
-    margin: 0 0 24px;
-    font-size: 1rem;
+    margin: 0;
+    border-left: 2px solid #C99A4B;
+    padding-left: 14px;
+    line-height: 1.7;
+    max-width: 480px;
   }
   
-  /* ============================================
-     Navigation Banner
-     ============================================ */
-  
+  /* ===== NAV BANNER ===== */
   .nav-banner {
     display: flex;
     align-items: center;
@@ -37,6 +85,7 @@
     font-size: 0.9rem;
     font-weight: 600;
     color: #251812;
+    box-shadow: 3px 3px 0 0 #251812;
   }
   
   .nav-banner i { color: #B83B2E; font-size: 1.1rem; }
@@ -45,21 +94,20 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 22px; height: 22px;
+    min-width: 22px;
+    height: 22px;
     padding: 0 6px;
     background: #E6D6B8;
     border: 1px solid #8B6E52;
     border-bottom-width: 2px;
     border-radius: 4px;
-    font-family: monospace;
+    font-family: 'IBM Plex Mono', monospace;
     font-size: 0.75rem;
     font-weight: 700;
     color: #251812;
   }
   
-  /* ============================================
-     Loading State
-     ============================================ */
+  /* ===== LOADING ===== */
   .state-box {
     display: flex;
     flex-direction: column;
@@ -68,24 +116,24 @@
     padding: 60px 20px;
     color: #8B6E52;
   }
+  
   .spinner {
-    width: 40px; height: 40px;
+    width: 40px;
+    height: 40px;
     border: 3px solid #E6D6B8;
     border-top-color: #251812;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
+  
   @keyframes spin { to { transform: rotate(360deg); } }
   
-  /* ============================================
-     Category Tabs (Chuẩn màu ĐEN ĐẬM, Không viền)
-     ============================================ */
-  
+  /* ===== CATEGORY TABS ===== */
   .tabs {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
   }
   
   .tab {
@@ -96,62 +144,58 @@
     padding: 10px 18px;
     background: transparent;
     border: 2px solid #d7ccc8;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 600;
     color: #8B6E52;
     cursor: pointer;
     transition: all 0.2s;
-    
-    outline: none !important;
+    outline: none;
     -webkit-tap-highlight-color: transparent;
   }
   
-  .tab:focus, .tab:focus-visible {
-    outline: none !important; 
-  }
+  .tab:focus,
+  .tab:focus-visible { outline: none; }
   
   .tab:hover {
     background: #F1E3C6;
     border-color: #8B6E52;
+    box-shadow: 3px 3px 0 0 #8B6E52;
   }
   
-  /* TRẠNG THÁI CHỌN & LƯỚT BÀN PHÍM -> CỤC ĐEN */
   .tab.active,
   .tab.is-keyboard-highlighted {
     background: #251812;
     border-color: #251812;
     color: #F1E3C6;
-    outline: none !important;
+    box-shadow: 4px 4px 0 0 #C99A4B;
+    outline: none;
   }
   
   .tab-badge {
     font-size: 0.75rem;
-    background: rgba(139, 110, 82, 0.15);
+    background: rgba(139,110,82,0.15);
     padding: 2px 8px;
     border-radius: 10px;
   }
   
   .tab.active .tab-badge,
   .tab.is-keyboard-highlighted .tab-badge {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255,255,255,0.2);
   }
   
-  /* ============================================
-     Tools Grid & Cards
-     ============================================ */
-  
+  /* ===== GRID ===== */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    gap: 24px;
   }
   
-  /* CÁI ĐẾ (WRAPPER) */
+  /* ===== CARD ===== */
   .card-wrap {
     position: relative;
-    height: 180px;
     z-index: 1;
+    transition: z-index 0s;
   }
   
   .card-wrap:hover,
@@ -159,101 +203,174 @@
     z-index: 100;
   }
   
-  /* CÁI LÕI (NẮP TRƯỢT) */
   .card {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 180px;
-    background: #F1E3C6;
-    border: 1px solid rgba(139, 110, 82, 0.35);
-    border-radius: 8px;
+    background: #F4E9D2;
+    border: 2px solid #251812;
+    border-radius: 12px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 5px 5px 0px 0px #251812;
+    transition: transform 0.25s cubic-bezier(0.25,0.8,0.25,1),
+                box-shadow 0.25s cubic-bezier(0.25,0.8,0.25,1);
   }
   
-  /* KHI THẺ NỞ RA (CHUỘT LƯỚT / PHÍM FOCUS) */
   .card-wrap:hover .card,
   .card-wrap.is-keyboard-highlighted .card {
-    height: auto;
-    max-height: 420px;
-    box-shadow: 0 12px 28px rgba(37, 24, 18, 0.2);
-    transform: scale(1.02);
-    border-color: #8B6E52;
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0px 0px #251812;
   }
   
-  /* KHI BÀN PHÍM ĐANG TRỎ VÀO THẺ (VIỀN ĐEN ĐẬM DÀY) */
   .card-wrap.is-keyboard-highlighted .card {
-    border-color: #251812 !important; 
-    outline: 2px solid #251812; 
-    outline-offset: -1px;
+    border-color: #B6473A;
+    box-shadow: 8px 8px 0px 0px #B6473A;
   }
   
-  /* CARD NỘI DUNG BÊN TRONG */
-  .card-head {
-    display: flex; align-items: center; gap: 12px;
-    padding: 16px 16px 8px;
-    flex-shrink: 0;
-  }
-  
-  .card-logo { width: 48px; height: 48px; flex-shrink: 0; }
-  .card-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
-  
-  .logo-text {
-    width: 48px; height: 48px;
-    display: flex; align-items: center; justify-content: center;
-    background: #E6D6B8; border: 2px dashed #8B6E52; border-radius: 8px;
-    font-size: 1.25rem; font-weight: 800; color: #8B6E52;
-  }
-  
-  .card-info { flex: 1; min-width: 0; }
-  .card-title {
-    font-size: 1.1rem; font-weight: 700; color: #251812;
-    margin: 0 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .card-tag {
-    display: inline-block; font-size: 0.65rem; padding: 2px 8px;
-    background: #E6D6B8; border-radius: 4px; color: #8B6E52; text-transform: uppercase;
-  }
-  
-  .card-desc-short {
-    padding: 0 16px; font-size: 0.85rem; color: #8B6E52;
-    margin: 0 0 12px 0;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-    flex-shrink: 0;
-  }
-  
-  /* THÂN THẺ (PHẦN BỊ GIẤU) */
-  .card-body {
-    flex: 1;
-    padding: 0 16px 16px;
-    display: flex; flex-direction: column; gap: 12px;
-    opacity: 0; visibility: hidden;
+  /* ===== LOGO BANNER — to hơn, full width ===== */
+  .card-banner {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    background: #251812;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s;
+    border-bottom: 2px solid #251812;
+    flex-shrink: 0;
   }
   
-  .card-wrap:hover .card-body,
-  .card-wrap.is-keyboard-highlighted .card-body {
-    opacity: 1; visibility: visible;
-    overflow-y: auto; flex: 1;
+  .card-logo-wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
   }
   
-  .card-desc-full { font-size: 0.85rem; line-height: 1.6; color: #251812; }
-  .card-desc-full p { margin-top: 0; margin-bottom: 8px; }
-  
-  .btn {
-    display: inline-flex; justify-content: center; align-items: center; gap: 6px;
-    padding: 12px 20px; background: #251812; color: #F1E3C6;
-    border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
-    outline: none; transition: background 0.2s;
-    margin-top: 8px;
+  .card-logo-img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
   }
-  .btn:hover { background: #4a332a; }
   
-  @media (max-width: 768px) {
-    .ai-tools { padding: 20px; }
-    .ai-tools__title { font-size: 1.75rem; }
+  .card-logo-placeholder {
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #3B2C20;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #C99A4B;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  
+  /* ===== CARD CONTENT ===== */
+  .card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .card-tag {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8B6E52;
+    background: #E6D6B8;
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid #d7ccc8;
+  }
+  
+  .card-free {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #251812;
+    background: #C99A4B;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  
+  .card-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #251812;
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  .card-tagline {
+    font-size: 0.875rem;
+    color: #8B6E52;
+    margin: 0;
+    line-height: 1.5;
+    border-left: 2px solid #C99A4B;
+    padding-left: 10px;
+  }
+  
+  .card-desc {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #251812;
+    display: none;
+  }
+  
+  .card-wrap:hover .card-desc,
+  .card-wrap.is-keyboard-highlighted .card-desc {
+    display: block;
+  }
+  
+  .card-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding: 10px 18px;
+    background: #251812;
+    color: #F1E3C6;
+    border: 2px solid #251812;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+    align-self: flex-start;
+    box-shadow: 3px 3px 0 0 #C99A4B;
+  }
+  
+  .card-btn:hover {
+    background: #3B2C20;
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 0 #C99A4B;
+  }
+  
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1000px) {
+    .ai-tools { padding: 32px 20px; }
+    .ai-tools__title { font-size: 52px; }
+  }
+  
+  @media (max-width: 700px) {
+    .ai-tools__title { font-size: 40px; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
   }

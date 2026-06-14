@@ -1,5 +1,6 @@
 <article class="ai-tools">
 
+  <!-- Keyboard nav banner -->
   <div *ngIf="isFocusLocked" class="nav-banner">
     <i class="ti ti-device-gamepad"></i>
     <span *ngIf="currentZone === 'ZONE_FILTERS'">
@@ -10,57 +11,71 @@
     </span>
   </div>
 
-  <header>
-    <h1 class="ai-tools__title">Khám Phá AI</h1>
-    <p class="ai-tools__subtitle">Kho công cụ AI tốt nhất được tuyển chọn cẩn thận.</p>
-  </header>
+  <!-- Header -->
+  <div class="ai-tools__header">
+    <div class="ai-tools__header-text">
+      <div class="ai-tools__badge">
+        <span class="ai-tools__badge-dot"></span>
+        CÔNG CỤ AI · TUYỂN CHỌN · CẬP NHẬT LIÊN TỤC
+      </div>
+      <h1 class="ai-tools__title">KHÁM PHÁ<br><span class="highlight">CÔNG CỤ AI</span></h1>
 
+    </div>
+  </div>
+
+  <!-- Loading -->
   <div *ngIf="isLoading" class="state-box">
     <div class="spinner"></div>
     <span>Đang tải kho chứa...</span>
   </div>
 
+  <!-- Category tabs -->
   <div class="tabs" *ngIf="!isLoading && groupedTools.length > 0">
-    <button 
+    <button
       class="tab"
       *ngFor="let group of groupedTools; let i = index; trackBy: trackByCategoryId"
       [class.active]="i === activeCategoryIndex"
       [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_FILTERS' && i === highlightedIndex"
       (click)="selectCategory(i)"
-      tabindex="-1"> 
+      tabindex="-1">
       <span>{{ group.category.name }}</span>
       <span class="tab-badge">{{ group.tools.length }}</span>
     </button>
   </div>
 
+  <!-- Tools grid -->
   <div class="grid" *ngIf="!isLoading && currentTools.length > 0">
-    
-    <div 
+
+    <div
       class="card-wrap"
       *ngFor="let tool of currentTools; let i = index; trackBy: trackByToolId"
       [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex">
-      
+
       <article class="card">
-        
-        <div class="card-head">
-          <div class="card-logo" *ngIf="tool.logoUrl; else noLogo">
-            <img [src]="tool.logoUrl" [alt]="tool.name" onerror="this.src='/assets/logos/default.png'">
+
+        <!-- Logo banner area -->
+        <div class="card-banner">
+          <div class="card-logo-wrap" *ngIf="tool.logoUrl; else noLogo">
+            <img [src]="tool.logoUrl" [alt]="tool.name" onerror="this.src='/assets/logos/default.png'" class="card-logo-img">
           </div>
           <ng-template #noLogo>
-            <div class="logo-text">{{ tool.name.charAt(0).toUpperCase() }}</div>
+            <div class="card-logo-placeholder">{{ tool.name.charAt(0).toUpperCase() }}</div>
           </ng-template>
-
-          <div class="card-info">
-            <h3 class="card-title">{{ tool.name }}</h3>
-            <span class="card-tag">{{ tool.useCaseTag }}</span>
-          </div>
         </div>
 
-        <p class="card-desc-short">{{ tool.taglineVi }}</p>
+        <!-- Card body -->
+        <div class="card-content">
+          <div class="card-meta">
+            <span class="card-tag">{{ tool.useCaseTag }}</span>
+            <span class="card-free" *ngIf="tool.isFree">MIỄN PHÍ</span>
+          </div>
+          <h3 class="card-title">{{ tool.name }}</h3>
+          <p class="card-tagline">{{ tool.taglineVi }}</p>
 
-        <div class="card-body">
-          <div class="card-desc-full" [innerHTML]="tool.descriptionVi"></div>
-          <button class="btn" (click)="openToolWebsite(tool.websiteUrl)" tabindex="-1">
+          <!-- Expanded description -->
+          <div class="card-desc" [innerHTML]="tool.descriptionVi"></div>
+
+          <button class="card-btn" (click)="openToolWebsite(tool.websiteUrl)" tabindex="-1">
             <i class="ti ti-external-link"></i> Truy cập công cụ
           </button>
         </div>

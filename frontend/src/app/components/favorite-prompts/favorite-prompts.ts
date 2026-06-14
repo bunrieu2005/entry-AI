@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import { FavoriteService } from '../../services/favorite.service';
 import { AuthModalService } from '../../services/auth-modal.service';
 import { AuthService } from '../../services/auth.service';
+import { HeartIconComponent } from '../shared/icons/heart-icon';
+import { CopyIconComponent } from '../shared/icons/copy-icon';
 
 export interface Prompt {
   id: number;
@@ -21,7 +23,7 @@ export interface Prompt {
 @Component({
   selector: 'app-favorite-prompts',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HeartIconComponent, CopyIconComponent],
   templateUrl: './favorite-prompts.html',
   styleUrl: './favorite-prompts.css',
 })

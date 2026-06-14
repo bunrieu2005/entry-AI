@@ -12,10 +12,11 @@
   --color-on-primary: #F1E3C6;
 
   /* Typography */
-  --font-display: "Archivo", sans-serif;
-  --font-heading: "Archivo", sans-serif;
-  --font-body: "Inter", sans-serif;
-  --font-label: "JetBrains Mono", monospace;
+  --font-display: 'IBM Plex Mono', monospace;
+  --font-heading: 'IBM Plex Mono', monospace;
+  --font-body: 'IBM Plex Mono', monospace;
+  --font-label: 'IBM Plex Mono', monospace;
+  --font-mono: 'IBM Plex Mono', monospace;
 
   /* Font Sizes */
   --text-display: 4rem;

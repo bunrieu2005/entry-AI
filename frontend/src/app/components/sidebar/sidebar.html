@@ -1,6 +1,6 @@
 <aside class="sidebar" role="navigation" aria-label="Điều hướng chính">
   <div class="sidebar__header">
-    <span class="sidebar__title">EntryAI</span>
+
   </div>
 
   <nav class="sidebar__nav">
@@ -20,11 +20,18 @@
           role="menuitem"
           [attr.aria-haspopup]="mod.children ? 'menu' : null">
           <span class="sidebar__icon" aria-hidden="true">
-            <i class="ti" [ngClass]="mod.icon"></i>
+            <ng-container [ngSwitch]="mod.customIcon">
+              <app-home-icon *ngSwitchCase="'home'" [size]="20"></app-home-icon>
+              <app-openai-icon *ngSwitchCase="'openai'" [size]="20"></app-openai-icon>
+              <app-library-icon *ngSwitchCase="'library'" [size]="20"></app-library-icon>
+              <app-paypal-icon *ngSwitchCase="'paypal'" [size]="20"></app-paypal-icon>
+              <app-hand-heart-icon *ngSwitchCase="'hand-heart'" [size]="20"></app-hand-heart-icon>
+              <app-book-icon *ngSwitchCase="'book'" [size]="20"></app-book-icon>
+              <i *ngSwitchDefault class="ti" [ngClass]="mod.icon"></i>
+            </ng-container>
           </span>
           <span class="sidebar__text">
             <span class="sidebar__name">{{ mod.name }}</span>
-            <span class="sidebar__desc">{{ mod.desc }}</span>
           </span>
           <span *ngIf="mod.children" class="sidebar__chevron" aria-hidden="true">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"

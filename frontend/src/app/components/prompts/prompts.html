@@ -8,14 +8,23 @@
     aria-live="polite"
     aria-atomic="true">
     <i class="ti ti-device-gamepad" aria-hidden="true"></i>
+
     <span *ngIf="currentZone === 'ZONE_FILTERS'">
       <kbd class="keycap">←</kbd><kbd class="keycap">→</kbd> chuyển danh mục &bull;
-      <kbd class="keycap">↓</kbd> xuống prompts &bull;
+      <kbd class="keycap">↓</kbd> xuống danh mục con &bull;
+      <kbd class="keycap">ESC</kbd> thoát
+    </span>
+    <span *ngIf="currentZone === 'ZONE_SUBS'">
+      <kbd class="keycap">↑</kbd><kbd class="keycap">↓</kbd> chọn danh mục con &bull;
+      <kbd class="keycap">Enter</kbd> tải prompt &bull;
+      <kbd class="keycap">→</kbd> vào lưới &bull;
+      <kbd class="keycap">↑</kbd> đầu tiên → về danh mục &bull;
       <kbd class="keycap">ESC</kbd> thoát
     </span>
     <span *ngIf="currentZone === 'ZONE_MAIN'">
       <kbd class="keycap">↑↓←→</kbd> di chuyển &bull;
       <kbd class="keycap">Enter</kbd> sao chép &bull;
+      <kbd class="keycap">↑</kbd> đầu tiên → về sub &bull;
       <kbd class="keycap">ESC</kbd> thoát
     </span>
   </div>
@@ -27,6 +36,62 @@
   </div>
 
   <ng-container *ngIf="!isLoadingHierarchy">
+
+    <!-- Page Header (editorial style) -->
+    <div class="prompts__hero">
+
+      <!-- LEFT BOX -->
+      <div class="prompts__hero-left">
+
+        <div class="prompts__badge">
+          <span class="prompts__badge-dot"></span>
+          THƯ VIỆN PROMPT 
+        </div>
+    
+        <h1 id="prompts-heading" class="prompts__title">
+          THƯ VIỆN<br>
+          <span class="highlight">PROMPT AI</span>
+        </h1>
+    
+        <p class="prompts__subtitle">
+          Khám phá các câu lệnh AI được tuyển chọn cho lĩnh vực
+          <strong>{{ activeCategoryName }}</strong>.
+        </p>
+    
+   
+    
+      </div>
+    
+      <!-- RIGHT BOX -->
+      <div class="prompts__hero-right">
+    
+        <div class="hero-video-card">
+    
+          <div class="hero-video-header">
+            Video hướng dẫn
+          </div>
+    
+          <div class="hero-video-frame">
+            <div class="video-thumb"
+              [style.background-image]="'url(https://img.youtube.com/vi/ad2ptg5smrQ/hqdefault.jpg)'"
+              [style.background-size]="'cover'"
+              [style.background-position]="'center'"
+              role="button"
+              tabindex="0"
+              (click)="openVideo('https://www.youtube.com/watch?v=ad2ptg5smrQ')"
+              (keyup.enter)="openVideo('https://www.youtube.com/watch?v=ad2ptg5smrQ')"
+              (keyup.space)="openVideo('https://www.youtube.com/watch?v=ad2ptg5smrQ')">
+              <div class="play-btn" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+    
+      </div>
+    
+    </div>
 
     <!-- Category Tabs -->
     <nav class="prompts__tabs" aria-label="Lĩnh vực prompt" role="tablist">
@@ -43,26 +108,22 @@
       </button>
     </nav>
 
-    <!-- Page Header -->
-    <header class="prompts__header">
-      <h1 id="prompts-heading" class="prompts__title">Thư viện Prompt</h1>
-      <p class="prompts__subtitle">
-        Khám phá các câu lệnh AI được tuyển chọn cho lĩnh vực
-        <strong>{{ activeCategoryName }}</strong>.
-      </p>
-    </header>
-
     <!-- Body: Sidebar + Grid -->
     <div class="prompts__body">
 
       <!-- Sub-category Sidebar -->
-      <aside class="prompts__sidebar" aria-label="Danh mục con">
+      <aside
+        class="prompts__sidebar"
+        aria-label="Danh mục con"
+        [class.zone-focused]="isFocusLocked && currentZone === 'ZONE_SUBS'">
         <button
-          *ngFor="let sub of activeSubs"
+          *ngFor="let sub of activeSubs; let i = index"
           type="button"
           class="sub-btn"
           [class.active]="sub.id === activeSubId"
+          [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_SUBS' && i === highlightedSubIndex"
           (click)="loadPromptsBySubcategory(sub.id)">
+          <span class="sub-btn__dot" aria-hidden="true"></span>
           {{ sub.name }}
         </button>
       </aside>
@@ -109,7 +170,7 @@
               [attr.aria-label]="'Prompt: ' + prompt.titleVi"
               [attr.aria-current]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex ? 'true' : null">
 
-              <!-- Accent stripe theo tool đầu tiên -->
+              <!-- Accent stripe -->
               <span
                 class="card-stripe"
                 [class.stripe--claude]="prompt.compatibleTools[0] === 'Claude'"
@@ -131,12 +192,13 @@
                   </div>
                 </div>
 
-                <!-- Content -->
-                <div class="card-content" role="region" [attr.aria-label]="'Nội dung: ' + prompt.titleVi">
+                <!-- Content — notebook style -->
+                <div class="card-notebook" role="region" [attr.aria-label]="'Nội dung: ' + prompt.titleVi">
+                  <div class="notebook-margin" aria-hidden="true"></div>
                   <pre class="card-text">{{ prompt.content }}</pre>
                 </div>
 
-                <!-- Footer: tools + button -->
+                <!-- Footer -->
                 <div class="card-footer">
                   <div class="card-tools" aria-label="Công cụ tương thích" *ngIf="prompt.compatibleTools.length">
                     <span
@@ -156,30 +218,36 @@
                       [attr.aria-label]="isFavorited(prompt.id) ? 'Bỏ yêu thích' : 'Yêu thích'"
                       [attr.aria-pressed]="isFavorited(prompt.id)"
                       (click)="toggleFavorite(prompt.id, $event)">
-                      <i [class]="isFavorited(prompt.id) ? 'ti ti-heart-filled' : 'ti ti-heart'" aria-hidden="true"></i>
+                      <app-heart-icon
+                        [size]="18"
+                        [color]="isFavorited(prompt.id) ? 'var(--c-red)' : 'var(--c-secondary)'"
+                        [filled]="isFavorited(prompt.id)">
+                      </app-heart-icon>
                     </button>
                     <button
                       type="button"
                       class="btn-copy"
                       [class.copied]="copiedPromptId === prompt.id"
                       [attr.aria-label]="copiedPromptId === prompt.id ? 'Đã sao chép' : 'Sao chép: ' + prompt.titleVi"
-                      [attr.aria-pressed]="copiedPromptId === prompt.id"
                       (click)="copyPromptContent(prompt.content, prompt.id)">
-                      <i
-                        [class]="copiedPromptId === prompt.id ? 'ti ti-check' : 'ti ti-clipboard'"
-                        aria-hidden="true"></i>
+                      <app-copy-icon
+                        *ngIf="copiedPromptId !== prompt.id"
+                        [size]="18"
+                        [color]="'var(--c-on-red)'">
+                      </app-copy-icon>
+                      <i *ngIf="copiedPromptId === prompt.id" class="ti ti-check" aria-hidden="true"></i>
                       <span>{{ copiedPromptId === prompt.id ? 'Đã sao chép!' : 'Sao chép' }}</span>
                     </button>
                   </div>
                 </div>
 
-              </div><!-- /card-inner -->
+              </div>
             </article>
-          </div><!-- /prompts__grid -->
+          </div>
 
-        </div><!-- /prompts__grid-container -->
-      </div><!-- /prompts__content -->
-    </div><!-- /prompts__body -->
+        </div>
+      </div>
+    </div>
 
   </ng-container>
 

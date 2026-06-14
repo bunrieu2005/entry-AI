@@ -1,20 +1,31 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { AuthModalService } from '../../services/auth-modal.service';
-import { FavoriteService } from '../../services/favorite.service'; 
+import { FavoriteService } from '../../services/favorite.service';
+import { LogoutIconComponent } from '../shared/icons/logout-icon';
+import { UserCheckIconComponent } from '../shared/icons/user-check-icon';
+import { GithubIconComponent } from '../shared/icons/github-icon';
+import { FacebookIconComponent } from '../shared/icons/facebook-icon';
+import { SendHorizontalIconComponent } from '../shared/icons/send-horizontal-icon';
+import { MoonIconComponent } from '../shared/icons/moon-icon';
+import { LockIconComponent } from '../shared/icons/lock-icon';
+import { WcagIconComponent } from '../shared/icons/wcag-icon';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LogoutIconComponent, UserCheckIconComponent, GithubIconComponent, FacebookIconComponent, SendHorizontalIconComponent, LockIconComponent, MoonIconComponent, WcagIconComponent],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   currentUser$: Observable<any>;
+
+  // Tên trang hiện tại để hiện breadcrumb
+  @Input() currentPageName: string = '';
 
   showModal: boolean = false;
   authMode: 'login' | 'register' = 'login';
@@ -60,7 +71,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       alert('Vui lòng nhập đầy đủ tài khoản và mật khẩu!');
       return;
     }
-    
+
     if (this.authMode === 'register') {
       if (this.authData.username.length < 4 || this.authData.username.includes(' ')) {
         alert('Tài khoản phải từ 4 ký tự trở lên và không chứa khoảng trắng!'); return;
@@ -72,29 +83,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const hasNumber = /\d/.test(this.authData.password);
       const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(this.authData.password);
       if (!hasLetter || !hasNumber || !hasSpecialChar) {
-        alert('Mật khẩu phải bao gồm chữ cái, chữ số và ít nhất một ký tự đặc biệt (VD: @, #, $...)!'); return;
+        alert('Mật khẩu phải bao gồm chữ cái, chữ số và ít nhất một ký tự đặc biệt!'); return;
       }
       if (this.authData.password !== this.authData.confirmPassword) {
         alert('Mật khẩu xác nhận không khớp!'); return;
       }
 
       this.authService.register({ username: this.authData.username, password: this.authData.password }).subscribe({
-        next: (res) => {
-     
+        next: () => {
           alert('Đăng ký thành công! Hãy đăng nhập nhé.');
           this.authMode = 'login';
-          this.authData.password = ''; 
+          this.authData.password = '';
           this.authData.confirmPassword = '';
         },
         error: (err) => {
-      
-          const errorMsg = typeof err.error === 'string' ? err.error : 'Tài khoản đã tồn tại !';
+          const errorMsg = typeof err.error === 'string' ? err.error : 'Tài khoản đã tồn tại!';
           alert(errorMsg);
         }
       });
     } else {
-      const credentials = { username: this.authData.username, password: this.authData.password };
-      this.authService.login(credentials).subscribe({
+      this.authService.login({ username: this.authData.username, password: this.authData.password }).subscribe({
         next: () => this.closeModal(),
         error: () => alert('Sai tài khoản hoặc mật khẩu!')
       });
@@ -102,8 +110,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    const isConfirm = confirm('Bạn có chắc chắn muốn đăng xuất không?');
-    if (isConfirm) {
+    if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
       this.authService.logout();
     }
   }

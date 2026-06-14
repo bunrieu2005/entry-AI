@@ -1,25 +1,27 @@
 <div class="app-wrapper">
-  <app-sidebar
-    [activeId]="activeModuleId"
-    [focusedModuleId]="keyboardNavigation.focusedSidebarModule()"
-    [isKeyboardLocked]="keyboardNavigation.isFocusLocked()"
-    (moduleSelected)="onModuleSelected($event)">
-  </app-sidebar>
 
-  <div class="app-content">
-    <app-header></app-header>
+  <!-- Header toàn chiều ngang, trên cùng -->
+  <app-header [currentPageName]="getPageName()"></app-header>
+
+  <!-- Body: sidebar + content nằm cùng hàng -->
+  <div class="app-body">
+    <app-sidebar
+      [activeId]="activeModuleId"
+      [focusedModuleId]="keyboardNavigation.focusedSidebarModule()"
+      [isKeyboardLocked]="keyboardNavigation.isFocusLocked()"
+      (moduleSelected)="onModuleSelected($event)">
+    </app-sidebar>
 
     <main class="main-content" role="main">
 
       <app-hero-section
-        *ngIf="isHomePage"
+        *ngIf="isHomePage && isHomeModule"
         [title]="getHeroTitle()"
         [subtitle]="getHeroSubtitle()"
         [isHome]="true"
         (cardSelected)="onModuleSelected($event)">
       </app-hero-section>
 
-      <app-guides *ngIf="isGuidesModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-guides>
       <app-ai-tools *ngIf="isExploreModule && !isHomePage"></app-ai-tools>
       <app-glossary *ngIf="isGlossaryModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-glossary>
       <app-prompts *ngIf="isPromptsModule && !isHomePage" [isFocusLocked]="isLockedInsideModule"></app-prompts>
@@ -29,4 +31,5 @@
 
     </main>
   </div>
+
 </div>

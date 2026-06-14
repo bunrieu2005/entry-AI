@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 
 export type SidebarModuleId =
-  | 'guides'
+  | 'home'
   | 'explore'
   | 'glossary'
   | 'prompts'
@@ -15,7 +15,7 @@ export type AiGuidelineSubCategory = 'gemini' | 'claude' | 'chatgpt';
 })
 export class KeyboardNavigationService {
   readonly isFocusLocked = signal<boolean>(false);
-  readonly focusedSidebarModule = signal<SidebarModuleId>('guides');
+  readonly focusedSidebarModule = signal<SidebarModuleId>('home');
 
   setFocusLocked(isLocked: boolean): void {
     this.isFocusLocked.set(isLocked);

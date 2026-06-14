@@ -1,39 +1,178 @@
 <section class="hero" [class.hero--home]="isHome" aria-labelledby="hero-title">
-  <div class="hero__content">
-    <h1 id="hero-title" class="hero__title">{{ title }}</h1>
-    <p class="hero__tagline">{{ subtitle }}</p>
-  </div>
 
-  <div *ngIf="isHome" class="hero__quick-access" aria-label="Truy cập nhanh">
-    <h2 class="quick-access__label">Truy cập nhanh</h2>
-    <div class="quick-access__grid">
-      <article
-        *ngFor="let card of quickAccessCards"
-        class="quick-card"
-        [class.quick-card--large]="quickAccessCards.indexOf(card) === 0"
-        (click)="onCardClick(card.id)"
-        (keyup.enter)="onCardClick(card.id)"
-        (keyup.space)="onCardClick(card.id)"
-        tabindex="0"
-        role="button"
-        [attr.aria-label]="card.title + ': ' + card.description">
-        <div class="quick-card__icon-wrapper" [style.--accent-color]="card.accent">
-          <span class="quick-card__icon" aria-hidden="true">
-            <i class="ti" [ngClass]="card.icon"></i>
+  <div class="page-grid">
+
+    <!-- ============ LEFT COLUMN ============ -->
+    <div class="left-col">
+
+      <!-- Hero text -->
+      <div class="hero-text">
+
+        <div class="hero-badge" aria-hidden="true">
+          <span class="hero-badge__dot"></span>
+          Trang Chủ
+        </div>
+
+        <h1 id="hero-title" class="hero-title">
+         
+          <span class="highlight">PROMPT - ENTRY </span>
+        </h1>
+
+        <p class="hero-sub">
+          Thư viện hơn 1.000 prompt được tuyển chọn, sử dụng chỉ với một nút bấm.
+          Bắt đầu khai thác AI hiệu quả ngay hôm nay.
+        </p>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <strong>1.000+</strong>
+            Prompt thư viện
+          </div>
+          <div class="stat">
+            <strong>1-click</strong>
+            Sao chép &amp; dùng ngay
+          </div>
+          <div class="stat">
+            <strong>5+</strong>
+            Công cụ AI hỗ trợ
+          </div>
+        </div>
+      </div>
+
+      <!-- Blog section -->
+      <div class="section-title">
+        <h2>Blog</h2>
+        <span>AI đã tiến hoá nhanh đến mức nào</span>
+      </div>
+
+      <!-- Timeline card -->
+      <div class="timeline-card" role="article" aria-label="Timeline: Sự phát triển của AI">
+
+        <!-- Timeline dots track -->
+        <div class="timeline-track" aria-label="Timeline">
+          <button
+            *ngFor="let era of timelineEras; let i = index"
+            class="tl-point"
+            [class.active]="activeEraIndex === i"
+            [attr.aria-current]="activeEraIndex === i ? 'step' : null"
+            (click)="selectEra(i)"
+            [attr.aria-label]="'Chọn giai đoạn ' + era.era">
+            {{ era.year }}
+          </button>
+        </div>
+
+        <!-- Nav: 2 nút ← → thay thế hint kéo -->
+        <div class="tl-nav">
+          <button
+            class="tl-nav-btn tl-nav-btn--prev"
+            (click)="prevEra()"
+            [disabled]="isFirstEra"
+            [class.tl-nav-btn--active]="!isFirstEra"
+            aria-label="Giai đoạn trước">
+            <span class="tl-nav-arrow">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </span>
+            <span class="tl-nav-label">Trước</span>
+          </button>
+
+          <!-- Step indicator -->
+          <div class="tl-step-dots" aria-hidden="true">
+            <span
+              *ngFor="let era of timelineEras; let i = index"
+              class="tl-step-dot"
+              [class.tl-step-dot--active]="activeEraIndex === i">
+            </span>
+          </div>
+
+          <button
+            class="tl-nav-btn tl-nav-btn--next"
+            (click)="nextEra()"
+            [disabled]="isLastEra"
+            [class.tl-nav-btn--active]="!isLastEra"
+            aria-label="Giai đoạn sau">
+            <span class="tl-nav-label">Tiếp</span>
+            <span class="tl-nav-arrow">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </span>
+          </button>
+        </div>
+
+        <!-- Draggable content -->
+        <div
+          class="tl-content"
+          [ngStyle]="cardStyle"
+          (mousedown)="onDragStart($event)"
+          (touchstart)="onDragStart($event)"
+          (mousemove)="onDragMove($event)"
+          (touchmove)="onDragMove($event)"
+          (mouseup)="onDragEnd()"
+          (mouseleave)="onDragEnd()"
+          (touchend)="onDragEnd()"
+          role="region"
+          aria-live="polite"
+          aria-label="Nội dung giai đoạn">
+          <div class="tl-era">{{ currentEra.era }}</div>
+          <div class="tl-headline">{{ currentEra.headline }}</div>
+          <p class="tl-desc">{{ currentEra.description }}</p>
+
+          <div class="tl-progress-row">
+            <span class="tl-progress-label">AI đảm nhận</span>
+            <div class="tl-progress-bar" role="progressbar" [attr.aria-valuenow]="currentEra.progressPercent" aria-valuemin="0" aria-valuemax="100">
+              <div class="tl-progress-fill" [style.width.%]="currentEra.progressPercent"></div>
+            </div>
+            <span class="tl-percent">{{ currentEra.progressPercent }}%</span>
+          </div>
+
+          <span class="tl-tag">{{ currentEra.tag }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ RIGHT COLUMN ============ -->
+    <div class="right-col">
+
+
+      <!-- Search widget -->
+      <div class="widget">
+        <div class="search-box" role="search">
+          <span class="search-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           </span>
+          <input
+            type="search"
+            class="search-input"
+            placeholder="Tìm kiếm prompt theo từ khoá..."
+            aria-label="Tìm kiếm prompt"
+            (keydown.enter)="onSearchKeydown($event)" />
         </div>
-        <div class="quick-card__content">
-          <h3 class="quick-card__title">{{ card.title }}</h3>
-          <p class="quick-card__description">{{ card.description }}</p>
+      </div>
+
+      <!-- Video guide widgets -->
+      <div
+        *ngFor="let guide of videoGuides; let i = index"
+        class="widget video-widget">
+        <h3 class="widget-title">{{ guide.title }}</h3>
+        <div
+          class="video-thumb"
+          [style.background-image]="guide.videoId ? 'url(https://img.youtube.com/vi/' + guide.videoId + '/hqdefault.jpg)' : ''"
+          [style.background-size]="'cover'"
+          [style.background-position]="'center'"
+          role="button"
+          tabindex="0"
+      
+          (click)="onCardClick('video-' + i)"
+          (keyup.enter)="onCardClick('video-' + i)"
+          (keyup.space)="onCardClick('video-' + i)">
+          <div class="play-btn" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
         </div>
-        <span class="quick-card__arrow" aria-hidden="true">
-          <i class="ti ti-arrow-right"></i>
-        </span>
-      </article>
+        <div class="video-meta">
+        
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div *ngIf="!isHome" class="hero__module-info">
-    <p class="module-info__text">Đang xem: <strong>{{ title }}</strong></p>
-  </div>
 </section>

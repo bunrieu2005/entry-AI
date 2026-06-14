@@ -1,6 +1,6 @@
 /* ============================================
    Glossary — 2-Column Redesign
-   Kraft Paper Design System Compliance
+   Kraft Paper + Hero-Style Design System
    ============================================ */
 
 /* ── Root container ── */
@@ -79,7 +79,7 @@
 /* ── TWO-COLUMN LAYOUT ── */
 .glossary__layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 300px 1fr;
   gap: var(--spacing-lg);
   flex: 1;
   min-height: 0;
@@ -96,8 +96,9 @@
   gap: var(--spacing-sm);
   overflow: hidden;
   background-color: var(--color-surface);
-  border: 1px solid rgba(139, 110, 82, 0.3);
+  border: 2px solid var(--color-primary);
   border-radius: var(--radius-lg);
+  box-shadow: 4px 4px 0 0 var(--color-primary);
   padding: var(--spacing-sm);
 }
 
@@ -110,15 +111,16 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  padding: 8px 12px;
+  padding: 9px 12px;
   background-color: #ffffff;
-  border: 1.5px solid rgba(139, 110, 82, 0.35);
+  border: 2px solid rgba(139, 110, 82, 0.35);
   border-radius: var(--radius-md);
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .search-box:focus-within {
   border-color: var(--color-primary);
+  box-shadow: 3px 3px 0 0 var(--color-primary);
 }
 
 .search-box__icon {
@@ -166,7 +168,7 @@
   color: var(--color-primary);
 }
 
-/* ── Group Filter Pills ── */
+/* ── Group Filter Pills (Category Tabs) ── */
 .sidebar__filters {
   display: flex;
   gap: 6px;
@@ -175,35 +177,47 @@
 
 .filter-pill {
   flex: 1;
-  padding: 6px 4px;
-  min-height: 36px;
+  padding: 7px 4px;
+  min-height: 38px;
   background-color: transparent;
-  border: 1.5px solid rgba(139, 110, 82, 0.3);
+  border: 2px solid rgba(139, 110, 82, 0.4);
   border-radius: var(--radius-md);
   font-family: var(--font-label);
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-secondary);
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+              color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
   white-space: nowrap;
+  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .filter-pill:hover {
   background-color: rgba(37, 24, 18, 0.05);
-  border-color: rgba(139, 110, 82, 0.5);
+  border-color: var(--color-primary);
   color: var(--color-primary);
+  /* Offset shadow nâu khi hover */
+  box-shadow: 3px 3px 0 0 rgba(37, 24, 18, 0.35);
+  transform: translate(-1px, -1px);
 }
 
+/* Active: offset shadow vàng gold để phân biệt rõ */
 .filter-pill--active {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
   color: var(--color-on-primary);
+  box-shadow: 3px 3px 0 0 #d4a853;
+  transform: translate(-1px, -1px);
 }
 
 .filter-pill--active:hover {
   background-color: var(--color-primary);
   color: var(--color-on-primary);
+  box-shadow: 4px 4px 0 0 #d4a853;
+  transform: translate(-2px, -2px);
 }
 
 /* Keyboard highlight for term rows in ZONE_MAIN */
@@ -218,7 +232,7 @@
 /* Search box keyboard highlight in ZONE_INPUT */
 .sidebar__search.is-keyboard-highlighted .search-box {
   border-color: #dc3545;
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+  box-shadow: 3px 3px 0 0 #dc3545;
 }
 
 /* ── Term List (scrollable) ── */
@@ -235,13 +249,13 @@
 
 .term-group__label {
   font-family: var(--font-label);
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.65rem;
+  font-weight: 800;
   color: var(--color-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   padding: var(--spacing-xs) 8px 4px;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .term-group__items,
@@ -369,15 +383,19 @@
   border: 2px solid var(--color-primary);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  box-shadow: 3px 3px 0 0 #d4a853;
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 .retry-btn:hover {
   background-color: #3a2a1e;
+  box-shadow: 4px 4px 0 0 #d4a853;
+  transform: translate(-1px, -1px);
 }
 
 .retry-btn:active {
-  transform: scale(0.98);
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 0 #d4a853;
 }
 
 .loading-spinner {
@@ -395,22 +413,55 @@
 
 /* ═══════════════════════════════════════
    COLUMN RIGHT — Detail Panel
+   "Cuốn vở" — Notebook / Kraft Paper style
    ═══════════════════════════════════════ */
 
 .glossary__detail {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  background-color: var(--color-surface);
-  border: 1px solid rgba(139, 110, 82, 0.3);
+  /* Kraft paper background with texture lines */
+  background-color: #f5ead8;
+  background-image:
+    /* Horizontal ruled lines like a notebook */
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 31px,
+      rgba(139, 110, 82, 0.18) 31px,
+      rgba(139, 110, 82, 0.18) 32px
+    ),
+    /* Subtle paper grain overlay */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  /* Red margin line on the left — classic notebook */
+  border-left: 4px solid rgba(184, 59, 46, 0.35);
+  /* Hero-style border + offset shadow */
+  border: 2px solid var(--color-primary);
   border-radius: var(--radius-lg);
+  box-shadow: 5px 5px 0 0 #1a1008;
   padding: var(--spacing-xl);
+  padding-left: calc(var(--spacing-xl) + 24px);
   outline: none;
+  position: relative;
+  /* Notebook left margin red line */
+}
+
+/* Red margin line pseudo-element */
+.glossary__detail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 36px;
+  width: 2px;
+  height: 100%;
+  background-color: rgba(184, 59, 46, 0.3);
+  pointer-events: none;
+  border-radius: 1px;
 }
 
 .glossary__detail.is-zone-focused {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(139, 110, 82, 0.15);
+  box-shadow: 5px 5px 0 0 #d4a853;
 }
 
 /* Empty state */
@@ -431,8 +482,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(37, 24, 18, 0.05);
-  border: 2px dashed rgba(139, 110, 82, 0.4);
+  background-color: rgba(37, 24, 18, 0.06);
+  border: 2px dashed rgba(139, 110, 82, 0.5);
   border-radius: var(--radius-lg);
   color: var(--color-secondary);
   font-size: 2rem;
@@ -443,31 +494,38 @@
   font-size: 1rem;
   color: var(--color-secondary);
   margin: 0;
+  font-style: italic;
 }
 
-/* ── Term Detail Article ── */
+/* ── Term Detail Article — Notebook Feel ── */
 .term-detail {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-/* Header */
+/* Header — like a notebook title page */
 .term-detail__header {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
   padding-bottom: var(--spacing-md);
+  /* Align to notebook lines: line-height 32px */
 }
 
 .term-detail__title {
-  font-family: var(--font-heading);
-  font-size: 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+  font-size: 2.25rem;
   font-weight: 800;
   color: var(--color-primary);
   line-height: 1.2;
   margin: 0;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  /* Subtle underline like handwritten title */
+  text-decoration: underline;
+  text-decoration-color: rgba(212, 168, 83, 0.6);
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
 }
 
 .term-detail__tags {
@@ -482,18 +540,20 @@
   padding: 3px 10px;
   font-family: var(--font-label);
   font-size: var(--text-label);
-  color: var(--color-secondary);
-  background-color: rgba(139, 110, 82, 0.12);
-  border-radius: var(--radius-md);
-  font-weight: 600;
+  color: #4a3520;
+  background-color: rgba(212, 168, 83, 0.2);
+  border: 1.5px solid rgba(212, 168, 83, 0.5);
+  border-radius: 3px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 
-/* Divider */
+/* Divider — like a ruled separator line in a notebook */
 .term-detail__divider {
-  height: 1px;
-  background-color: rgba(139, 110, 82, 0.25);
+  height: 0;
+  border: none;
+  border-top: 1px solid rgba(139, 110, 82, 0.25);
   margin: var(--spacing-md) 0;
 }
 
@@ -501,32 +561,96 @@
 .term-detail__section {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: 8px;
+  margin-bottom: var(--spacing-md);
 }
 
 .section__label {
   font-family: var(--font-label);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--color-secondary);
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: rgba(184, 59, 46, 0.75);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  opacity: 0.75;
+  letter-spacing: 0.12em;
 }
 
+/* ── Base body text ── */
 .section__body {
   font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: 1.75;
-  color: var(--color-primary);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #2a1a0e;
 }
 
-/* Definition — renders innerHTML */
+/* ── Definition — "trang vở" box ── */
 .section__body--definition {
-  font-size: 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: #2a1a0e;
+
+  /* Notebook page: trắng ngà hơn nền kraft */
+  background-color: rgba(255, 252, 244, 0.92);
+  border: 1.5px solid rgba(139, 110, 82, 0.3);
+  border-left: 3px solid rgba(184, 59, 46, 0.4);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 16px 20px 16px 18px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 2px 2px 0 0 rgba(139,110,82,0.15);
+  position: relative;
+
+  /* Ruled lines bên trong ô định nghĩa */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 27px,
+    rgba(139, 110, 82, 0.1) 27px,
+    rgba(139, 110, 82, 0.1) 28px
+  );
 }
 
-/* Example box */
+/* Reset font cho tất cả children của definition */
+.section__body--definition p,
+.section__body--definition ul,
+.section__body--definition ol,
+.section__body--definition li {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: #2a1a0e;
+  margin: 0 0 10px 0;
+}
+
+.section__body--definition p:last-child,
+.section__body--definition li:last-child {
+  margin-bottom: 0;
+}
+
+.section__body--definition strong {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-family: var(--font-body);
+}
+
+.section__body--definition em {
+  font-style: italic;
+  color: #4a3520;
+}
+
+.section__body--definition ul,
+.section__body--definition ol {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.section__body--definition li {
+  margin-bottom: 6px;
+}
+
+.section__body--definition li::marker {
+  color: rgba(184, 59, 46, 0.6);
+}
+
+/* ── Example box — sticky note trên giấy kraft ── */
 .section__body--example {
   padding: 0;
 }
@@ -534,26 +658,43 @@
 .example-box {
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  background-color: rgba(37, 24, 18, 0.04);
-  border-left: 3px solid rgba(139, 110, 82, 0.5);
+  gap: 12px;
+  padding: 14px 16px 14px 18px;
+  background-color: rgba(255, 248, 200, 0.9);
+  border: 1.5px solid rgba(212, 168, 83, 0.45);
+  border-left: 4px solid #d4a853;
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  box-shadow: 2px 2px 0 0 rgba(180, 140, 40, 0.3);
+  position: relative;
+}
+
+.example-box::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 14px 14px 0;
+  border-color: transparent rgba(212, 168, 83, 0.3) transparent transparent;
 }
 
 .example-box i {
-  color: var(--color-secondary);
-  font-size: 1.1rem;
+  color: #b8860b;
+  font-size: 1rem;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 .example-box__text {
   font-family: var(--font-body);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--color-primary);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: #3a2800;
   margin: 0;
+  font-style: italic;
+  white-space: pre-line;
 }
 
 /* Related Tags */
@@ -568,20 +709,25 @@
   align-items: center;
   padding: 6px 14px;
   background-color: rgba(37, 24, 18, 0.06);
-  border: 1.5px solid rgba(139, 110, 82, 0.3);
+  border: 2px solid rgba(139, 110, 82, 0.4);
   border-radius: var(--radius-md);
   font-family: var(--font-label);
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-secondary);
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+              color 0.15s ease, box-shadow 0.12s ease, transform 0.1s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .related-tag:hover {
   background-color: rgba(37, 24, 18, 0.1);
-  border-color: rgba(139, 110, 82, 0.5);
+  border-color: var(--color-primary);
   color: var(--color-primary);
+  box-shadow: 3px 3px 0 0 rgba(37, 24, 18, 0.3);
+  transform: translate(-1px, -1px);
 }
 
 /* ═══════════════════════════════════════
@@ -621,11 +767,12 @@
 
   .glossary__detail {
     padding: var(--spacing-lg);
+    padding-left: calc(var(--spacing-lg) + 20px);
     min-height: 400px;
   }
 
   .term-detail__title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 }
 
@@ -646,10 +793,13 @@
   .glossary__sidebar {
     padding: var(--spacing-sm);
     max-height: 300px;
+    box-shadow: 3px 3px 0 0 var(--color-primary);
   }
 
   .glossary__detail {
     padding: var(--spacing-md);
+    padding-left: calc(var(--spacing-md) + 16px);
+    box-shadow: 3px 3px 0 0 #1a1008;
   }
 
   .term-detail__title {
@@ -657,7 +807,7 @@
   }
 
   .filter-pill {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     padding: 5px 4px;
   }
 }

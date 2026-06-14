@@ -1,108 +1,119 @@
-<section class="fav-prompts" aria-labelledby="fav-heading">
+<section class="prompts-fav" aria-labelledby="fav-heading">
 
-  <!-- Page Header -->
-  <header class="fav-header">
-    <h1 id="fav-heading" class="fav-title">
-      <i class="ti ti-heart" aria-hidden="true"></i>
-      Prompt yêu thích
-    </h1>
-    <p class="fav-subtitle">
-      Những câu lệnh bạn đã lưu lại để sử dụng sau.
-    </p>
-  </header>
+  <!-- Loading hierarchy -->
+  <div *ngIf="isLoading" class="state-block" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <span>Đang tải danh sách yêu thích...</span>
+  </div>
 
-  <!-- Body -->
-  <div class="fav-body">
+  <ng-container *ngIf="!isLoading">
 
-    <!-- Not logged in -->
-    <div *ngIf="!isLoggedIn" class="state-block">
-      <div class="state-icon"><i class="ti ti-lock"></i></div>
-      <p>Vui lòng <a href="javascript:void(0)" (click)="openLogin()">đăng nhập</a> để xem prompt yêu thích của bạn.</p>
-      <button type="button" class="retry-btn" (click)="openLogin()">
-        <i class="ti ti-login" aria-hidden="true"></i> Đăng nhập
-      </button>
+    <!-- Page Header (editorial style) -->
+    <div class="prompts-fav__header-block">
+      <div class="prompts-fav__badge" aria-hidden="true">
+        <span class="prompts-fav__badge-dot"></span>
+        PROMPT YÊU THÍCH · ĐÃ LƯU
+      </div>
+      <h1 id="fav-heading" class="prompts-fav__title">
+        YÊU<br><span class="highlight">THÍCH</span>
+      </h1>
+      <p class="prompts-fav__subtitle">
+        Những câu lệnh AI bạn đã lưu lại để sử dụng sau.
+      </p>
     </div>
 
-    <!-- Loading -->
-    <div *ngIf="isLoggedIn && isLoading" class="state-block" role="status" aria-live="polite">
-      <div class="spinner" aria-hidden="true"></div>
-      <span>Đang tải danh sách yêu thích...</span>
-    </div>
+    <!-- Content Area -->
+    <div class="prompts-fav__content">
 
-    <!-- Error -->
-    <div *ngIf="!isLoading && errorMessage" class="state-block state-block--error" role="alert">
-      <div class="state-icon"><i class="ti ti-alert-circle"></i></div>
-      <p>{{ errorMessage }}</p>
-      <button type="button" class="retry-btn" (click)="loadFavorites()">
-        <i class="ti ti-refresh" aria-hidden="true"></i> Thử lại
-      </button>
-    </div>
+      <!-- Not logged in -->
+      <div *ngIf="!isLoggedIn" class="state-block" role="status">
+        <div class="state-icon"><i class="ti ti-lock"></i></div>
+        <p>Vui lòng <a href="javascript:void(0)" (click)="openLogin()">đăng nhập</a> để xem prompt yêu thích của bạn.</p>
+        <button type="button" class="retry-btn" (click)="openLogin()">
+          <i class="ti ti-login" aria-hidden="true"></i> Đăng nhập
+        </button>
+      </div>
 
-    <!-- Empty -->
-    <div *ngIf="!isLoading && !errorMessage && promptsList.length === 0 && isLoggedIn" class="state-block">
-      <div class="state-icon"><i class="ti ti-heart-off"></i></div>
-      <p>Chưa có prompt yêu thích nào.</p>
-      <span class="fav-hint">Nhấn <strong>trái tim</strong> ở bất kỳ prompt nào để lưu lại.</span>
-    </div>
+      <!-- Error -->
+      <div *ngIf="!errorMessage && promptsList.length === 0 && isLoggedIn" class="state-block" role="status">
+        <div class="state-icon"><i class="ti ti-heart-off"></i></div>
+        <p>Chưa có prompt yêu thích nào.</p>
+        <span class="fav-hint">Nhấn <strong>trái tim</strong> ở bất kỳ prompt nào để lưu lại.</span>
+      </div>
 
-    <!-- Prompt Grid -->
-    <div
-      *ngIf="!isLoading && !errorMessage && promptsList.length > 0"
-      class="fav-grid-container">
+      <div *ngIf="errorMessage" class="state-block state-block--error" role="alert">
+        <div class="state-icon"><i class="ti ti-alert-circle"></i></div>
+        <p>{{ errorMessage }}</p>
+        <button type="button" class="retry-btn" (click)="loadFavorites()">
+          <i class="ti ti-refresh" aria-hidden="true"></i> Thử lại
+        </button>
+      </div>
 
-      <div class="fav-grid">
-        <article
-          *ngFor="let prompt of promptsList; let i = index; trackBy: trackByPromptId"
-          class="prompt-card"
-          [attr.aria-label]="'Prompt: ' + prompt.titleVi">
+      <!-- Prompt Grid -->
+      <div
+        *ngIf="!errorMessage && promptsList.length > 0"
+        class="prompts-fav__grid-container"
+        role="tabpanel"
+        aria-label="Prompt yêu thích">
 
-          <!-- Accent stripe -->
-          <span
-            class="card-stripe"
-            [class.stripe--claude]="prompt.compatibleTools[0] === 'Claude'"
-            [class.stripe--chatgpt]="prompt.compatibleTools[0] === 'ChatGPT'"
-            [class.stripe--gemini]="prompt.compatibleTools[0] === 'Gemini'"
-            aria-hidden="true"></span>
+        <div class="prompts-fav__grid">
+          <article
+            *ngFor="let prompt of promptsList; let i = index; trackBy: trackByPromptId"
+            class="prompt-card"
+            [attr.aria-label]="'Prompt: ' + prompt.titleVi">
 
-          <div class="card-inner">
+            <!-- Accent stripe -->
+            <span
+              class="card-stripe"
+              [class.stripe--claude]="prompt.compatibleTools[0] === 'Claude'"
+              [class.stripe--chatgpt]="prompt.compatibleTools[0] === 'ChatGPT'"
+              [class.stripe--gemini]="prompt.compatibleTools[0] === 'Gemini'"
+              aria-hidden="true"></span>
 
-            <!-- Header -->
-            <div class="card-header">
-              <span class="card-index" aria-hidden="true">#{{ (i + 1).toString().padStart(2, '0') }}</span>
-              <div class="card-title-block">
-                <h2 class="card-title">{{ prompt.titleVi }}</h2>
-                <span class="card-meta" aria-label="{{ prompt.copyCount }} lần sao chép">
-                  <i class="ti ti-copy" aria-hidden="true"></i>
-                  {{ prompt.copyCount }} lần
-                </span>
+            <div class="card-inner">
+
+              <!-- Header -->
+              <div class="card-header">
+                <span class="card-index" aria-hidden="true">#{{ (i + 1).toString().padStart(2, '0') }}</span>
+                <div class="card-title-block">
+                  <h2 class="card-title">{{ prompt.titleVi }}</h2>
+                  <span class="card-meta" aria-label="{{ prompt.copyCount }} lần sao chép">
+                    <i class="ti ti-copy" aria-hidden="true"></i>
+                    {{ prompt.copyCount }} lần
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <!-- Content -->
-            <div class="card-content" role="region" [attr.aria-label]="'Nội dung: ' + prompt.titleVi">
-              <pre class="card-text">{{ prompt.content }}</pre>
-            </div>
-
-            <!-- Footer -->
-            <div class="card-footer">
-              <div class="card-tools" aria-label="Công cụ tương thích" *ngIf="prompt.compatibleTools.length">
-                <span
-                  *ngFor="let tool of prompt.compatibleTools"
-                  class="tool-tag"
-                  [class.tool-tag--claude]="tool === 'Claude'"
-                  [class.tool-tag--chatgpt]="tool === 'ChatGPT'"
-                  [class.tool-tag--gemini]="tool === 'Gemini'">
-                  {{ tool }}
-                </span>
+              <!-- Content — notebook style -->
+              <div class="card-notebook" role="region" [attr.aria-label]="'Nội dung: ' + prompt.titleVi">
+                <div class="notebook-margin" aria-hidden="true"></div>
+                <pre class="card-text">{{ prompt.content }}</pre>
               </div>
-              <div class="card-actions">
+
+              <!-- Footer -->
+              <div class="card-footer">
+                <div class="card-tools" aria-label="Công cụ tương thích" *ngIf="prompt.compatibleTools.length">
+                  <span
+                    *ngFor="let tool of prompt.compatibleTools"
+                    class="tool-tag"
+                    [class.tool-tag--claude]="tool === 'Claude'"
+                    [class.tool-tag--chatgpt]="tool === 'ChatGPT'"
+                    [class.tool-tag--gemini]="tool === 'Gemini'">
+                    {{ tool }}
+                  </span>
+                </div>
+                <div class="card-actions">
                 <button
                   type="button"
                   class="btn-favorite btn-favorite--active"
                   aria-label="Bỏ yêu thích"
                   aria-pressed="true"
                   (click)="toggleFavorite(prompt.id, $event)">
-                  <i class="ti ti-heart-filled" aria-hidden="true"></i>
+                  <app-heart-icon
+                    [size]="18"
+                    [color]="'var(--c-red)'"
+                    [filled]="true">
+                  </app-heart-icon>
                 </button>
                 <button
                   type="button"
@@ -111,17 +122,24 @@
                   [attr.aria-label]="copiedPromptId === prompt.id ? 'Đã sao chép' : 'Sao chép: ' + prompt.titleVi"
                   [attr.aria-pressed]="copiedPromptId === prompt.id"
                   (click)="copyPromptContent(prompt.content, prompt.id)">
-                  <i [class]="copiedPromptId === prompt.id ? 'ti ti-check' : 'ti ti-clipboard'" aria-hidden="true"></i>
+                  <app-copy-icon
+                    *ngIf="copiedPromptId !== prompt.id"
+                    [size]="18"
+                    [color]="'var(--c-on-red)'">
+                  </app-copy-icon>
+                  <i *ngIf="copiedPromptId === prompt.id" class="ti ti-check" aria-hidden="true"></i>
                   <span>{{ copiedPromptId === prompt.id ? 'Đã sao chép!' : 'Sao chép' }}</span>
                 </button>
+                </div>
               </div>
+
             </div>
+          </article>
+        </div>
 
-          </div>
-        </article>
       </div>
-
     </div>
-  </div>
+
+  </ng-container>
 
 </section>

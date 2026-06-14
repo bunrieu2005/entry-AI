@@ -6,7 +6,6 @@ import { filter, Subscription } from 'rxjs';
 import { SidebarComponent } from './components/sidebar/sidebar';
 import { HeaderComponent } from './components/header/header';
 import { HeroSectionComponent } from './components/hero-section/hero-section';
-import { GuidesComponent } from './components/guides/guides';
 import { AiToolsComponent } from './components/ai-tools/ai-tools';
 import { GlossaryComponent } from './components/glossary/glossary';
 import { PromptsComponent } from './components/prompts/prompts';
@@ -31,7 +30,6 @@ export interface ModuleInfo {
     HeroSectionComponent,
     PromptsComponent,
     FavoritePromptsComponent,
-    GuidesComponent,
     AiToolsComponent,
     GlossaryComponent,
   ],
@@ -43,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly keyboardNavigation = inject(KeyboardNavigationService);
 
   readonly modulesList: SidebarModuleId[] = [
-    'guides',
+    'home',
     'explore',
     'glossary',
     'prompts',
@@ -55,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
     'ai-guidelines': '/ai-guidelines/gemini'
   };
 
-  activeModuleId: string = 'guides';
+  activeModuleId: string = 'home';
   isHomePage: boolean = true;
 
   private routerSub?: Subscription;
@@ -94,16 +92,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onModuleSelected(moduleId: string): void {
     this.activeModuleId = moduleId;
-    this.isHomePage = false;
+    this.isHomePage = moduleId === 'home';
     this.keyboardNavigation.setFocusedSidebarModule(moduleId as SidebarModuleId);
-  }
-
-  get isGuidesModule(): boolean {
-    return this.activeModuleId === 'guides';
   }
 
   get isExploreModule(): boolean {
     return this.activeModuleId === 'explore';
+  }
+
+  get isHomeModule(): boolean {
+    return this.activeModuleId === 'home';
   }
 
   get isGlossaryModule(): boolean {
@@ -129,7 +127,7 @@ export class AppComponent implements OnInit, OnDestroy {
   get showHeroSection(): boolean {
     return (
       this.isHomePage &&
-      !this.isGuidesModule &&
+      !this.isHomeModule &&
       !this.isExploreModule &&
       !this.isGlossaryModule &&
       !this.isPromptsModule &&
@@ -139,8 +137,20 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   // ==========================================
-  //  SỬA LỖI INPUT)
+  //  Breadcrumb page name for header
   // ==========================================
+  getPageName(): string {
+    switch (this.activeModuleId) {
+      case 'home':       return '';
+      case 'explore':    return 'Khám Phá';
+      case 'glossary':   return 'Thuật Ngữ AI';
+      case 'prompts':     return 'Thư Viện Prompt';
+      case 'favorite-prompts': return 'Yêu Thích';
+      case 'ai-guidelines':    return 'Hướng Dẫn AI';
+      default:           return '';
+    }
+  }
+
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
   
@@ -184,8 +194,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private selectModuleByShortcut(moduleId: SidebarModuleId): void {
     this.activeModuleId = moduleId;
-    this.isHomePage = false;
+    this.isHomePage = moduleId === 'home';
     this.keyboardNavigation.setFocusedSidebarModule(moduleId);
+
+    if (moduleId === 'home') {
+      this.router.navigateByUrl('/');
+      return;
+    }
 
     const targetRoute = this.defaultModuleRoutes[moduleId];
     if (targetRoute && this.router.url !== targetRoute) {
@@ -195,8 +210,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   getHeroTitle(): string {
     switch (this.activeModuleId) {
-      case 'guides':
-        return 'Hướng Dẫn';
+      case 'home':
+        return 'Trang Chủ';
       case 'explore':
         return 'Khám Phá';
       case 'glossary':
@@ -212,8 +227,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   getHeroSubtitle(): string {
     switch (this.activeModuleId) {
-      case 'guides':
-        return 'Học và làm chủ AI qua các hướng dẫn tương tác';
+      case 'home':
+        return 'Nền tảng học và làm chủ AI cho người Việt';
       case 'explore':
         return 'Bài báo, tin tức và công cụ AI mới nhất';
       case 'glossary':

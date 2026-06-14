@@ -1,19 +1,21 @@
-/* App Layout - Flexbox cố định */
+/* ===== APP LAYOUT ===== */
 .app-wrapper {
   display: flex;
+  flex-direction: column;  /* header trên, body dưới */
   min-height: 100vh;
   background-color: var(--color-neutral);
 }
 
-.app-content {
-  flex: 1;
+/* Row chứa sidebar + main */
+.app-body {
   display: flex;
-  flex-direction: column;
-  min-width: 0;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
 .main-content {
   flex: 1;
+  min-width: 0;
   overflow-y: auto;
 }

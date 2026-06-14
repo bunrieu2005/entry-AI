@@ -3,12 +3,19 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter, Subscription } from 'rxjs';
 import { SidebarModuleId } from '../../services/keyboard-navigation.service';
+import { HomeIconComponent } from '../shared/icons/home-icon';
+import { OpenaiIconComponent } from '../shared/icons/openai-icon';
+import { LibraryIconComponent } from '../shared/icons/library-icon';
+import { PaypalIconComponent } from '../shared/icons/paypal-icon';
+import { HandHeartIconComponent } from '../shared/icons/hand-heart-icon';
+import { BookIconComponent } from '../shared/icons/book-icon';
 
 export interface SidebarModule {
   id: string;
   name: string;
   desc: string;
   icon: string;
+  customIcon?: string;
   children?: {
     id: string;
     name: string;
@@ -19,26 +26,35 @@ export interface SidebarModule {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    HomeIconComponent,
+    OpenaiIconComponent,
+    LibraryIconComponent,
+    PaypalIconComponent,
+    HandHeartIconComponent,
+    BookIconComponent,
+  ],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css'
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   @Output() moduleSelected = new EventEmitter<string>();
   @Input() activeId: string = '';
-  @Input() focusedModuleId: SidebarModuleId = 'guides';
+  @Input() focusedModuleId: SidebarModuleId = 'home';
   @Input() isKeyboardLocked: boolean = false;
 
   modules: SidebarModule[] = [
-    { id: 'guides', name: 'Hướng dẫn', desc: 'WCAG', icon: 'ti-device-gamepad' },
-    { id: 'explore', name: 'Khám phá', desc: 'Bài báo - AI tools', icon: 'ti-compass' },
-    { id: 'glossary', name: 'Thuật ngữ AI', desc: 'Từ điển - Ví dụ', icon: 'ti-book' },
-    { id: 'prompts', name: 'Thư viện Prompt', desc: 'Theo lĩnh vực', icon: 'ti-terminal-2' },
-    { id: 'favorite-prompts', name: 'Yêu thích', desc: 'Prompt đã lưu', icon: 'ti-heart' },
-    { id: 'ai-guidelines', name: 'Hướng dẫn AI', desc: 'Gemini · Claude · ChatGPT', icon: 'ti-sparkles' },
+    { id: 'home', name: 'Trang chủ', desc: 'Giới thiệu', icon: 'ti-home', customIcon: 'home' },
+    { id: 'explore', name: 'Khám phá', desc: 'Bài báo - AI tools', icon: 'ti-compass', customIcon: 'openai' },
+    { id: 'glossary', name: 'Thuật ngữ AI', desc: 'Từ điển - Ví dụ', icon: 'ti-book', customIcon: 'library' },
+    { id: 'prompts', name: 'Thư viện Prompt', desc: 'Theo lĩnh vực', icon: 'ti-terminal-2', customIcon: 'paypal' },
+    { id: 'favorite-prompts', name: 'Yêu thích', desc: 'Prompt đã lưu', icon: 'ti-heart', customIcon: 'hand-heart' },
+    { id: 'ai-guidelines', name: 'Hướng dẫn AI', desc: 'Gemini · Claude · ChatGPT', icon: 'ti-sparkles', customIcon: 'book' },
   ]
 
-  activeModuleId: string = 'guides';
+  activeModuleId: string = 'explore';
   expandedIds = new Set<string>();
   private routerSub?: Subscription;
 
@@ -68,6 +84,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.activeModuleId = moduleId;
     if (moduleId === 'ai-guidelines') {
       this.router.navigateByUrl('/ai-guidelines');
+    }
+    if (moduleId === 'home') {
+      this.router.navigateByUrl('/');
     }
 
     if (this.modules.find(m => m.id === moduleId)?.children) {
