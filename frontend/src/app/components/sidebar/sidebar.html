@@ -1,24 +1,17 @@
 <aside class="sidebar" role="navigation" aria-label="Điều hướng chính">
-  <div class="sidebar__header">
-
-  </div>
+  <div class="sidebar__header"></div>
 
   <nav class="sidebar__nav">
     <ul class="sidebar__list" role="list">
-      <li *ngFor="let mod of modules" class="sidebar__item">
-
-        <!-- Parent button with optional chevron for modules with children -->
+      <li *ngFor="let mod of modules; let i = index" class="sidebar__item">
         <button
           type="button"
           class="sidebar__btn"
           [class.sidebar__btn--active]="isActive(mod.id) || hasActiveChild(mod)"
           [class.sidebar__btn--focused]="isKeyboardLocked && isFocused(mod.id)"
           (click)="selectModule(mod.id)"
-          (pointerup)="$event"
-          [attr.aria-expanded]="mod.children ? isExpanded(mod.id) : null"
-          [attr.aria-current]="isKeyboardLocked && isFocused(mod.id) ? 'true' : null"
-          role="menuitem"
-          [attr.aria-haspopup]="mod.children ? 'menu' : null">
+          role="menuitem">
+
           <span class="sidebar__icon" aria-hidden="true">
             <ng-container [ngSwitch]="mod.customIcon">
               <app-home-icon *ngSwitchCase="'home'" [size]="20"></app-home-icon>
@@ -30,34 +23,45 @@
               <i *ngSwitchDefault class="ti" [ngClass]="mod.icon"></i>
             </ng-container>
           </span>
+
           <span class="sidebar__text">
-            <span class="sidebar__name">{{ mod.name }}</span>
-          </span>
-          <span *ngIf="mod.children" class="sidebar__chevron" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                 [class.sidebar__chevron--rotated]="isExpanded(mod.id)">
-              <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <span class="sidebar__name">
+              {{ mod.name }}
+
+              <span
+                class="sidebar__shortcut"
+                aria-hidden="true">
+                {{ i + 1 }}
+              </span>
+
+            </span>
           </span>
         </button>
-
-        <!-- Sub-items: show when expanded OR when a child is active -->
-        <ul *ngIf="mod.children && (isExpanded(mod.id) || hasActiveChild(mod) || (isKeyboardLocked && isFocused(mod.id)))"
-            class="sidebar__sub-list"
-            role="menu">
-          <li *ngFor="let child of mod.children" class="sidebar__sub-item">
-            <a [routerLink]="child.path"
-               class="sidebar__sub-link"
-               routerLinkActive="sidebar__sub-link--active"
-               role="menuitem">
-              <span class="sidebar__sub-dot" aria-hidden="true"></span>
-              {{ child.name }}
-            </a>
-          </li>
-        </ul>
-
       </li>
     </ul>
   </nav>
+
+  <div class="sidebar__footer">
+    <button
+      type="button"
+      class="sidebar__btn wcag-btn"
+      [class.wcag-btn--active]="isWcagModeActive"
+      (click)="toggleWcagMode()">
+
+      <span class="sidebar__icon">
+        <i class="ti ti-accessible"></i>
+      </span>
+
+      <span class="sidebar__text">
+        <span class="sidebar__name">
+          Keyboard (Alt)
+        </span>
+      </span>
+
+      <div class="wcag-toggle-switch">
+        <div class="wcag-toggle-thumb"></div>
+      </div>
+
+    </button>
+  </div>
 </aside>

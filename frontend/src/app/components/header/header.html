@@ -17,52 +17,53 @@
   </div>
 
   <!-- Actions -->
-  <div class="header__actions">
-    <a href="https://github.com" target="_blank" class="btn-icon" aria-label="GitHub">
-      <app-github-icon [size]="18"></app-github-icon>
-    </a>
-    <a href="https://facebook.com" target="_blank" class="btn-icon" aria-label="Liên hệ">
-      <app-facebook-icon [size]="18"></app-facebook-icon>
-    </a>
-    <a href="/wcag" target="_blank" class="btn-icon btn-icon--wide" aria-label="WCAG" title="WCAG">
-      <app-wcag-icon [width]="48" [height]="20"></app-wcag-icon>
-    </a>
+<!-- Actions -->
+<div class="header__actions">
+  <a href="https://github.com" target="_blank" class="btn-icon" aria-label="GitHub">
+    <app-github-icon [size]="18"></app-github-icon>
+  </a>
+  <a href="https://facebook.com" target="_blank" class="btn-icon" aria-label="Liên hệ">
+    <app-facebook-icon [size]="18"></app-facebook-icon>
+  </a>
+  <a href="/wcag" target="_blank" class="btn-icon btn-icon--wide" aria-label="WCAG" title="WCAG">
+    <app-wcag-icon [width]="48" [height]="20"></app-wcag-icon>
+  </a>
 
-    <button type="button" class="btn-add-prompt" aria-label="Bổ sung prompt" title="Bổ sung prompt">
-      <app-send-horizontal-icon [size]="15"></app-send-horizontal-icon>
-      <span>Bổ sung prompt</span>
-    </button>
+  <button type="button" class="btn-add-prompt" aria-label="Bổ sung prompt" title="Bổ sung prompt">
+    <app-send-horizontal-icon [size]="15"></app-send-horizontal-icon>
+    <span>Bổ sung prompt</span>
+  </button>
 
-    <a href="/privacy" target="_blank" class="btn-action-link" aria-label="Chính sách bảo mật">
-      <span class="btn-icon">
-        <app-lock-icon [size]="16"></app-lock-icon>
+  <!-- Fix nút CSBM: Bỏ bọc .btn-icon bên trong để không bị bể layout -->
+  <a href="/privacy" target="_blank" class="btn-action-link" aria-label="Chính sách bảo mật">
+    <app-lock-icon [size]="15"></app-lock-icon>
+    <span>CSBM</span>
+  </a>
+
+  <!-- Vạch phân cách -->
+  <span class="header__divider" aria-hidden="true"></span>
+
+  <ng-container *ngIf="(currentUser$ | async) === null; else loggedInTpl">
+    <button class="btn-auth btn-ghost" (click)="openModal('login')">Đăng nhập</button>
+    <button class="btn-auth btn-solid" (click)="openModal('register')">Đăng ký</button>
+  </ng-container>
+
+  <ng-template #loggedInTpl>
+    <div class="user-logged-in">
+      <span class="user-avatar">
+        <app-user-check-icon [size]="16"></app-user-check-icon>
       </span>
-      <span class="btn-action-label">CSBM</span>
-    </a>
-
-    <span class="header__divider" aria-hidden="true"></span>
-
-    <ng-container *ngIf="(currentUser$ | async) === null; else loggedInTpl">
-      <button class="btn-auth btn-ghost" (click)="openModal('login')">Đăng nhập</button>
-      <button class="btn-auth btn-solid" (click)="openModal('register')">Đăng ký</button>
-    </ng-container>
-
-    <ng-template #loggedInTpl>
-      <div class="user-logged-in">
-        <span class="user-avatar">
-          <app-user-check-icon [size]="16"></app-user-check-icon>
-        </span>
-        <span class="user-name">{{ (currentUser$ | async)?.displayName || (currentUser$ | async)?.username }}</span>
-      </div>
-      <button class="btn-icon" (click)="logout()" title="Đăng xuất" aria-label="Đăng xuất">
-        <app-logout-icon [size]="18"></app-logout-icon>
-      </button>
-    </ng-template>
-
-    <button type="button" class="btn-icon" aria-label="Chế độ tối">
-      <app-moon-icon [size]="18"></app-moon-icon>
+      <span class="user-name">{{ (currentUser$ | async)?.displayName || (currentUser$ | async)?.username }}</span>
+    </div>
+    <button class="btn-icon" (click)="logout()" title="Đăng xuất" aria-label="Đăng xuất">
+      <app-logout-icon [size]="18"></app-logout-icon>
     </button>
-  </div>
+  </ng-template>
+
+  <button type="button" class="btn-icon" aria-label="Chế độ tối">
+    <app-moon-icon [size]="18"></app-moon-icon>
+  </button>
+</div>  
 </header>
 
 <!-- Auth Modal -->
@@ -72,17 +73,62 @@
       {{ authMode === 'login' ? 'Đăng nhập hệ thống' : 'Đăng ký tài khoản' }}
     </div>
 
+    <!-- Server / success message -->
+    <div *ngIf="fieldErrors['server']" class="form-server-error" role="alert">
+      <app-triangle-alert-icon [size]="15" color="#E53E3E"></app-triangle-alert-icon>
+      {{ fieldErrors['server'] }}
+    </div>
+    <div *ngIf="fieldErrors['success']" class="form-server-success" role="status" aria-live="polite">
+      {{ fieldErrors['success'] }}
+    </div>
+
     <div class="form-group">
-      <label>Tài khoản</label>
-      <input type="text" placeholder="Nhập username..." [(ngModel)]="authData.username">
+      <label for="auth-username">Tài khoản</label>
+      <input
+        id="auth-username"
+        type="text"
+        autocomplete="username"
+        placeholder="Nhập username..."
+        [(ngModel)]="authData.username"
+        [attr.aria-invalid]="fieldErrors['username'] ? true : null"
+        [attr.aria-describedby]="fieldErrors['username'] ? 'err-username' : null"
+        (input)="clearFieldError('username')">
+      <div *ngIf="fieldErrors['username']" id="err-username" class="form-error" role="alert">
+        <app-triangle-alert-icon [size]="13" color="#E53E3E"></app-triangle-alert-icon>
+        {{ fieldErrors['username'] }}
+      </div>
     </div>
     <div class="form-group">
-      <label>Mật khẩu</label>
-      <input type="password" placeholder="Nhập password..." [(ngModel)]="authData.password">
+      <label for="auth-password">Mật khẩu</label>
+      <input
+        id="auth-password"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Nhập password..."
+        [(ngModel)]="authData.password"
+        [attr.aria-invalid]="fieldErrors['password'] ? true : null"
+        [attr.aria-describedby]="fieldErrors['password'] ? 'err-password' : null"
+        (input)="clearFieldError('password')">
+      <div *ngIf="fieldErrors['password']" id="err-password" class="form-error" role="alert">
+        <app-triangle-alert-icon [size]="13" color="#E53E3E"></app-triangle-alert-icon>
+        {{ fieldErrors['password'] }}
+      </div>
     </div>
     <div class="form-group" *ngIf="authMode === 'register'">
-      <label>Xác nhận mật khẩu</label>
-      <input type="password" placeholder="Nhập lại password..." [(ngModel)]="authData.confirmPassword">
+      <label for="auth-confirm-password">Xác nhận mật khẩu</label>
+      <input
+        id="auth-confirm-password"
+        type="password"
+        autocomplete="new-password"
+        placeholder="Nhập lại password..."
+        [(ngModel)]="authData.confirmPassword"
+        [attr.aria-invalid]="fieldErrors['confirmPassword'] ? true : null"
+        [attr.aria-describedby]="fieldErrors['confirmPassword'] ? 'err-confirm-password' : null"
+        (input)="clearFieldError('confirmPassword')">
+      <div *ngIf="fieldErrors['confirmPassword']" id="err-confirm-password" class="form-error" role="alert">
+        <app-triangle-alert-icon [size]="13" color="#E53E3E"></app-triangle-alert-icon>
+        {{ fieldErrors['confirmPassword'] }}
+      </div>
     </div>
 
     <div class="modal-actions">

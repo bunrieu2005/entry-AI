@@ -1,15 +1,15 @@
-Luôn tuân thủ các quy tắc sau khi viết code cho dự án này:
-
-1. Tiêu chuẩn WCAG 2.2 (Mức độ AA/AAA):
-   - [cite_start]Mọi nút bấm (Button) phải có kích thước tối thiểu 44x44px để hỗ trợ người hạn chế vận động tay[cite: 729].
-   - [cite_start]Sử dụng sự kiện (pointerup) cho các hành động quan trọng để hỗ trợ "Hủy con trỏ"[cite: 704].
-   - [cite_start]Mọi phần tử tương tác phải có chỉ báo tiêu điểm (:focus-visible) rõ ràng, dày 3px[cite: 645].
-   - [cite_start]Sử dụng Semantic HTML (article, nav, main, button)[cite: 988].
-
-2. Kraft Paper Design System:
-   - Màu sắc: Primary (#251812), Surface (#F1E3C6), Tertiary (#B83B2E - chỉ dùng cho nút Copy).
-   - [cite_start]Typography: Archivo cho tiêu đề, Inter cho nội dung.
-   - Phong cách: Phẳng (Flat), không gradient.
-
-3. Kỹ thuật:
-   - [cite_start]Sử dụng Angular CDK (A11y, LiveAnnouncer) để thông báo trạng thái[cite: 921].
+   1. Quy tắc Nhận biết được (Perceivable)
+   1.1.1 (Hình ảnh & Biểu tượng): Yêu cầu mọi thẻ <img> phải có thuộc tính alt mô tả nội dung. 
+   Đối với ảnh trang trí, bắt buộc alt="". Các nút bấm chỉ chứa biểu tượng (icon) phải có aria-label
+   1.3.1 (Cấu trúc & Ngữ nghĩa): Bắt buộc sử dụng Semantic HTML (<nav>, <main>, <article>, <button>) thay vì lạm dụng <div>. Cấu trúc thẻ tiêu đề <h1> đến <h6> phải theo đúng phân cấp logic. Các trường nhập liệu (<input>, <textarea>) phải có <label> liên kết chặt chẽ thông qua thuộc tính for và id
+   1.3.5 (Mục đích đầu vào): Các trường thu thập thông tin người dùng phải được gán thuộc tính autocomplete phù hợp (ví dụ: email, tel)
+   2. Quy tắc Vận hành được (Operable)
+   2.1.1 & 2.1.2 (Bàn phím): Kiểm tra để đảm bảo không có bẫy bàn phím (keyboard trap) trong các cửa sổ modal hoặc widget. Mọi thành phần tương tác phải có khả năng nhận tiêu điểm (focus).
+   2.4.7 (Tiêu điểm hiển thị): Cảnh báo mức độ cao (Critical) nếu phát hiện CSS có thuộc tính outline: none . ở trạng thái :focus mà không có cơ chế thay thế rõ ràng để hiển thị tiêu điểm.  
+   2.5.8 (Kích thước mục tiêu - Mới): Đảm bảo các vùng có thể nhấp chuột (nút, liên kết) có kích thước CSS tối thiểu là 24x24 pixel
+   3. Quy tắc Có thể hiểu được (Understandable)
+   3.1.1 (Ngôn ngữ): Thẻ <html> phải có thuộc tính lang được khai báo (ví dụ: lang="vi"). 
+   3.3.1 & 3.3.2 (Hỗ trợ nhập liệu): Các lỗi nhập liệu được phát hiện tự động phải hiển thị mô tả lỗi bằng văn bản rõ ràng gần vị trí trường bị lỗi, không chỉ đánh dấu đỏ.  3.3.7 (Nhập liệu thừa - Mới): Phân tích luồng form để đảm bảo thông tin người dùng đã nhập trước đó được tự động điền lại ở các bước sau nếu cần thiết. 
+   4. Quy tắc Mạnh mẽ (Robust)
+   4.1.2 (Tên, Vai trò, Giá trị): Đánh giá các UI Component tùy chỉnh. Nếu sử dụng <div> hoặc <span> để làm nút, bắt buộc phải có role="button" và các trạng thái như aria-expanded hoặc aria-checked.
+   4.1.3 (Thông báo trạng thái): Các vùng cập nhật nội dung động (không làm thay đổi focus) phải sử dụng aria-live (polite hoặc assertive) hoặc role="status" để trình đọc màn hình có thể thông báo.

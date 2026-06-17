@@ -1,8 +1,19 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  HostListener
+} from '@angular/core';
+
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter, Subscription } from 'rxjs';
+
 import { SidebarModuleId } from '../../services/keyboard-navigation.service';
+
 import { HomeIconComponent } from '../shared/icons/home-icon';
 import { OpenaiIconComponent } from '../shared/icons/openai-icon';
 import { LibraryIconComponent } from '../shared/icons/library-icon';
@@ -34,66 +45,169 @@ export interface SidebarModule {
     LibraryIconComponent,
     PaypalIconComponent,
     HandHeartIconComponent,
-    BookIconComponent,
+    BookIconComponent
   ],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css'
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+
   @Output() moduleSelected = new EventEmitter<string>();
+
   @Input() activeId: string = '';
+
   @Input() focusedModuleId: SidebarModuleId = 'home';
+
   @Input() isKeyboardLocked: boolean = false;
 
   modules: SidebarModule[] = [
-    { id: 'home', name: 'Trang chủ', desc: 'Giới thiệu', icon: 'ti-home', customIcon: 'home' },
-    { id: 'explore', name: 'Khám phá', desc: 'Bài báo - AI tools', icon: 'ti-compass', customIcon: 'openai' },
-    { id: 'glossary', name: 'Thuật ngữ AI', desc: 'Từ điển - Ví dụ', icon: 'ti-book', customIcon: 'library' },
-    { id: 'prompts', name: 'Thư viện Prompt', desc: 'Theo lĩnh vực', icon: 'ti-terminal-2', customIcon: 'paypal' },
-    { id: 'favorite-prompts', name: 'Yêu thích', desc: 'Prompt đã lưu', icon: 'ti-heart', customIcon: 'hand-heart' },
-    { id: 'ai-guidelines', name: 'Hướng dẫn AI', desc: 'Gemini · Claude · ChatGPT', icon: 'ti-sparkles', customIcon: 'book' },
-  ]
+    {
+      id: 'home',
+      name: 'Trang chủ',
+      desc: 'Giới thiệu',
+      icon: 'ti-home',
+      customIcon: 'home'
+    },
+    {
+      id: 'explore',
+      name: 'Khám phá',
+      desc: 'Bài báo - AI tools',
+      icon: 'ti-compass',
+      customIcon: 'openai'
+    },
+    {
+      id: 'glossary',
+      name: 'Thuật ngữ AI',
+      desc: 'Từ điển - Ví dụ',
+      icon: 'ti-book',
+      customIcon: 'library'
+    },
+    {
+      id: 'prompts',
+      name: 'Thư viện Prompt',
+      desc: 'Theo lĩnh vực',
+      icon: 'ti-terminal-2',
+      customIcon: 'paypal'
+    },
+    {
+      id: 'favorite-prompts',
+      name: 'Yêu thích',
+      desc: 'Prompt đã lưu',
+      icon: 'ti-heart',
+      customIcon: 'hand-heart'
+    },
+    {
+      id: 'ai-guidelines',
+      name: 'Hướng dẫn AI',
+      desc: 'Gemini · Claude · ChatGPT',
+      icon: 'ti-sparkles',
+      customIcon: 'book'
+    }
+  ];
 
-  activeModuleId: string = 'explore';
+  activeModuleId = 'explore';
+
   expandedIds = new Set<string>();
+
+  isWcagModeActive = false;
+
   private routerSub?: Subscription;
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.syncExpandedFromUrl(this.router.url);
+
     this.routerSub = this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe((e) => this.syncExpandedFromUrl((e as NavigationEnd).url));
+      .subscribe(e => {
+        this.syncExpandedFromUrl(
+          (e as NavigationEnd).url
+        );
+      });
   }
 
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe();
   }
 
+  @HostListener('document:keyup.alt', ['$event'])
+  handleAlt(event: Event): void {
+    event.preventDefault();
+    this.toggleWcagMode();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleShortcut(event: KeyboardEvent): void {
+
+    if (!this.isWcagModeActive) return;
+
+    switch (event.key) {
+
+      case '1':
+        this.selectModule('home');
+        break;
+
+      case '2':
+        this.selectModule('explore');
+        break;
+
+      case '3':
+        this.selectModule('glossary');
+        break;
+
+      case '4':
+        this.selectModule('prompts');
+        break;
+
+      case '5':
+        this.selectModule('favorite-prompts');
+        break;
+
+      case '6':
+        this.selectModule('ai-guidelines');
+        break;
+    }
+  }
+
+  toggleWcagMode(event?: Event): void {
+
+    event?.stopPropagation();
+
+    this.isWcagModeActive = !this.isWcagModeActive;
+
+    if (this.isWcagModeActive) {
+      document.body.classList.add('wcag-on');
+    } else {
+      document.body.classList.remove('wcag-on');
+    }
+  }
+
   private syncExpandedFromUrl(url: string): void {
+
     for (const mod of this.modules) {
+
       if (mod.children?.some(c => url.startsWith(c.path))) {
+
         this.expandedIds.add(mod.id);
+
         this.activeModuleId = mod.id;
       }
     }
   }
 
   selectModule(moduleId: string): void {
+
     this.activeModuleId = moduleId;
-    if (moduleId === 'ai-guidelines') {
-      this.router.navigateByUrl('/ai-guidelines');
-    }
+
     if (moduleId === 'home') {
       this.router.navigateByUrl('/');
     }
 
-    if (this.modules.find(m => m.id === moduleId)?.children) {
-      this.expandedIds.add(moduleId);
-    } else {
-      this.expandedIds.delete(moduleId);
+    if (moduleId === 'ai-guidelines') {
+      this.router.navigateByUrl('/ai-guidelines');
     }
+
     this.moduleSelected.emit(moduleId);
   }
 
@@ -106,7 +220,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   hasActiveChild(mod: SidebarModule): boolean {
-    return mod.children?.some(c => this.router.url.startsWith(c.path)) ?? false;
+    return mod.children?.some(
+      c => this.router.url.startsWith(c.path)
+    ) ?? false;
   }
 
   isFocused(moduleId: string): boolean {
@@ -114,7 +230,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   toggleExpand(moduleId: string, event?: Event): void {
+
     event?.stopPropagation();
+
     if (this.expandedIds.has(moduleId)) {
       this.expandedIds.delete(moduleId);
     } else {

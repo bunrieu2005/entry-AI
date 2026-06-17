@@ -1,387 +1,399 @@
 /* ============================================================
-   Header — Dark Tech / itshover style
-   IBM Plex Mono · #0d0d0d · Accent #f97316
-   Logo: icon P (đen, viền trắng) + wordmark "Prompt-Entry" to, viền trắng
+   Header — Dark Shell Style
    ============================================================ */
 
-   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700;800&display=swap');
-
    .header {
-     display: flex;
-     align-items: center;
-     justify-content: space-between;
-     height: 64px;
-     padding: 0 24px 0 28px;
-     background-color: #0d0d0d;
-     border-bottom: 1px solid #2e2e2e;
-     position: sticky;
-     top: 0;
-     z-index: 100;
-     flex-shrink: 0;
-     font-family: var(--font-body);
-   }
-   
-   /* ── Left: brand + breadcrumb ── */
-   .header__left {
-     display: flex;
-     align-items: center;
-     gap: 0;
-   }
-   
-   .header__brand {
-     display: flex;
-     align-items: center;
-     gap: 14px;
-     text-decoration: none;
-   }
-   
-   /* Icon chữ P — đen, viền trắng bao quanh hình */
-   .header__logo-icon {
-     flex-shrink: 0;
-     display: block;
-   }
-   
-   /* Wordmark "Prompt-Entry" — to, đen với viền trắng quanh chữ */
-   .header__wordmark {
-     font-family: var(--font-body);
-     font-size: 22px;
-     font-weight: 500;
-     color: #111111;
-     -webkit-text-stroke: 1.2px #ffffff;
-     paint-order: stroke fill;
-     letter-spacing: -0.01em;
-     white-space: nowrap;
-   }
-   
-   /* Breadcrumb */
-   .header__breadcrumb {
-     display: flex;
-     align-items: center;
-     gap: 8px;
-     margin-left: 16px;
-   }
-   
-   .header__breadcrumb-sep {
-     color: #4a4a4a;
-     font-size: 18px;
-     font-weight: 300;
-     line-height: 1;
-   }
-   
-   .header__breadcrumb-page {
-     font-size: 11px;
-     font-weight: 600;
-     color: #f97316;
-     letter-spacing: 0.08em;
-     text-transform: uppercase;
-     padding: 3px 12px;
-     background: rgba(249, 115, 22, 0.08);
-     border: 1px solid rgba(249, 115, 22, 0.3);
-     border-radius: 5px;
-   }
-   
-   /* ── Right: actions ── */
-   .header__actions {
-     display: flex;
-     align-items: center;
-     gap: 8px;
-   }
-   
-   .header__divider {
-     width: 1px;
-     height: 22px;
-     background: #2e2e2e;
-     margin: 0 4px;
-     flex-shrink: 0;
-   }
-   
-   /* ── Icon buttons — vuông vắc, radius nhỏ đồng nhất ── */
-   .btn-icon {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     width: 36px;
-     height: 36px;
-     background: transparent;
-     border: 1px solid #2e2e2e;
-     border-radius: 5px;
-     color: #6b7280;
-     font-size: 16px;
-     cursor: pointer;
-     text-decoration: none;
-     transition: background 0.15s, color 0.15s, border-color 0.15s;
-     flex-shrink: 0;
-     box-sizing: border-box;
-   }
-   
-   .btn-icon:hover {
-     background: rgba(229, 229, 229, 0.06);
-     color: #e5e5e5;
-     border-color: rgba(229, 229, 229, 0.25);
-   }
-   
-   .btn-icon--wide {
-     width: auto;
-     padding: 0 10px;
-   }
-   
-   /* ── Action link (icon + label) ── */
-   .btn-action-link {
-     display: flex;
-     align-items: center;
-     gap: 7px;
-     text-decoration: none;
-     background: transparent;
-     border: none;
-     cursor: pointer;
-     padding: 0;
-     height: 36px;
-     transition: opacity 0.15s;
-   }
-   
-   .btn-action-link:hover { opacity: 0.85; }
-   
-   .btn-action-label {
-     font-size: 12px;
-     font-weight: 600;
-     color: rgba(229, 229, 229, 0.65);
-     white-space: nowrap;
-     letter-spacing: 0.02em;
-   }
-   
-   .btn-action-link:hover .btn-action-label { color: #e5e5e5; }
-   
-   /* ── Bổ sung prompt — nút vuông nổi bật cam ── */
-   .btn-add-prompt {
-     display: flex;
-     align-items: center;
-     gap: 7px;
-     height: 36px;
-     padding: 0 14px;
-     background: rgba(249, 115, 22, 0.08);
-     border: 1px solid rgba(249, 115, 22, 0.35);
-     border-radius: 5px;
-     color: #f97316;
-     font-family: inherit;
-     font-size: 12.5px;
-     font-weight: 600;
-     letter-spacing: 0.02em;
-     cursor: pointer;
-     white-space: nowrap;
-     transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, color 0.15s;
-   }
-   
-   .btn-add-prompt:hover {
-     background: rgba(249, 115, 22, 0.16);
-     border-color: rgba(249, 115, 22, 0.6);
-     color: #fb923c;
-     box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
-   }
-   
-   /* ── Auth buttons — vuông vắc ── */
-   .btn-auth {
-     height: 36px;
-     padding: 0 16px;
-     border-radius: 5px;
-     font-size: 12.5px;
-     font-weight: 600;
-     letter-spacing: 0.02em;
-     cursor: pointer;
-     border: none;
-     transition: background 0.15s, transform 0.1s, box-shadow 0.15s, border-color 0.15s;
-     white-space: nowrap;
-   }
-   
-   .btn-ghost {
-     background: transparent;
-     color: rgba(229, 229, 229, 0.7);
-     border: 1px solid #2e2e2e;
-   }
-   
-   .btn-ghost:hover {
-     background: rgba(229, 229, 229, 0.06);
-     color: #e5e5e5;
-     border-color: rgba(229, 229, 229, 0.35);
-   }
-   
-   .btn-solid {
-     background: #f97316;
-     color: #0d0d0d;
-     border: 1px solid #f97316;
-     box-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
-   }
-   
-   .btn-solid:hover {
-     background: #fb923c;
-     border-color: #fb923c;
-     box-shadow: 0 0 16px rgba(249, 115, 22, 0.45);
-     transform: translateY(-1px);
-   }
-   
-   /* ── User logged in — vuông vắc ── */
-   .user-logged-in {
-     display: flex;
-     align-items: center;
-     gap: 8px;
-     height: 36px;
-     background: rgba(229, 229, 229, 0.05);
-     padding: 0 12px 0 6px;
-     border-radius: 5px;
-     border: 1px solid #2e2e2e;
-   }
-   
-   .user-avatar {
-     width: 26px;
-     height: 26px;
-     border-radius: 5px;
-     background: rgba(249, 115, 22, 0.12);
-     border: 1px solid rgba(249, 115, 22, 0.4);
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     color: #f97316;
-     flex-shrink: 0;
-   }
-   
-   .user-name {
-     font-weight: 600;
-     font-size: 13px;
-     color: #e5e5e5;
-   }
-   
-   /* ── Auth Modal ── */
-   .modal-overlay {
-     position: fixed;
-     top: 0; left: 0;
-     width: 100vw; height: 100vh;
-     background: rgba(0, 0, 0, 0.8);
-     backdrop-filter: blur(8px);
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     z-index: 1000;
-   }
-   
-   .modal-box {
-     background: #1a1a1a;
-     width: 420px;
-     padding: 36px;
-     border-radius: 10px;
-     border: 1px solid #2e2e2e;
-     box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(249,115,22,0.08);
-   }
-   
-   .modal-title {
-     font-size: 20px;
-     font-weight: 800;
-     text-align: center;
-     margin-bottom: 28px;
-     color: #e5e5e5;
-     letter-spacing: -0.02em;
-   }
-   
-   .modal-title span { color: #f97316; }
-   
-   .form-group { margin-bottom: 16px; }
-   
-   .form-group label {
-     display: block;
-     font-size: 11px;
-     font-weight: 600;
-     letter-spacing: 0.1em;
-     text-transform: uppercase;
-     margin-bottom: 7px;
-     color: #6b7280;
-   }
-   
-   .form-group input {
-     width: 100%;
-     padding: 11px 14px;
-     border-radius: 6px;
-     border: 1px solid #2e2e2e;
-     outline: none;
-     font-family: inherit;
-     font-size: 13px;
-     background: #0d0d0d;
-     color: #e5e5e5;
-     transition: border-color 0.15s, box-shadow 0.15s;
-     box-sizing: border-box;
-   }
-   
-   .form-group input::placeholder { color: #4a4a4a; }
-   
-   .form-group input:focus {
-     border-color: #f97316;
-     box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
-   }
-   
-   .modal-actions {
-     display: flex;
-     gap: 10px;
-     margin-top: 24px;
-   }
-   
-   .btn-full {
-     flex: 1;
-     background: #f97316;
-     color: #0d0d0d;
-     padding: 12px;
-     border-radius: 6px;
-     font-weight: 700;
-     font-size: 13px;
-     letter-spacing: 0.04em;
-     border: 1px solid #f97316;
-     cursor: pointer;
-     transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-     box-shadow: 0 0 12px rgba(249, 115, 22, 0.3);
-   }
-   
-   .btn-full:hover {
-     background: #fb923c;
-     border-color: #fb923c;
-     box-shadow: 0 0 20px rgba(249, 115, 22, 0.45);
-     transform: translateY(-1px);
-   }
-   
-   .btn-cancel {
-     flex: 1;
-     background: transparent;
-     border: 1px solid #2e2e2e;
-     padding: 12px;
-     border-radius: 6px;
-     font-weight: 500;
-     font-size: 13px;
-     color: #6b7280;
-     cursor: pointer;
-     transition: background 0.15s, color 0.15s, border-color 0.15s;
-   }
-   
-   .btn-cancel:hover {
-     background: rgba(229, 229, 229, 0.05);
-     color: #e5e5e5;
-     border-color: rgba(229, 229, 229, 0.2);
-   }
-   
-   .auth-switch {
-     text-align: center;
-     font-size: 12px;
-     margin-top: 20px;
-     color: #4a4a4a;
-   }
-   
-   .auth-switch a {
-     color: #f97316;
-     font-weight: 600;
-     text-decoration: none;
-     margin-left: 4px;
-   }
-   
-   .auth-switch a:hover { text-decoration: underline; }
-   
-   /* ── Responsive ── */
-   @media (max-width: 900px) {
-     .btn-action-label { display: none; }
-     .btn-add-prompt span:not(.btn-add-prompt-inner) { display: none; }
-     .btn-add-prompt { width: 36px; padding: 0; justify-content: center; }
-     .header__wordmark { font-size: 18px; }
-   }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    padding: 0 24px 0 28px;
+    background-color: #1A110B;
+    border-bottom: 1px solid rgba(201, 154, 75, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-shrink: 0;
+  }
+  
+  /* ── Left: brand + breadcrumb ── */
+  .header__left {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  
+  .header__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  
+  .header__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, #B83B2E 0%, #8B2820 100%);
+    color: #F4E9D2;
+    border-radius: 9px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 1px rgba(201,154,75,0.3), 0 2px 8px rgba(184,59,46,0.4);
+  }
+  
+  .header__wordmark {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: #F4E9D2;
+    letter-spacing: -0.01em;
+  }
+  
+  /* Breadcrumb */
+  .header__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 16px;
+  }
+  
+  .header__breadcrumb-sep {
+    color: rgba(201, 154, 75, 0.4);
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1;
+  }
+  
+  .header__breadcrumb-page {
+    font-size: 13px;
+    font-weight: 600;
+    color: #C99A4B;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    background: rgba(201, 154, 75, 0.1);
+    border: 1px solid rgba(201, 154, 75, 0.25);
+    border-radius: 999px;
+  }
+  
+  /* ── Right: actions ── */
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Auth buttons */
+  .btn-auth {
+    height: 36px;
+    padding: 0 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    white-space: nowrap;
+  }
+  
+  .btn-ghost {
+    background: transparent;
+    color: rgba(244, 233, 210, 0.75);
+    border: 1.5px solid rgba(244, 233, 210, 0.2);
+  }
+  
+  .btn-ghost:hover {
+    background: rgba(244, 233, 210, 0.08);
+    color: #F4E9D2;
+    border-color: rgba(244, 233, 210, 0.4);
+  }
+  
+  .btn-solid {
+    background: #C99A4B;
+    color: #1A110B;
+    border: 1.5px solid #C99A4B;
+    box-shadow: 0 2px 8px rgba(201, 154, 75, 0.3);
+  }
+  
+  .btn-solid:hover {
+    background: #E6C070;
+    box-shadow: 0 4px 12px rgba(201, 154, 75, 0.4);
+    transform: translateY(-1px);
+  }
+  
+  /* Bổ sung prompt */
+  .btn-add-prompt {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1.5px solid rgba(201, 154, 75, 0.35);
+    border-radius: 8px;
+    color: rgba(201, 154, 75, 0.8);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+
+  .btn-add-prompt:hover {
+    background: rgba(201, 154, 75, 0.08);
+    border-color: rgba(201, 154, 75, 0.6);
+    color: #C99A4B;
+  }
+
+  /* Icon button */
+  .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1.5px solid rgba(244, 233, 210, 0.15);
+    border-radius: 8px;
+    color: rgba(244, 233, 210, 0.55);
+    font-size: 17px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  
+  .btn-icon:hover {
+    background: rgba(244, 233, 210, 0.08);
+    color: #F4E9D2;
+    border-color: rgba(244, 233, 210, 0.3);
+  }
+  
+  /* User logged in */
+  .user-logged-in {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(244, 233, 210, 0.07);
+    padding: 4px 12px 4px 6px;
+    border-radius: 999px;
+    border: 1px solid rgba(244, 233, 210, 0.15);
+  }
+  
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(201, 154, 75, 0.15);
+    border: 1px solid rgba(201, 154, 75, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+  }
+  
+  .user-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: #F4E9D2;
+  }
+  
+  /* ── Auth Modal ── */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(10, 6, 3, 0.75);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-box {
+    background: #241A12;
+    width: 420px;
+    padding: 36px;
+    border-radius: 16px;
+    border: 1.5px solid rgba(201, 154, 75, 0.25);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(201,154,75,0.1);
+  }
+  
+  .modal-title {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 28px;
+    color: #F4E9D2;
+    letter-spacing: -0.01em;
+  }
+  
+  .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+    color: rgba(244, 233, 210, 0.6);
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(244, 233, 210, 0.15);
+    outline: none;
+    font-family: inherit;
+    font-size: 14px;
+    background: rgba(244, 233, 210, 0.06);
+    color: #F4E9D2;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+  }
+  
+  .form-group input::placeholder {
+    color: rgba(244, 233, 210, 0.3);
+  }
+  
+  .form-group input:focus {
+    border-color: #C99A4B;
+    box-shadow: 0 0 0 3px rgba(201, 154, 75, 0.15);
+  }
+
+  .form-group input[aria-invalid="true"] {
+    border-color: #E53E3E;
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.15);
+  }
+
+  .form-error {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #E53E3E;
+    font-weight: 500;
+  }
+
+  .form-server-error {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #E53E3E;
+    background: rgba(229, 62, 62, 0.08);
+    border: 1px solid rgba(229, 62, 62, 0.2);
+  }
+
+  .form-server-success {
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #38A169;
+    background: rgba(56, 161, 105, 0.08);
+    border: 1px solid rgba(56, 161, 105, 0.2);
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  
+  .btn-full {
+    flex: 1;
+    background: #C99A4B;
+    color: #1A110B;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  
+  .btn-full:hover {
+    background: #E6C070;
+    transform: translateY(-1px);
+  }
+  
+  .btn-cancel {
+    flex: 1;
+    background: transparent;
+    border: 1.5px solid rgba(244, 233, 210, 0.15);
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: rgba(244, 233, 210, 0.6);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  
+  .btn-cancel:hover {
+    background: rgba(244, 233, 210, 0.06);
+    color: #F4E9D2;
+  }
+  
+  .auth-switch {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 20px;
+    color: rgba(244, 233, 210, 0.45);
+  }
+  
+  .auth-switch a {
+    color: #C99A4B;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 4px;
+  }
+  
+  .auth-switch a:hover { text-decoration: underline; }
+  /* Sửa nút WCAG cho phép tự giãn chiều ngang */
+.btn-icon--wide {
+  width: auto;
+  padding: 0 10px;
+}
+
+/* Style cho nút liên kết CSBM (Đồng bộ Dark Shell) */
+.btn-action-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1.5px solid rgba(244, 233, 210, 0.15);
+  border-radius: 8px;
+  color: rgba(244, 233, 210, 0.55);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.btn-action-link:hover {
+  background: rgba(244, 233, 210, 0.08);
+  color: #F4E9D2;
+  border-color: rgba(244, 233, 210, 0.3);
+}
+
+/* Vạch kẻ phân cách giữa nhóm menu chức năng và tài khoản */
+.header__divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(244, 233, 210, 0.15);
+  margin: 0 4px;
+}

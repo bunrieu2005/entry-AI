@@ -12,12 +12,13 @@ import { FacebookIconComponent } from '../shared/icons/facebook-icon';
 import { SendHorizontalIconComponent } from '../shared/icons/send-horizontal-icon';
 import { MoonIconComponent } from '../shared/icons/moon-icon';
 import { LockIconComponent } from '../shared/icons/lock-icon';
+import { TriangleAlertIconComponent } from '../shared/icons/triangle-alert-icon';
 import { WcagIconComponent } from '../shared/icons/wcag-icon';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, LogoutIconComponent, UserCheckIconComponent, GithubIconComponent, FacebookIconComponent, SendHorizontalIconComponent, LockIconComponent, MoonIconComponent, WcagIconComponent],
+  imports: [CommonModule, FormsModule, LogoutIconComponent, UserCheckIconComponent, GithubIconComponent, FacebookIconComponent, SendHorizontalIconComponent, LockIconComponent, MoonIconComponent, WcagIconComponent, TriangleAlertIconComponent],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
@@ -35,6 +36,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     password: '',
     confirmPassword: ''
   };
+
+  // Validation errors keyed by field name
+  fieldErrors: Record<string, string> = {};
 
   private subs = new Subscription();
 
@@ -64,47 +68,65 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   closeModal() {
     this.authModalService.close();
+    this.fieldErrors = {};
+    this.authData = { username: '', password: '', confirmPassword: '' };
+  }
+
+  clearFieldError(field: string): void {
+    delete this.fieldErrors[field];
   }
 
   submitStep1() {
-    if (!this.authData.username || !this.authData.password) {
-      alert('Vui lòng nhập đầy đủ tài khoản và mật khẩu!');
+    this.fieldErrors = {};
+
+    if (!this.authData.username) {
+      this.fieldErrors['username'] = 'Vui lòng nhập tài khoản.';
+      return;
+    }
+    if (!this.authData.password) {
+      this.fieldErrors['password'] = 'Vui lòng nhập mật khẩu.';
       return;
     }
 
     if (this.authMode === 'register') {
       if (this.authData.username.length < 4 || this.authData.username.includes(' ')) {
-        alert('Tài khoản phải từ 4 ký tự trở lên và không chứa khoảng trắng!'); return;
+        this.fieldErrors['username'] = 'Tài khoản phải từ 4 ký tự trở lên, không chứa khoảng trắng.';
+        return;
       }
       if (this.authData.password.length < 6) {
-        alert('Mật khẩu quá ngắn, vui lòng nhập ít nhất 6 ký tự!'); return;
+        this.fieldErrors['password'] = 'Mật khẩu phải từ 6 ký tự trở lên.';
+        return;
       }
       const hasLetter = /[a-zA-Z]/.test(this.authData.password);
       const hasNumber = /\d/.test(this.authData.password);
       const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(this.authData.password);
       if (!hasLetter || !hasNumber || !hasSpecialChar) {
-        alert('Mật khẩu phải bao gồm chữ cái, chữ số và ít nhất một ký tự đặc biệt!'); return;
+        this.fieldErrors['password'] = 'Mật khẩu phải bao gồm chữ cái, chữ số và ký tự đặc biệt.';
+        return;
       }
       if (this.authData.password !== this.authData.confirmPassword) {
-        alert('Mật khẩu xác nhận không khớp!'); return;
+        this.fieldErrors['confirmPassword'] = 'Mật khẩu xác nhận không khớp.';
+        return;
       }
 
       this.authService.register({ username: this.authData.username, password: this.authData.password }).subscribe({
         next: () => {
-          alert('Đăng ký thành công! Hãy đăng nhập nhé.');
+          this.fieldErrors['success'] = 'Đăng ký thành công! Hãy đăng nhập nhé.';
           this.authMode = 'login';
           this.authData.password = '';
           this.authData.confirmPassword = '';
         },
         error: (err) => {
           const errorMsg = typeof err.error === 'string' ? err.error : 'Tài khoản đã tồn tại!';
-          alert(errorMsg);
+          this.fieldErrors['server'] = errorMsg;
         }
       });
     } else {
       this.authService.login({ username: this.authData.username, password: this.authData.password }).subscribe({
         next: () => this.closeModal(),
-        error: () => alert('Sai tài khoản hoặc mật khẩu!')
+        error: () => {
+          this.fieldErrors['server'] = 'Sai tài khoản hoặc mật khẩu!';
+        }
       });
     }
   }
