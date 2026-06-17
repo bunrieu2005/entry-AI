@@ -1,9 +1,0 @@
-{
-    "outputDirectory": "dist/entry-AI",
-    "rewrites": [
-      {
-        "source": "/(.*)",
-        "destination": "/index.html"
-      }
-    ]
-  }
