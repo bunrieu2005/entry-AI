@@ -76,6 +76,10 @@ export class GlossaryComponent implements OnInit, OnChanges {
 
   private resetKeyboardReady(): void {
     this.isKeyboardReady = false;
+    // Xoá focus DOM thật còn sót lại để không tạo ra viền outline mặc định
+    // của trình duyệt nằm ở một nút khác — chỉ còn duy nhất highlight đen
+    // (.is-keyboard-highlighted) do component tự vẽ.
+    (document.activeElement as HTMLElement)?.blur();
     setTimeout(() => {
       this.isKeyboardReady = true;
     }, 100);

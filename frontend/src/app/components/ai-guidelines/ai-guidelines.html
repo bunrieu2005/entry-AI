@@ -1,38 +1,29 @@
-<!-- ============================================
-     AI Guidelines — Main Layout
-     Two-panel: lesson list (left) + lesson detail (right)
-     ============================================ -->
+<div class="ai-guidelines" [class.kb-lock]="isFocusLocked">
 
-<div class="ai-guidelines">
-
-  <!-- Navigation Status Banner -->
   <div
     *ngIf="isFocusLocked"
-    class="nav-status-banner"
+    class="nav-banner"
     role="status"
     aria-live="polite"
     aria-atomic="true">
     <i class="ti ti-device-gamepad" aria-hidden="true"></i>
     <span *ngIf="currentZone === 'ZONE_FILTERS'">
-      <span class="keycap">←</span> <span class="keycap">→</span> chuyển AI &bull;
-      <span class="keycap">↓</span> xuống danh sách &bull;
-      <span class="keycap">ESC</span> thoát
+      <kbd class="keycap">←</kbd> <kbd class="keycap">→</kbd> chuyển AI &bull;
+      <kbd class="keycap">↓</kbd> xuống danh sách &bull;
+      <kbd class="keycap">ESC</kbd> thoát
     </span>
     <span *ngIf="currentZone === 'ZONE_MAIN'">
-      <span class="keycap">↑</span> <span class="keycap">↓</span> chọn bài &bull;
-      <span class="keycap">→</span> xem chi tiết &bull;
-      <span class="keycap">ESC</span> thoát
+      <kbd class="keycap">↑</kbd> <kbd class="keycap">↓</kbd> chọn bài &bull;
+      <kbd class="keycap">→</kbd> xem chi tiết &bull;
+      <kbd class="keycap">ESC</kbd> thoát
     </span>
     <span *ngIf="currentZone === 'ZONE_DETAIL'">
-      <span class="keycap">↑</span> <span class="keycap">↓</span> cuộn &bull;
-      <span class="keycap">←</span> quay lại &bull;
-      <span class="keycap">ESC</span> thoát
+      <kbd class="keycap">↑</kbd> <kbd class="keycap">↓</kbd> cuộn &bull;
+      <kbd class="keycap">←</kbd> quay lại &bull;
+      <kbd class="keycap">ESC</kbd> thoát
     </span>
   </div>
 
-  <!-- ============================================
-       AI Tab Bar (ZONE_FILTERS)
-       ============================================ -->
   <div class="ai-tabs" role="tablist" aria-label="Chọn trợ lý AI">
     <button
       *ngFor="let tab of aiTabs"
@@ -40,7 +31,9 @@
       class="ai-tab"
       role="tab"
       [class.ai-tab--active]="currentCategory === tab.id"
+      [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_FILTERS' && currentCategory === tab.id"
       [attr.aria-selected]="currentCategory === tab.id"
+      [attr.tabindex]="isFocusLocked ? (currentZone === 'ZONE_FILTERS' && currentCategory === tab.id ? 0 : -1) : null"
       (click)="changeCategory(tab.id)">
       <span class="ai-tab__icon" aria-hidden="true">
         <i class="ti" [ngClass]="tab.icon"></i>
@@ -49,12 +42,8 @@
     </button>
   </div>
 
-  <!-- ============================================
-       Two-panel layout: lessons + detail
-       ============================================ -->
   <div class="ai-layout">
 
-    <!-- Lesson List (left panel) (ZONE_MAIN) -->
     <aside class="ai-lessons" aria-label="Danh sách bài học">
       <div class="ai-lessons__header">
         <h2 class="ai-lessons__title">Danh sách bài</h2>
@@ -67,8 +56,9 @@
             type="button"
             class="ai-lesson-item__btn"
             [class.ai-lesson-item__btn--active]="currentLesson && currentLesson.id === lesson.id"
-            [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && currentLesson && currentLesson.id === lesson.id"
+            [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex"
             (click)="selectLesson(lesson.id)"
+            [attr.tabindex]="isFocusLocked ? (currentZone === 'ZONE_MAIN' && i === highlightedIndex ? 0 : -1) : null"
             [attr.aria-current]="currentLesson && currentLesson.id === lesson.id ? 'true' : null">
             <span class="ai-lesson-item__number" aria-hidden="true">
               {{ lesson.id.split('-')[1] || '?' }}
@@ -80,7 +70,6 @@
           </button>
         </li>
 
-        <!-- Empty state -->
         <li *ngIf="lessons.length === 0" class="ai-lessons__empty" role="status">
           <span class="ai-lessons__empty-icon" aria-hidden="true">
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -95,14 +84,12 @@
       </ul>
     </aside>
 
-    <!-- Lesson Detail (right panel) (ZONE_DETAIL) -->
     <main
       class="ai-detail"
       [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_DETAIL'"
       aria-label="Chi tiết bài học"
       tabindex="-1">
 
-      <!-- No lesson selected — welcome state -->
       <div *ngIf="!currentLesson" class="ai-detail__welcome">
         <div class="ai-detail__welcome-icon" aria-hidden="true">
           <i class="ti" [ngClass]="currentAiTab.icon"></i>
@@ -122,7 +109,6 @@
         </div>
       </div>
 
-      <!-- Lesson loaded -->
       <article *ngIf="currentLesson" class="ai-detail__content">
 
         <header class="ai-detail__header">
@@ -133,7 +119,6 @@
           <h1 class="ai-detail__title">{{ currentLesson.title }}</h1>
         </header>
 
-        <!-- ── PLATFORM SWITCH: Điều phối theo nền tảng AI ── -->
         @switch (currentCategory) {
           @case ('gemini') {
             <app-gemini-lessons [lessonId]="currentLesson.id"></app-gemini-lessons>

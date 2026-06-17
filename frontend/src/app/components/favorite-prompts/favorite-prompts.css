@@ -29,6 +29,52 @@
   overflow: hidden;
 }
 
+/* ── Keyboard Navigation Banner ─────────────────────────────*/
+.nav-banner {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  background: var(--c-primary);
+  border: 2px solid var(--c-primary);
+  border-radius: var(--r-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--c-on-red);
+  line-height: 1.5;
+  flex-shrink: 0;
+  box-shadow: 3px 3px 0 0 var(--c-gold), 0 6px 14px rgba(0,0,0,0.25);
+}
+
+.nav-banner i {
+  font-size: 1.1rem;
+  color: var(--c-gold);
+  flex-shrink: 0;
+}
+
+.keycap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-gold);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: var(--font-label);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--c-primary);
+  line-height: 1;
+}
+
 /* ── Editorial Header Block ─────────────────────────────────*/
 .prompts-fav__header-block {
   padding: 28px;
@@ -193,6 +239,22 @@
 .prompt-card:hover {
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 0 var(--c-primary);
+}
+
+.prompt-card.is-keyboard-highlighted {
+  border-color: var(--c-primary);
+  box-shadow: 8px 8px 0 0 var(--c-primary);
+  position: relative;
+}
+
+/* Cursor marker — chỉ hiện khi card này đang được bàn phím highlight */
+.prompt-card.is-keyboard-highlighted::before {
+  content: '▶';
+  position: absolute;
+  left: -18px;
+  top: 16px;
+  font-size: 14px;
+  color: var(--c-gold);
 }
 
 /* Accent stripe */

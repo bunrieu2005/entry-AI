@@ -1,26 +1,34 @@
 <article class="ai-tools">
 
-  <!-- Keyboard nav banner -->
-  <div *ngIf="isFocusLocked" class="nav-banner">
-    <i class="ti ti-device-gamepad"></i>
+  <!-- Keyboard Navigation Banner -->
+  <div
+    *ngIf="isFocusLocked"
+    class="nav-banner"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true">
+    <i class="ti ti-device-gamepad" aria-hidden="true"></i>
+
     <span *ngIf="currentZone === 'ZONE_FILTERS'">
-      Dùng <kbd>A</kbd><kbd>D</kbd> lướt thẻ &bull; <kbd>S</kbd> xuống Grid &bull; <kbd>ESC</kbd> thoát
+      <kbd class="keycap">←</kbd><kbd class="keycap">→</kbd> lướt thẻ &bull;
+      <kbd class="keycap">↓</kbd> xuống Grid &bull;
+      <kbd class="keycap">ESC</kbd> thoát
     </span>
     <span *ngIf="currentZone === 'ZONE_MAIN'">
-      Dùng <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> lướt &bull; <kbd>W</kbd> ở đầu để lên thẻ &bull; <kbd>Enter</kbd> truy cập
+      <kbd class="keycap">↑</kbd><kbd class="keycap">↓</kbd><kbd class="keycap">←</kbd><kbd class="keycap">→</kbd> di chuyển &bull;
+      <kbd class="keycap">Enter</kbd> truy cập &bull;
+      <kbd class="keycap">↑</kbd> đầu tiên → về thẻ &bull;
+      <kbd class="keycap">ESC</kbd> thoát
     </span>
   </div>
 
   <!-- Header -->
   <div class="ai-tools__header">
-    <div class="ai-tools__header-text">
-      <div class="ai-tools__badge">
-        <span class="ai-tools__badge-dot"></span>
-        CÔNG CỤ AI · TUYỂN CHỌN · CẬP NHẬT LIÊN TỤC
-      </div>
-      <h1 class="ai-tools__title">KHÁM PHÁ<br><span class="highlight">CÔNG CỤ AI</span></h1>
-
+    <div class="ai-tools__badge">
+      <span class="ai-tools__badge-dot"></span>
+      CÔNG CỤ AI · TUYỂN CHỌN · CẬP NHẬT LIÊN TỤC
     </div>
+    <h1 class="ai-tools__title">KHÁM PHÁ <span class="highlight">CÔNG CỤ AI</span></h1>
   </div>
 
   <!-- Loading -->
@@ -36,8 +44,8 @@
       *ngFor="let group of groupedTools; let i = index; trackBy: trackByCategoryId"
       [class.active]="i === activeCategoryIndex"
       [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_FILTERS' && i === highlightedIndex"
-      (click)="selectCategory(i)"
-      tabindex="-1">
+      [attr.tabindex]="isFocusLocked ? -1 : null"
+      (click)="selectCategory(i)">
       <span>{{ group.category.name }}</span>
       <span class="tab-badge">{{ group.tools.length }}</span>
     </button>

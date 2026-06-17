@@ -104,6 +104,10 @@ export class PromptsComponent implements OnInit, OnChanges, OnDestroy {
 
   private resetKeyboardReady(): void {
     this.isKeyboardReady = false;
+    // Bỏ focus DOM thật (nếu có) để không còn viền outline mặc định của
+    // trình duyệt tồn đọng trên một nút khác — chỉ còn duy nhất highlight
+    // đen (.is-keyboard-highlighted / .active) do component tự vẽ.
+    (document.activeElement as HTMLElement)?.blur();
     setTimeout(() => {
       this.isKeyboardReady = true;
       this.currentZone = 'ZONE_FILTERS';
@@ -311,12 +315,20 @@ export class PromptsComponent implements OnInit, OnChanges, OnDestroy {
         }
         return;
       }
-      // Enter: load prompts của sub đang highlight
+      // Enter: load prompts của sub đang highlight → chuyển luôn sang ZONE_MAIN
       if (key === 'enter') {
         event.preventDefault();
         event.stopPropagation();
         const sub = this.activeSubs[this.highlightedSubIndex];
-        if (sub) this.loadPromptsBySubcategory(sub.id);
+        if (sub) {
+          this.loadPromptsBySubcategory(sub.id);
+          // Chuyển sang ZONE_MAIN ngay — highlight sub index reset về -1
+          // để không còn viền đen tồn đọng trên sub-btn
+          this.highlightedSubIndex = -1;
+          this.highlightedIndex = 0;
+          this.currentZone = 'ZONE_MAIN';
+          this.scrollActiveCardIntoView();
+        }
         return;
       }
       // D / →: vào ZONE_MAIN nếu có prompt
@@ -391,6 +403,14 @@ export class PromptsComponent implements OnInit, OnChanges, OnDestroy {
         event.stopPropagation();
         const prompt = this.promptsList[this.highlightedIndex];
         if (prompt) this.copyPromptContent(prompt.content, prompt.id);
+        return;
+      }
+      // T: toggle favorite card đang highlight
+      if (key === 't') {
+        event.preventDefault();
+        event.stopPropagation();
+        const prompt = this.promptsList[this.highlightedIndex];
+        if (prompt) this.toggleFavorite(prompt.id);
         return;
       }
     }

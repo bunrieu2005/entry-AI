@@ -14,25 +14,29 @@
 
 /* ── Navigation Status Banner ── */
 .nav-status-banner {
+  position: sticky;
+  top: 0;
+  z-index: 30;
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
   padding: 10px 16px;
   margin-bottom: var(--spacing-md);
-  background-color: var(--color-surface);
+  background-color: var(--color-primary);
   border: 2px solid var(--color-primary);
   border-radius: var(--radius-lg);
   font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-on-primary);
   line-height: 1.4;
   flex-shrink: 0;
+  box-shadow: 3px 3px 0 0 #d4a853;
 }
 
 .nav-status-banner i {
   font-size: 1.1rem;
-  color: var(--color-tertiary);
+  color: #d4a853;
   flex-shrink: 0;
 }
 
@@ -43,13 +47,13 @@
   min-width: 22px;
   height: 22px;
   padding: 0 5px;
-  background-color: var(--color-neutral);
-  border: 1px solid rgba(139, 110, 82, 0.4);
+  background-color: var(--color-surface);
+  border: 1px solid #d4a853;
   border-bottom-width: 2px;
   border-radius: 4px;
   font-family: var(--font-label);
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--color-primary);
   line-height: 1;
 }
@@ -59,9 +63,9 @@
   align-items: center;
   padding: 2px 8px;
   background-color: #d4a853;
-  color: #ffffff;
+  color: var(--color-primary);
   border-radius: 4px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.75rem;
 }
 
@@ -69,10 +73,10 @@
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
+  background-color: #d4a853;
+  color: var(--color-primary);
   border-radius: 4px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.75rem;
 }
 
@@ -220,19 +224,41 @@
   transform: translate(-2px, -2px);
 }
 
-/* Keyboard highlight for term rows in ZONE_MAIN */
+/* Keyboard highlight for term rows in ZONE_MAIN — một chỉ báo DUY NHẤT:
+   nền đen + marker mũi tên, không dùng viền/outline đỏ chồng chéo nữa */
 .term-row.is-keyboard-highlighted {
-  outline: 3px solid #dc3545;
-  outline-offset: -1px;
-  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.3);
-  border-color: #dc3545 !important;
-  background-color: rgba(220, 53, 69, 0.08);
+  background-color: var(--color-primary);
+}
+
+.term-row.is-keyboard-highlighted .term-row__name {
+  color: var(--color-on-primary);
+}
+
+.term-row.is-keyboard-highlighted .term-row__tag {
+  background-color: rgba(255, 255, 255, 0.18);
+  color: var(--color-on-primary);
 }
 
 /* Search box keyboard highlight in ZONE_INPUT */
 .sidebar__search.is-keyboard-highlighted .search-box {
-  border-color: #dc3545;
-  box-shadow: 3px 3px 0 0 #dc3545;
+  border-color: var(--color-primary);
+  box-shadow: 3px 3px 0 0 var(--color-primary);
+}
+
+/* Khi đang ở chế độ điều hướng bàn phím, ẩn nền đỏ "active" (term đang hiển
+   thị ở panel chi tiết) nếu nó không trùng với vị trí con trỏ — tránh có
+   hai chỉ báo (đỏ + đen) cùng lúc trên hai dòng khác nhau. Khi dùng chuột
+   bình thường (không khoá), nền đỏ vẫn hiển thị như cũ. */
+.kb-lock .term-row--active:not(.is-keyboard-highlighted) {
+  background-color: transparent;
+}
+
+.kb-lock .term-row--active:not(.is-keyboard-highlighted):hover {
+  background-color: rgba(37, 24, 18, 0.05);
+}
+
+.kb-lock .term-row--active:not(.is-keyboard-highlighted) .term-row__name {
+  font-weight: 600;
 }
 
 /* ── Term List (scrollable) ── */
@@ -314,6 +340,25 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Marker mũi tên — chỉ báo bàn phím DUY NHẤT cho term-row, thay cho việc
+   chỉ đổi màu viền (dễ bị mờ/thừa) */
+.term-row__cursor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  color: var(--color-on-primary);
+  transition: width 0.15s ease, margin-right 0.15s ease;
+}
+
+.term-row.is-keyboard-highlighted .term-row__cursor {
+  width: 12px;
+  margin-right: 2px;
 }
 
 .term-row--active .term-row__name {

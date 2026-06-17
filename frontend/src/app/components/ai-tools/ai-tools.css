@@ -10,8 +10,11 @@
   
   /* ===== HEADER BLOCK ===== */
   .ai-tools__header {
-    display: block;
-    padding: 28px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px 24px;
     margin-bottom: 36px;
     border: 2px solid #251812;
     border-radius: 14px;
@@ -23,11 +26,13 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
+    white-space: nowrap;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.1em;
     color: #8B6E52;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     padding: 6px 14px 6px 10px;
     border: 1px solid #8B6E52;
     border-radius: 999px;
@@ -37,7 +42,7 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #C99A4B;
+    background: #7A5C00;
     flex-shrink: 0;
     animation: badge-pulse 2s ease-in-out infinite;
   }
@@ -49,24 +54,25 @@
   
   .ai-tools__title {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 72px;
+    font-size: 26px;
     font-weight: 900;
-    line-height: 0.9;
-    letter-spacing: -0.03em;
+    line-height: 1;
+    letter-spacing: -0.01em;
     color: #251812;
-    margin: 0 0 20px;
+    margin: 0;
     text-transform: uppercase;
+    white-space: nowrap;
   }
   
   .ai-tools__title .highlight {
-    color: #C99A4B;
+    color: #7A5C00;
   }
   
   .ai-tools__subtitle {
     font-size: 15px;
     color: #8B6E52;
     margin: 0;
-    border-left: 2px solid #C99A4B;
+    border-left: 2px solid #7A5C00;
     padding-left: 14px;
     line-height: 1.7;
     max-width: 480px;
@@ -79,16 +85,19 @@
     gap: 8px;
     padding: 10px 16px;
     margin-bottom: 20px;
-    background: #F1E3C6;
-    border: 2px solid #8B6E52;
+    background: #251812;
+    border: 2px solid #251812;
     border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #251812;
-    box-shadow: 3px 3px 0 0 #251812;
+    color: #F1E3C6;
+    box-shadow: 3px 3px 0 0 #7A5C00;
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
   
-  .nav-banner i { color: #B83B2E; font-size: 1.1rem; }
+  .nav-banner i { color: #7A5C00; font-size: 1.1rem; }
   
   .nav-banner kbd {
     display: inline-flex;
@@ -97,14 +106,14 @@
     min-width: 22px;
     height: 22px;
     padding: 0 6px;
-    background: #E6D6B8;
-    border: 1px solid #8B6E52;
+    background: #3B2C20;
+    border: 1px solid #7A5C00;
     border-bottom-width: 2px;
     border-radius: 4px;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.75rem;
     font-weight: 700;
-    color: #251812;
+    color: #F1E3C6;
   }
   
   /* ===== LOADING ===== */
@@ -168,8 +177,23 @@
     background: #251812;
     border-color: #251812;
     color: #F1E3C6;
-    box-shadow: 4px 4px 0 0 #C99A4B;
+    box-shadow: 4px 4px 0 0 #251812;
     outline: none;
+  }
+
+  /* Marker mũi tên cho tab đang highlight bằng bàn phím */
+  .tab.is-keyboard-highlighted {
+    position: relative;
+  }
+
+  .tab.is-keyboard-highlighted::before {
+    content: '▶';
+    position: absolute;
+    left: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: #251812;
   }
   
   .tab-badge {
@@ -222,8 +246,20 @@
   }
   
   .card-wrap.is-keyboard-highlighted .card {
-    border-color: #B6473A;
-    box-shadow: 8px 8px 0px 0px #B6473A;
+    border-color: #251812;
+    box-shadow: 8px 8px 0px 0px #251812;
+    position: relative;
+  }
+
+  /* Marker mũi tên cho card đang highlight bằng bàn phím */
+  .card-wrap.is-keyboard-highlighted::before {
+    content: '▶';
+    position: absolute;
+    left: -18px;
+    top: 16px;
+    font-size: 14px;
+    color: #251812;
+    z-index: 101;
   }
   
   /* ===== LOGO BANNER — to hơn, full width ===== */
@@ -245,15 +281,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 6px;
   }
   
   .card-logo-img {
-    max-width: 80%;
-    max-height: 80%;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-    opacity: 0.9;
+    max-width: 98%;
+    max-height: 98%;
+    width: auto;
+    height: auto;
+    background: #fff;
+    border: 2px solid #251812;
+    border-radius: 10px;
+    padding: 6px;
+    box-sizing: border-box;
   }
   
   .card-logo-placeholder {
@@ -267,7 +307,7 @@
     border-radius: 12px;
     font-size: 2rem;
     font-weight: 900;
-    color: #C99A4B;
+    color: #7A5C00;
     font-family: 'IBM Plex Mono', monospace;
   }
   
@@ -304,7 +344,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #251812;
-    background: #C99A4B;
+    background: #7A5C00;
     padding: 3px 10px;
     border-radius: 4px;
   }
@@ -323,7 +363,7 @@
     color: #8B6E52;
     margin: 0;
     line-height: 1.5;
-    border-left: 2px solid #C99A4B;
+    border-left: 2px solid #7A5C00;
     padding-left: 10px;
   }
   
@@ -355,22 +395,23 @@
     outline: none;
     transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
     align-self: flex-start;
-    box-shadow: 3px 3px 0 0 #C99A4B;
+    box-shadow: 3px 3px 0 0 #7A5C00;
   }
   
   .card-btn:hover {
     background: #3B2C20;
     transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0 0 #C99A4B;
+    box-shadow: 4px 4px 0 0 #7A5C00;
   }
   
   /* ===== RESPONSIVE ===== */
   @media (max-width: 1000px) {
     .ai-tools { padding: 32px 20px; }
-    .ai-tools__title { font-size: 52px; }
+    .ai-tools__title { font-size: 22px; }
   }
   
   @media (max-width: 700px) {
-    .ai-tools__title { font-size: 40px; }
+    .ai-tools__header { flex-direction: column; align-items: flex-start; }
+    .ai-tools__title { font-size: 20px; white-space: normal; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
   }

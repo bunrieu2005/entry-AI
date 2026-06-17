@@ -1,5 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, HostListener, OnInit, inject, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { KeyboardNavigationService } from '../../services/keyboard-navigation.service';
 
 export interface QuickAccessCard {
   id: string;
@@ -32,6 +34,12 @@ export interface QuickPill {
   label: string;
 }
 
+export interface MainNavItem {
+  type: 'prompt' | 'video' | 'blog';
+  title?: string;
+  videoId?: string;
+}
+
 @Component({
   selector: 'app-hero-section',
   standalone: true,
@@ -39,12 +47,16 @@ export interface QuickPill {
   templateUrl: './hero-section.html',
   styleUrl: './hero-section.css'
 })
-export class HeroSectionComponent {
+export class HeroSectionComponent implements OnInit {
   @Input() title: string = 'Trang Chủ';
   @Input() subtitle: string = 'Nền tảng học và làm chủ AI cho người Việt';
   @Input() isHome: boolean = true;
 
   @Output() cardSelected = new EventEmitter<string>();
+
+  ngOnInit(): void {
+    this.resetKeyboardReady();
+  }
 
   timelinePoints: TimelinePoint[] = [
     { year: '2021', active: true },
@@ -58,9 +70,18 @@ export class HeroSectionComponent {
   isAnimating = false;
   isDragging = false;
 
+  private keyboardNav = inject(KeyboardNavigationService);
+  private isKeyboardReady = false;
+  currentZone: 'ZONE_FILTERS' | 'ZONE_MAIN' = 'ZONE_FILTERS';
+  highlightedIndex = 0;
+
   private dragStartX = 0;
   private dragCurrentX = 0;
   private dragDeltaX = 0;
+
+  get isFocusLocked(): boolean {
+    return this.keyboardNav.isFocusLocked();
+  }
 
   timelineEras: TimelineEra[] = [
     {
@@ -105,18 +126,17 @@ export class HeroSectionComponent {
     },
   ];
 
-  videoGuides: VideoGuide[] = [
-    {
-      title: 'Hướng Dẫn Sử Dụng Trang Web',
-    
-      videoId: '2BpCk4d2Cc0',
-    },
-    {
-      title: 'Hướng dẫn WCAG — Dành cho người hạn chế sử dụng chuột',
-   
-      videoId: '6bs5b4FltCU',
-    },
+  // ZONE_MAIN: GET PROMPT + video guides + Blog (keyboard order)
+  mainItems: MainNavItem[] = [
+    { type: 'prompt' },
+    { type: 'video', title: 'Hướng Dẫn Sử Dụng Trang Web', videoId: '2BpCk4d2Cc0' },
+    { type: 'video', title: 'Hướng dẫn WCAG — Dành cho người hạn chế sử dụng chuột', videoId: 'kkmePFcbdws' },
+    { type: 'blog' },
   ];
+
+  get highlightedMainItem(): MainNavItem | null {
+    return this.mainItems[this.highlightedIndex] || null;
+  }
 
   quickPills: QuickPill[] = [
     { label: 'Prompt cho lập trình' },
@@ -179,14 +199,124 @@ export class HeroSectionComponent {
   }
 
   onCardClick(cardId: string): void {
+    if (cardId === 'prompts') {
+      this.cardSelected.emit('prompts');
+      return;
+    }
+    if (cardId === 'blog') {
+      this.cardSelected.emit('blog');
+      return;
+    }
     const index = parseInt(cardId.replace('video-', ''), 10);
-    const guide = this.videoGuides[index];
-    if (guide?.videoId) {
-      window.open(`https://youtu.be/${guide.videoId}`, '_blank');
+    const videoItem = this.mainItems[index + 1];
+    if (videoItem?.type === 'video' && videoItem.videoId) {
+      window.open(`https://youtu.be/${videoItem.videoId}`, '_blank');
     }
   }
 
   onSearchKeydown(event: Event): void {
     // future: emit search event
+  }
+
+  // ========== KEYBOARD NAVIGATION ==========
+
+  private resetKeyboardReady(): void {
+    this.isKeyboardReady = false;
+    (document.activeElement as HTMLElement)?.blur();
+    setTimeout(() => {
+      this.isKeyboardReady = true;
+      this.currentZone = 'ZONE_FILTERS';
+      this.highlightedIndex = 0;
+    }, 100);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if (!this.isKeyboardReady || !this.isFocusLocked) return;
+
+    const key = event.key.toLowerCase();
+
+    if (key === 'escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      (document.activeElement as HTMLElement)?.blur();
+      return;
+    }
+
+    // ZONE_FILTERS: Timeline points
+    if (this.currentZone === 'ZONE_FILTERS') {
+      if (key === 'arrowleft') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.activeEraIndex > 0) {
+          this.activeEraIndex--;
+        }
+        return;
+      }
+      if (key === 'arrowright') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.activeEraIndex < this.timelineEras.length - 1) {
+          this.activeEraIndex++;
+        }
+        return;
+      }
+      if (key === 'arrowdown' || key === 'enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        this.currentZone = 'ZONE_MAIN';
+        this.highlightedIndex = 0;
+        this.scrollHighlightIntoView();
+        return;
+      }
+      return;
+    }
+
+    // ZONE_MAIN: GET PROMPT → video guides → Blog
+    if (this.currentZone === 'ZONE_MAIN') {
+      if (key === 'arrowup' || key === 'arrowleft') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex === 0) {
+          this.currentZone = 'ZONE_FILTERS';
+        } else {
+          this.highlightedIndex--;
+          this.scrollHighlightIntoView();
+        }
+        return;
+      }
+      if (key === 'arrowdown' || key === 'arrowright') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex < this.mainItems.length - 1) {
+          this.highlightedIndex++;
+          this.scrollHighlightIntoView();
+        }
+        return;
+      }
+      if (key === 'enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        const item = this.highlightedMainItem;
+        if (!item) return;
+        if (item.type === 'prompt') {
+          this.cardSelected.emit('prompts');
+        } else if (item.type === 'video' && item.videoId) {
+          window.open(`https://youtu.be/${item.videoId}`, '_blank');
+        } else if (item.type === 'blog') {
+          this.cardSelected.emit('blog');
+        }
+        return;
+      }
+    }
+  }
+
+  private scrollHighlightIntoView(): void {
+    setTimeout(() => {
+      const card = document.querySelector('.video-widget.is-keyboard-highlighted, .blog-widget.is-keyboard-highlighted, .banner-cta-action.is-keyboard-highlighted');
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 10);
   }
 }

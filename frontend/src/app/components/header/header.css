@@ -1,6 +1,7 @@
 /* ============================================================
    Header — Dark Tech / itshover style
    IBM Plex Mono · #0d0d0d · Accent #f97316
+   Logo: icon P (đen, viền trắng) + wordmark "Prompt-Entry" to, viền trắng
    ============================================================ */
 
    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700;800&display=swap');
@@ -30,34 +31,26 @@
    .header__brand {
      display: flex;
      align-items: center;
-     gap: 10px;
+     gap: 14px;
      text-decoration: none;
    }
    
-   .header__logo {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     width: 34px;
-     height: 34px;
-     background: #f97316;
-     color: #0d0d0d;
-     border-radius: 9px;
+   /* Icon chữ P — đen, viền trắng bao quanh hình */
+   .header__logo-icon {
      flex-shrink: 0;
-     box-shadow: 0 0 12px rgba(249, 115, 22, 0.4), 0 2px 8px rgba(249, 115, 22, 0.25);
+     display: block;
    }
    
-   /* wordmark: EntryAI — "Entry" trắng, "AI" cam */
+   /* Wordmark "Prompt-Entry" — to, đen với viền trắng quanh chữ */
    .header__wordmark {
      font-family: var(--font-body);
-     font-size: 17px;
-     font-weight: 800;
-     color: #e5e5e5;
-     letter-spacing: -0.02em;
-   }
-   
-   .header__wordmark span {
-     color: #f97316;
+     font-size: 22px;
+     font-weight: 500;
+     color: #111111;
+     -webkit-text-stroke: 1.2px #ffffff;
+     paint-order: stroke fill;
+     letter-spacing: -0.01em;
+     white-space: nowrap;
    }
    
    /* Breadcrumb */
@@ -72,12 +65,10 @@
      color: #4a4a4a;
      font-size: 18px;
      font-weight: 300;
-     font-family: var(--font-body);
      line-height: 1;
    }
    
    .header__breadcrumb-page {
-     font-family: var(--font-body);
      font-size: 11px;
      font-weight: 600;
      color: #f97316;
@@ -86,25 +77,115 @@
      padding: 3px 12px;
      background: rgba(249, 115, 22, 0.08);
      border: 1px solid rgba(249, 115, 22, 0.3);
-     border-radius: 9999px;
+     border-radius: 5px;
    }
    
    /* ── Right: actions ── */
    .header__actions {
      display: flex;
      align-items: center;
-     gap: 10px;
+     gap: 8px;
    }
    
-   /* Auth buttons */
+   .header__divider {
+     width: 1px;
+     height: 22px;
+     background: #2e2e2e;
+     margin: 0 4px;
+     flex-shrink: 0;
+   }
+   
+   /* ── Icon buttons — vuông vắc, radius nhỏ đồng nhất ── */
+   .btn-icon {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     width: 36px;
+     height: 36px;
+     background: transparent;
+     border: 1px solid #2e2e2e;
+     border-radius: 5px;
+     color: #6b7280;
+     font-size: 16px;
+     cursor: pointer;
+     text-decoration: none;
+     transition: background 0.15s, color 0.15s, border-color 0.15s;
+     flex-shrink: 0;
+     box-sizing: border-box;
+   }
+   
+   .btn-icon:hover {
+     background: rgba(229, 229, 229, 0.06);
+     color: #e5e5e5;
+     border-color: rgba(229, 229, 229, 0.25);
+   }
+   
+   .btn-icon--wide {
+     width: auto;
+     padding: 0 10px;
+   }
+   
+   /* ── Action link (icon + label) ── */
+   .btn-action-link {
+     display: flex;
+     align-items: center;
+     gap: 7px;
+     text-decoration: none;
+     background: transparent;
+     border: none;
+     cursor: pointer;
+     padding: 0;
+     height: 36px;
+     transition: opacity 0.15s;
+   }
+   
+   .btn-action-link:hover { opacity: 0.85; }
+   
+   .btn-action-label {
+     font-size: 12px;
+     font-weight: 600;
+     color: rgba(229, 229, 229, 0.65);
+     white-space: nowrap;
+     letter-spacing: 0.02em;
+   }
+   
+   .btn-action-link:hover .btn-action-label { color: #e5e5e5; }
+   
+   /* ── Bổ sung prompt — nút vuông nổi bật cam ── */
+   .btn-add-prompt {
+     display: flex;
+     align-items: center;
+     gap: 7px;
+     height: 36px;
+     padding: 0 14px;
+     background: rgba(249, 115, 22, 0.08);
+     border: 1px solid rgba(249, 115, 22, 0.35);
+     border-radius: 5px;
+     color: #f97316;
+     font-family: inherit;
+     font-size: 12.5px;
+     font-weight: 600;
+     letter-spacing: 0.02em;
+     cursor: pointer;
+     white-space: nowrap;
+     transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, color 0.15s;
+   }
+   
+   .btn-add-prompt:hover {
+     background: rgba(249, 115, 22, 0.16);
+     border-color: rgba(249, 115, 22, 0.6);
+     color: #fb923c;
+     box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+   }
+   
+   /* ── Auth buttons — vuông vắc ── */
    .btn-auth {
      height: 36px;
-     padding: 0 18px;
-     border-radius: 9999px;
-     font-family: var(--font-body);
-     font-size: 13px;
+     padding: 0 16px;
+     border-radius: 5px;
+     font-size: 12.5px;
      font-weight: 600;
-     letter-spacing: 0.03em;
+     letter-spacing: 0.02em;
      cursor: pointer;
      border: none;
      transition: background 0.15s, transform 0.1s, box-shadow 0.15s, border-color 0.15s;
@@ -127,153 +208,42 @@
      background: #f97316;
      color: #0d0d0d;
      border: 1px solid #f97316;
-     box-shadow: 0 0 12px rgba(249, 115, 22, 0.35);
+     box-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
    }
    
    .btn-solid:hover {
      background: #fb923c;
      border-color: #fb923c;
-     box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+     box-shadow: 0 0 16px rgba(249, 115, 22, 0.45);
      transform: translateY(-1px);
    }
    
-   /* Icon button */
-   .btn-icon {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     width: 36px;
-     height: 36px;
-     background: transparent;
-     border: 1px solid #2e2e2e;
-     border-radius: 8px;
-     color: #6b7280;
-     font-size: 17px;
-     cursor: pointer;
-     transition: background 0.15s, color 0.15s, border-color 0.15s;
-   }
-   
-  .btn-icon:hover {
-    background: rgba(229, 229, 229, 0.06);
-    color: #e5e5e5;
-    border-color: rgba(229, 229, 229, 0.25);
-  }
-
-  .btn-add-prompt {
-    color: #f97316;
-    border-color: rgba(249, 115, 22, 0.4);
-    background: rgba(249, 115, 22, 0.06);
-  }
-
-  .btn-add-prompt:hover {
-    background: rgba(249, 115, 22, 0.14);
-    color: #fb923c;
-    border-color: rgba(249, 115, 22, 0.6);
-    box-shadow: 0 0 10px rgba(249, 115, 22, 0.25);
-  }
-
-  /* Action link button (icon + label) */
-  .btn-action-link {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    transition: opacity 0.15s;
-  }
-
-  .btn-action-link:hover {
-    opacity: 0.8;
-  }
-
-  .btn-action-link .btn-icon {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-  }
-
-  .btn-action-label {
-    font-family: var(--font-body);
-    font-size: 12px;
-    font-weight: 600;
-    color: rgba(229, 229, 229, 0.7);
-    white-space: nowrap;
-    letter-spacing: 0.02em;
-  }
-
-  .btn-action-link:hover .btn-action-label {
-    color: #e5e5e5;
-  }
-
-  /* Bổ sung prompt — nổi bật cam */
-  .btn-add-prompt-text {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(249, 115, 22, 0.08);
-    border: 1px solid rgba(249, 115, 22, 0.35);
-    border-radius: 9999px;
-    padding: 4px 14px 4px 6px;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
-  }
-
-  .btn-add-prompt-text:hover {
-    background: rgba(249, 115, 22, 0.16);
-    border-color: rgba(249, 115, 22, 0.6);
-    box-shadow: 0 0 12px rgba(249, 115, 22, 0.2);
-  }
-
-  .btn-add-prompt-inner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    background: #f97316;
-    color: #0d0d0d;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .btn-add-prompt-text .btn-action-label {
-    color: #f97316;
-    font-size: 12px;
-  }
-
-  .btn-add-prompt-text:hover .btn-action-label {
-    color: #fb923c;
-  }
-   
-   /* User logged in */
+   /* ── User logged in — vuông vắc ── */
    .user-logged-in {
      display: flex;
      align-items: center;
      gap: 8px;
+     height: 36px;
      background: rgba(229, 229, 229, 0.05);
-     padding: 4px 12px 4px 6px;
-     border-radius: 9999px;
+     padding: 0 12px 0 6px;
+     border-radius: 5px;
      border: 1px solid #2e2e2e;
    }
    
    .user-avatar {
-     width: 28px;
-     height: 28px;
-     border-radius: 50%;
+     width: 26px;
+     height: 26px;
+     border-radius: 5px;
      background: rgba(249, 115, 22, 0.12);
      border: 1px solid rgba(249, 115, 22, 0.4);
      display: flex;
      align-items: center;
      justify-content: center;
-     font-size: 15px;
      color: #f97316;
+     flex-shrink: 0;
    }
    
    .user-name {
-     font-family: var(--font-body);
      font-weight: 600;
      font-size: 13px;
      color: #e5e5e5;
@@ -296,14 +266,12 @@
      background: #1a1a1a;
      width: 420px;
      padding: 36px;
-     border-radius: 16px;
+     border-radius: 10px;
      border: 1px solid #2e2e2e;
      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(249,115,22,0.08);
-     font-family: var(--font-body);
    }
    
    .modal-title {
-     font-family: var(--font-body);
      font-size: 20px;
      font-weight: 800;
      text-align: center;
@@ -312,18 +280,12 @@
      letter-spacing: -0.02em;
    }
    
-   /* Accent từ trong title */
-   .modal-title span {
-     color: #f97316;
-   }
+   .modal-title span { color: #f97316; }
    
-   .form-group {
-     margin-bottom: 16px;
-   }
+   .form-group { margin-bottom: 16px; }
    
    .form-group label {
      display: block;
-     font-family: var(--font-body);
      font-size: 11px;
      font-weight: 600;
      letter-spacing: 0.1em;
@@ -335,10 +297,10 @@
    .form-group input {
      width: 100%;
      padding: 11px 14px;
-     border-radius: 8px;
+     border-radius: 6px;
      border: 1px solid #2e2e2e;
      outline: none;
-     font-family: var(--font-body);
+     font-family: inherit;
      font-size: 13px;
      background: #0d0d0d;
      color: #e5e5e5;
@@ -346,9 +308,7 @@
      box-sizing: border-box;
    }
    
-   .form-group input::placeholder {
-     color: #4a4a4a;
-   }
+   .form-group input::placeholder { color: #4a4a4a; }
    
    .form-group input:focus {
      border-color: #f97316;
@@ -366,8 +326,7 @@
      background: #f97316;
      color: #0d0d0d;
      padding: 12px;
-     border-radius: 9999px;
-     font-family: var(--font-body);
+     border-radius: 6px;
      font-weight: 700;
      font-size: 13px;
      letter-spacing: 0.04em;
@@ -389,8 +348,7 @@
      background: transparent;
      border: 1px solid #2e2e2e;
      padding: 12px;
-     border-radius: 9999px;
-     font-family: var(--font-body);
+     border-radius: 6px;
      font-weight: 500;
      font-size: 13px;
      color: #6b7280;
@@ -406,7 +364,6 @@
    
    .auth-switch {
      text-align: center;
-     font-family: var(--font-body);
      font-size: 12px;
      margin-top: 20px;
      color: #4a4a4a;
@@ -419,6 +376,12 @@
      margin-left: 4px;
    }
    
-   .auth-switch a:hover {
-     text-decoration: underline;
+   .auth-switch a:hover { text-decoration: underline; }
+   
+   /* ── Responsive ── */
+   @media (max-width: 900px) {
+     .btn-action-label { display: none; }
+     .btn-add-prompt span:not(.btn-add-prompt-inner) { display: none; }
+     .btn-add-prompt { width: 36px; padding: 0; justify-content: center; }
+     .header__wordmark { font-size: 18px; }
    }

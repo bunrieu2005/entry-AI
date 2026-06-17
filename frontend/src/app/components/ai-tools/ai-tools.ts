@@ -69,6 +69,10 @@ export class AiToolsComponent implements OnInit {
 
   private resetKeyboardReady(): void {
     this.isKeyboardReady = false;
+    // Bỏ focus DOM thật (nếu có) để không còn viền outline mặc định của
+    // trình duyệt tồn đọng trên một nút khác — chỉ còn duy nhất highlight
+    // đen (.is-keyboard-highlighted / .active) do component tự vẽ.
+    (document.activeElement as HTMLElement)?.blur();
     setTimeout(() => {
       this.isKeyboardReady = true;
       this.currentZone = 'ZONE_FILTERS';

@@ -2,16 +2,12 @@
 
   <!-- Brand -->
   <div class="header__left">
-    <div class="header__brand">
-      <span class="header__logo" aria-label="EntryAI">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2a4 4 0 0 1 4 4v1h1a3 3 0 0 1 3 3v2a3 3 0 0 1-3 3h-1v1a4 4 0 0 1-8 0v-1H7a3 3 0 0 1-3-3v-2a3 3 0 0 1 3-3h1V6a4 4 0 0 1 4-4z"/>
-          <circle cx="9" cy="10" r="1" fill="currentColor"/>
-          <circle cx="15" cy="10" r="1" fill="currentColor"/>
-        </svg>
-      </span>
-      <span class="header__wordmark">Entry<span>AI</span></span>
-    </div>
+    <a href="/" class="header__brand" aria-label="Prompt-Entry - Trang chủ">
+      <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true" class="header__logo-icon">
+        <path fill="#111111" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round" d="M20.098 0A3.899 3.899 0 0 1 24 3.903v16.194A3.899 3.899 0 0 1 20.098 24H6.393l-.051-10.34v-.074c0-3.92 3.112-7.09 6.963-7.09 2.31 0 4.177 1.902 4.177 4.254 0 2.352-1.867 4.254-4.177 4.254-.77 0-1.393-.634-1.393-1.418 0-.783.623-1.418 1.393-1.418.769 0 1.392-.634 1.392-1.418 0-.784-.623-1.418-1.392-1.418-2.31 0-4.178 1.9-4.178 4.253 0 2.352 1.868 4.254 4.178 4.254 3.85 0 6.962-3.169 6.962-7.09 0-3.92-3.112-7.089-6.962-7.089-5.39 0-9.75 4.436-9.75 9.925v.086l.023 10.315A3.899 3.899 0 0 1 0 20.097V3.903A3.899 3.899 0 0 1 3.902 0z"/>
+      </svg>
+      <span class="header__wordmark">Prompt-Entry</span>
+    </a>
 
     <!-- Breadcrumb / tên trang đang đứng -->
     <nav class="header__breadcrumb" aria-label="Vị trí hiện tại" *ngIf="currentPageName">
@@ -23,26 +19,28 @@
   <!-- Actions -->
   <div class="header__actions">
     <a href="https://github.com" target="_blank" class="btn-icon" aria-label="GitHub">
-      <app-github-icon [size]="20"></app-github-icon>
+      <app-github-icon [size]="18"></app-github-icon>
     </a>
     <a href="https://facebook.com" target="_blank" class="btn-icon" aria-label="Liên hệ">
-      <app-facebook-icon [size]="20"></app-facebook-icon>
+      <app-facebook-icon [size]="18"></app-facebook-icon>
     </a>
-    <a href="/wcag" target="_blank" class="btn-icon" aria-label="WCAG" title="WCAG">
-      <app-wcag-icon [width]="56" [height]="24"></app-wcag-icon>
+    <a href="/wcag" target="_blank" class="btn-icon btn-icon--wide" aria-label="WCAG" title="WCAG">
+      <app-wcag-icon [width]="48" [height]="20"></app-wcag-icon>
     </a>
-    <button type="button" class="btn-action-link btn-add-prompt-text" aria-label="Bổ sung prompt" title="Bổ sung prompt">
-      <span class="btn-icon btn-add-prompt-inner">
-        <app-send-horizontal-icon [size]="16"></app-send-horizontal-icon>
-      </span>
-      <span class="btn-action-label">Bổ sung prompt</span>
+
+    <button type="button" class="btn-add-prompt" aria-label="Bổ sung prompt" title="Bổ sung prompt">
+      <app-send-horizontal-icon [size]="15"></app-send-horizontal-icon>
+      <span>Bổ sung prompt</span>
     </button>
+
     <a href="/privacy" target="_blank" class="btn-action-link" aria-label="Chính sách bảo mật">
-      <button type="button" class="btn-icon" aria-label="Chính sách bảo mật">
-        <app-lock-icon [size]="18"></app-lock-icon>
-      </button>
+      <span class="btn-icon">
+        <app-lock-icon [size]="16"></app-lock-icon>
+      </span>
       <span class="btn-action-label">CSBM</span>
     </a>
+
+    <span class="header__divider" aria-hidden="true"></span>
 
     <ng-container *ngIf="(currentUser$ | async) === null; else loggedInTpl">
       <button class="btn-auth btn-ghost" (click)="openModal('login')">Đăng nhập</button>
@@ -51,18 +49,18 @@
 
     <ng-template #loggedInTpl>
       <div class="user-logged-in">
-        <div class="user-avatar">
-          <app-user-check-icon [size]="18"></app-user-check-icon>
-        </div>
+        <span class="user-avatar">
+          <app-user-check-icon [size]="16"></app-user-check-icon>
+        </span>
         <span class="user-name">{{ (currentUser$ | async)?.displayName || (currentUser$ | async)?.username }}</span>
       </div>
       <button class="btn-icon" (click)="logout()" title="Đăng xuất" aria-label="Đăng xuất">
-        <app-logout-icon [size]="20"></app-logout-icon>
+        <app-logout-icon [size]="18"></app-logout-icon>
       </button>
     </ng-template>
 
     <button type="button" class="btn-icon" aria-label="Chế độ tối">
-      <app-moon-icon [size]="20"></app-moon-icon>
+      <app-moon-icon [size]="18"></app-moon-icon>
     </button>
   </div>
 </header>

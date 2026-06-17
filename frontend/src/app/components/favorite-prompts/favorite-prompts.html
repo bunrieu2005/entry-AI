@@ -1,5 +1,21 @@
 <section class="prompts-fav" aria-labelledby="fav-heading">
 
+  <!-- Keyboard Navigation Banner -->
+  <div
+    *ngIf="isFocusLocked"
+    class="nav-banner"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true">
+    <i class="ti ti-device-gamepad" aria-hidden="true"></i>
+    <span *ngIf="currentZone === 'ZONE_MAIN'">
+      <kbd class="keycap">↑</kbd><kbd class="keycap">↓</kbd><kbd class="keycap">←</kbd><kbd class="keycap">→</kbd> di chuyển &bull;
+      <kbd class="keycap">Enter</kbd> sao chép &bull;
+      <kbd class="keycap">↑</kbd> đầu tiên → về lưới &bull;
+      <kbd class="keycap">ESC</kbd> thoát
+    </span>
+  </div>
+
   <!-- Loading hierarchy -->
   <div *ngIf="isLoading" class="state-block" role="status" aria-live="polite">
     <div class="spinner" aria-hidden="true"></div>
@@ -60,7 +76,9 @@
           <article
             *ngFor="let prompt of promptsList; let i = index; trackBy: trackByPromptId"
             class="prompt-card"
-            [attr.aria-label]="'Prompt: ' + prompt.titleVi">
+            [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex"
+            [attr.aria-label]="'Prompt: ' + prompt.titleVi"
+            [attr.aria-current]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex ? 'true' : null">
 
             <!-- Accent stripe -->
             <span

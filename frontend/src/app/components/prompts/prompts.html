@@ -1,4 +1,4 @@
-<section class="prompts" aria-labelledby="prompts-heading">
+<section class="prompts" aria-labelledby="prompts-heading" [class.kb-lock]="isFocusLocked">
 
   <!-- Keyboard Navigation Banner -->
   <div
@@ -24,6 +24,7 @@
     <span *ngIf="currentZone === 'ZONE_MAIN'">
       <kbd class="keycap">↑↓←→</kbd> di chuyển &bull;
       <kbd class="keycap">Enter</kbd> sao chép &bull;
+      <kbd class="keycap">T</kbd> yêu thích &bull;
       <kbd class="keycap">↑</kbd> đầu tiên → về sub &bull;
       <kbd class="keycap">ESC</kbd> thoát
     </span>
@@ -40,26 +41,50 @@
     <!-- Page Header (editorial style) -->
     <div class="prompts__hero">
 
-      <!-- LEFT BOX -->
-      <div class="prompts__hero-left">
+      <!-- LEFT BOX — card frame matching right side -->
+      <div class="prompts__hero-left prompts__card-frame">
 
         <div class="prompts__badge">
           <span class="prompts__badge-dot"></span>
-          THƯ VIỆN PROMPT 
+          THƯ VIỆN PROMPT
         </div>
-    
+
         <h1 id="prompts-heading" class="prompts__title">
-          THƯ VIỆN<br>
-          <span class="highlight">PROMPT AI</span>
+          THƯ VIỆN PROMPT AI
         </h1>
-    
+
         <p class="prompts__subtitle">
           Khám phá các câu lệnh AI được tuyển chọn cho lĩnh vực
           <strong>{{ activeCategoryName }}</strong>.
         </p>
-    
-   
-    
+
+        <!-- Dashed separator -->
+        <div class="prompts__hero-separator" aria-hidden="true"></div>
+
+        <!-- Dải hỗ trợ AI: pill tags -->
+        <div class="prompts__support-strip" aria-label="Hỗ trợ các công cụ AI">
+          <span class="support-tool-pill support-tool-pill--claude">
+            <svg preserveAspectRatio="xMidYMid" viewBox="0 0 256 257" width="13" height="13" aria-hidden="true"><path fill="#D97757" d="m50.228 170.321 50.357-28.257.843-2.463-.843-1.361h-2.462l-8.426-.518-28.775-.778-24.952-1.037-24.175-1.296-6.092-1.297L0 125.796l.583-3.759 5.12-3.434 7.324.648 16.202 1.101 24.304 1.685 17.629 1.037 26.118 2.722h4.148l.583-1.685-1.426-1.037-1.101-1.037-25.147-17.045-27.22-18.017-14.258-10.37-7.713-5.25-3.888-4.925-1.685-10.758 7-7.713 9.397.649 2.398.648 9.527 7.323 20.35 15.75L94.817 91.9l3.889 3.24 1.555-1.102.195-.777-1.75-2.917-14.453-26.118-15.425-26.572-6.87-11.018-1.814-6.61c-.648-2.723-1.102-4.991-1.102-7.778l7.972-10.823L71.42 0 82.05 1.426l4.472 3.888 6.61 15.101 10.694 23.786 16.591 32.34 4.861 9.592 2.592 8.879.973 2.722h1.685v-1.556l1.36-18.211 2.528-22.36 2.463-28.776.843-8.1 4.018-9.722 7.971-5.25 6.222 2.981 5.12 7.324-.713 4.73-3.046 19.768-5.962 30.98-3.889 20.739h2.268l2.593-2.593 10.499-13.934 17.628-22.036 7.778-8.749 9.073-9.657 5.833-4.601h11.018l8.1 12.055-3.628 12.443-11.342 14.388-9.398 12.184-13.48 18.147-8.426 14.518.778 1.166 2.01-.194 30.46-6.481 16.462-2.982 19.637-3.37 8.88 4.148.971 4.213-3.5 8.62-20.998 5.184-24.628 4.926-36.682 8.685-.454.324.519.648 16.526 1.555 7.065.389h17.304l32.21 2.398 8.426 5.574 5.055 6.805-.843 5.184-12.962 6.611-17.498-4.148-40.83-9.721-14-3.5h-1.944v1.167l11.666 11.406 21.387 19.314 26.767 24.887 1.36 6.157-3.434 4.86-3.63-.518-23.526-17.693-9.073-7.972-20.545-17.304h-1.36v1.814l4.73 6.935 25.017 37.59 1.296 11.536-1.814 3.76-6.481 2.268-7.13-1.297-14.647-20.544-15.1-23.138-12.185-20.739-1.49.843-7.194 77.448-3.37 3.953-7.778 2.981-6.48-4.925-3.436-7.972 3.435-15.749 4.148-20.544 3.37-16.333 3.046-20.285 1.815-6.74-.13-.454-1.49.194-15.295 20.999-23.267 31.433-18.406 19.702-4.407 1.75-7.648-3.954.713-7.064 4.277-6.286 25.47-32.405 15.36-20.092 9.917-11.6-.065-1.686h-.583L44.07 198.125l-12.055 1.555-5.185-4.86.648-7.972 2.463-2.593 20.35-13.999-.064.065Z"/></svg>
+            Claude
+          </span>
+
+          <span class="support-tool-pill support-tool-pill--chatgpt">
+            <svg viewBox="0 0 512 509.639" width="13" height="13" aria-hidden="true"><path fill="#fff" d="M115.612 0h280.775C459.974 0 512 52.026 512 115.612v278.415c0 63.587-52.026 115.613-115.613 115.613H115.612C52.026 509.64 0 457.614 0 394.027V115.612C0 52.026 52.026 0 115.612 0z"/><path fill-rule="nonzero" d="M412.037 221.764a90.834 90.834 0 004.648-28.67 90.79 90.79 0 00-12.443-45.87c-16.37-28.496-46.738-46.089-79.605-46.089-6.466 0-12.943.683-19.264 2.04a90.765 90.765 0 00-67.881-30.515h-.576c-.059.002-.149.002-.216.002-39.807 0-75.108 25.686-87.346 63.554-25.626 5.239-47.748 21.31-60.682 44.03a91.873 91.873 0 00-12.407 46.077 91.833 91.833 0 0023.694 61.553 90.802 90.802 0 00-4.649 28.67 90.804 90.804 0 0012.442 45.87c16.369 28.504 46.74 46.087 79.61 46.087a91.81 91.81 0 0019.253-2.04 90.783 90.783 0 0067.887 30.516h.576l.234-.001c39.829 0 75.119-25.686 87.357-63.588 25.626-5.242 47.748-21.312 60.682-44.033a91.718 91.718 0 0012.383-46.035 91.83 91.83 0 00-23.693-61.553l-.004-.005zM275.102 413.161h-.094a68.146 68.146 0 01-43.611-15.8 56.936 56.936 0 002.155-1.221l72.54-41.901a11.799 11.799 0 005.962-10.251V241.651l30.661 17.704c.326.163.55.479.596.84v84.693c-.042 37.653-30.554 68.198-68.21 68.273h.001zm-146.689-62.649a68.128 68.128 0 01-9.152-34.085c0-3.904.341-7.817 1.005-11.663.539.323 1.48.897 2.155 1.285l72.54 41.901a11.832 11.832 0 0011.918-.002l88.563-51.137v35.408a1.1 1.1 0 01-.438.94l-73.33 42.339a68.43 68.43 0 01-34.11 9.12 68.359 68.359 0 01-59.15-34.11l-.001.004zm-19.083-158.36a68.044 68.044 0 0135.538-29.934c0 .625-.036 1.731-.036 2.5v83.801l-.001.07a11.79 11.79 0 005.954 10.242l88.564 51.13-30.661 17.704a1.096 1.096 0 01-1.034.093l-73.337-42.375a68.36 68.36 0 01-34.095-59.143 68.412 68.412 0 019.112-34.085l-.004-.003zm251.907 58.621l-88.563-51.137 30.661-17.697a1.097 1.097 0 011.034-.094l73.337 42.339c21.109 12.195 34.132 34.746 34.132 59.132 0 28.604-17.849 54.199-44.686 64.078v-86.308c.004-.032.004-.065.004-.096 0-4.219-2.261-8.119-5.919-10.217zm30.518-45.93c-.539-.331-1.48-.898-2.155-1.286l-72.54-41.901a11.842 11.842 0 00-5.958-1.611c-2.092 0-4.15.558-5.957 1.611l-88.564 51.137v-35.408l-.001-.061a1.1 1.1 0 01.44-.88l73.33-42.303a68.301 68.301 0 0134.108-9.129c37.704 0 68.281 30.577 68.281 68.281a68.69 68.69 0 01-.984 11.545v.005zm-191.843 63.109l-30.668-17.704a1.09 1.09 0 01-.596-.84v-84.692c.016-37.685 30.593-68.236 68.281-68.236a68.332 68.332 0 0143.689 15.804 63.09 63.09 0 00-2.155 1.222l-72.54 41.9a11.794 11.794 0 00-5.961 10.248v.068l-.05 102.23zm16.655-35.91l39.445-22.782 39.444 22.767v45.55l-39.444 22.767-39.445-22.767v-45.535z"/></svg>
+            ChatGPT
+          </span>
+
+          <span class="support-tool-pill support-tool-pill--gemini">
+            <svg viewBox="0 0 296 298" width="13" height="13" aria-hidden="true"><mask id="gemini__a" width="296" height="298" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#3186FF" d="M141.201 4.886c2.282-6.17 11.042-6.071 13.184.148l5.985 17.37a184.004 184.004 0 0 0 111.257 113.049l19.304 6.997c6.143 2.227 6.156 10.91.02 13.155l-19.35 7.082a184.001 184.001 0 0 0-109.495 109.385l-7.573 20.629c-2.241 6.105-10.869 6.121-13.133.025l-7.908-21.296a184 184 0 0 0-109.02-108.658l-19.698-7.239c-6.102-2.243-6.118-10.867-.025-13.132l20.083-7.467A183.998 183.998 0 0 0 133.291 26.28l7.91-21.394Z"/></mask><g mask="url(#gemini__a)"><g><ellipse cx="163" cy="149" fill="#3689FF" rx="196" ry="159"/></g><g><ellipse cx="33.5" cy="142.5" fill="#F6C013" rx="68.5" ry="72.5"/></g><g><ellipse cx="19.5" cy="148.5" fill="#F6C013" rx="68.5" ry="72.5"/></g><g><path fill="#FA4340" d="M194 10.5C172 82.5 65.5 134.333 22.5 135L144-66l50 76.5Z"/></g><g><path fill="#FA4340" d="M190.5-12.5C168.5 59.5 62 111.333 19 112L140.5-89l50 76.5Z"/></g><g><path fill="#14BB69" d="M194.5 279.5C172.5 207.5 66 155.667 23 155l121.5 201 50-76.5Z"/></g><g><path fill="#14BB69" d="M196.5 320.5C174.5 248.5 68 196.667 25 196l121.5 201 50-76.5Z"/></g></g></svg>
+            Gemini
+          </span>
+
+          <span class="support-tool-pill support-tool-pill--notebooklm">
+            <img src="/assets/logos/NotebookLMlogo.svg" alt="" width="13" height="13" aria-hidden="true">
+            NotebookLM
+          </span>
+
+        </div>
+
       </div>
     
       <!-- RIGHT BOX -->
@@ -68,7 +93,7 @@
         <div class="hero-video-card">
     
           <div class="hero-video-header">
-            Video hướng dẫn
+            Introduction
           </div>
     
           <div class="hero-video-frame">
@@ -102,6 +127,7 @@
         class="prompts__tab"
         [class.active]="cat.id === activeCategoryId"
         [attr.aria-selected]="cat.id === activeCategoryId"
+        [attr.tabindex]="isFocusLocked ? -1 : null"
         (click)="selectCategory(cat)">
         <i class="ti {{ cat.icon }}" aria-hidden="true"></i>
         <span>{{ cat.name }}</span>
@@ -122,6 +148,7 @@
           class="sub-btn"
           [class.active]="sub.id === activeSubId"
           [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_SUBS' && i === highlightedSubIndex"
+          [attr.tabindex]="isFocusLocked ? -1 : null"
           (click)="loadPromptsBySubcategory(sub.id)">
           <span class="sub-btn__dot" aria-hidden="true"></span>
           {{ sub.name }}
@@ -170,15 +197,19 @@
               [attr.aria-label]="'Prompt: ' + prompt.titleVi"
               [attr.aria-current]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex ? 'true' : null">
 
-              <!-- Accent stripe -->
-              <span
-                class="card-stripe"
-                [class.stripe--claude]="prompt.compatibleTools[0] === 'Claude'"
-                [class.stripe--chatgpt]="prompt.compatibleTools[0] === 'ChatGPT'"
-                [class.stripe--gemini]="prompt.compatibleTools[0] === 'Gemini'"
-                aria-hidden="true"></span>
+              <!-- Cursor marker — chỉ hiện khi card này đang được bàn phím highlight -->
+              <span class="card-cursor-badge" aria-hidden="true">▶</span>
 
-              <div class="card-inner">
+              <div class="card-clip">
+                <!-- Accent stripe -->
+                <span
+                  class="card-stripe"
+                  [class.stripe--claude]="prompt.compatibleTools[0] === 'Claude'"
+                  [class.stripe--chatgpt]="prompt.compatibleTools[0] === 'ChatGPT'"
+                  [class.stripe--gemini]="prompt.compatibleTools[0] === 'Gemini'"
+                  aria-hidden="true"></span>
+
+                <div class="card-inner">
 
                 <!-- Header -->
                 <div class="card-header">
@@ -241,6 +272,7 @@
                   </div>
                 </div>
 
+              </div>
               </div>
             </article>
           </div>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { FavoriteService } from '../../services/favorite.service';
 import { AuthModalService } from '../../services/auth-modal.service';
 import { AuthService } from '../../services/auth.service';
+import { KeyboardNavigationService } from '../../services/keyboard-navigation.service';
 import { HeartIconComponent } from '../shared/icons/heart-icon';
 import { CopyIconComponent } from '../shared/icons/copy-icon';
 
@@ -36,6 +37,10 @@ export class FavoritePromptsComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
 
   private subs = new Subscription();
+  private keyboardNav = inject(KeyboardNavigationService);
+  private isKeyboardReady = false;
+  currentZone: 'ZONE_MAIN' = 'ZONE_MAIN';
+  highlightedIndex = 0;
 
   constructor(
     private readonly http: HttpClient,
@@ -43,6 +48,14 @@ export class FavoritePromptsComponent implements OnInit, OnDestroy {
     private readonly authModalService: AuthModalService,
     private readonly authService: AuthService,
   ) {}
+
+  get isFocusLocked(): boolean {
+    return this.keyboardNav.isFocusLocked();
+  }
+
+  get highlightedPrompt(): Prompt | null {
+    return this.promptsList[this.highlightedIndex] || null;
+  }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.authService.getCurrentUserId();
@@ -64,10 +77,22 @@ export class FavoritePromptsComponent implements OnInit, OnDestroy {
         this.favoriteIds = ids;
       })
     );
+
+    this.resetKeyboardReady();
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+  }
+
+  private resetKeyboardReady(): void {
+    this.isKeyboardReady = false;
+    (document.activeElement as HTMLElement)?.blur();
+    setTimeout(() => {
+      this.isKeyboardReady = true;
+      this.currentZone = 'ZONE_MAIN';
+      this.highlightedIndex = 0;
+    }, 100);
   }
 
   loadFavorites(): void {
@@ -131,5 +156,58 @@ export class FavoritePromptsComponent implements OnInit, OnDestroy {
 
   trackByPromptId(_: number, prompt: Prompt): number {
     return prompt.id;
+  }
+
+  // ========== KEYBOARD NAVIGATION ==========
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if (!this.isKeyboardReady || !this.isFocusLocked || this.isLoading) return;
+
+    const key = event.key.toLowerCase();
+
+    if (key === 'escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      (document.activeElement as HTMLElement)?.blur();
+      return;
+    }
+
+    if (this.currentZone === 'ZONE_MAIN') {
+      if (key === 'arrowup' || key === 'arrowleft') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex > 0) {
+          this.highlightedIndex--;
+          this.scrollHighlightIntoView();
+        }
+        return;
+      }
+      if (key === 'arrowdown' || key === 'arrowright') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.highlightedIndex < this.promptsList.length - 1) {
+          this.highlightedIndex++;
+          this.scrollHighlightIntoView();
+        }
+        return;
+      }
+      if (key === 'enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        const prompt = this.highlightedPrompt;
+        if (prompt) this.copyPromptContent(prompt.content, prompt.id);
+        return;
+      }
+    }
+  }
+
+  private scrollHighlightIntoView(): void {
+    setTimeout(() => {
+      const card = document.querySelector('.prompt-card.is-keyboard-highlighted');
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 10);
   }
 }

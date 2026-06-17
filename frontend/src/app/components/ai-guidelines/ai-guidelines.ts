@@ -93,6 +93,7 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
 
   private resetKeyboardReady(): void {
     this.isKeyboardReady = false;
+    (document.activeElement as HTMLElement)?.blur();
     setTimeout(() => {
       this.isKeyboardReady = true;
       this.currentZone = 'ZONE_FILTERS';
@@ -109,7 +110,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
   selectLesson(lessonId: string) {
     const no = lessonId.split('-')[1];
     this.router.navigate(['/ai-guidelines', this.currentCategory, no]);
-    // Sync highlightedIndex với lesson đang chọn
     const idx = this.lessons.findIndex(l => l.id === lessonId);
     if (idx !== -1) {
       this.highlightedIndex = idx;
@@ -141,7 +141,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
 
     // ZONE_FILTERS: AI Tabs
     if (this.currentZone === 'ZONE_FILTERS') {
-      // A / ←: Move left to previous AI tab
       if (key === 'a' || key === 'arrowleft') {
         event.preventDefault();
         event.stopPropagation();
@@ -152,7 +151,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
         return;
       }
 
-      // D / →: Move right to next AI tab
       if (key === 'd' || key === 'arrowright') {
         event.preventDefault();
         event.stopPropagation();
@@ -163,7 +161,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
         return;
       }
 
-      // S / ↓: Drop to ZONE_MAIN (first lesson)
       if (key === 's' || key === 'arrowdown') {
         event.preventDefault();
         event.stopPropagation();
@@ -180,7 +177,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
 
     // ZONE_MAIN: Lesson List
     if (this.currentZone === 'ZONE_MAIN') {
-      // W / ↑: Move up
       if (key === 'w' || key === 'arrowup') {
         event.preventDefault();
         event.stopPropagation();
@@ -196,7 +192,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
         return;
       }
 
-      // S / ↓: Move down
       if (key === 's' || key === 'arrowdown') {
         event.preventDefault();
         event.stopPropagation();
@@ -210,7 +205,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
         return;
       }
 
-      // D / →: Go to ZONE_DETAIL
       if (key === 'd' || key === 'arrowright') {
         event.preventDefault();
         event.stopPropagation();
@@ -224,7 +218,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
         return;
       }
 
-      // A / ←: Back to ZONE_FILTERS
       if (key === 'a' || key === 'arrowleft') {
         event.preventDefault();
         event.stopPropagation();
@@ -234,9 +227,8 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
       return;
     }
 
-    // ZONE_DETAIL: Lesson Detail (scroll content)
+    // ZONE_DETAIL: Lesson Detail
     if (this.currentZone === 'ZONE_DETAIL') {
-      // W / ↑: Scroll up
       if (key === 'w' || key === 'arrowup') {
         event.preventDefault();
         event.stopPropagation();
@@ -245,7 +237,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
         return;
       }
 
-      // S / ↓: Scroll down
       if (key === 's' || key === 'arrowdown') {
         event.preventDefault();
         event.stopPropagation();
@@ -254,7 +245,6 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
         return;
       }
 
-      // A / ← or Backspace: Back to ZONE_MAIN
       if (key === 'a' || key === 'arrowleft' || key === 'backspace') {
         event.preventDefault();
         event.stopPropagation();
