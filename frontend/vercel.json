@@ -1,5 +1,5 @@
 {
-  "outputDirectory": "dist/entry-AI",
+  "outputDirectory": "dist/entry-AI/browser",
   "rewrites": [
     {
       "source": "/(.*)",
