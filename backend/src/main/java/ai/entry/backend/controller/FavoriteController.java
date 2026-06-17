@@ -20,7 +20,7 @@ public class FavoriteController {
      POST /api/favorites/1/5
      */
     @PostMapping("/{userId}/{promptId}")
-    public ResponseEntity<Boolean> toggleFavorite(@PathVariable Long userId, @PathVariable Long promptId) {
+    public ResponseEntity<Boolean> toggleFavorite(@PathVariable("userId") Long userId, @PathVariable("promptId") Long promptId) {
         boolean currentStatus = favoriteService.toggleFavorite(userId, promptId);
         return ResponseEntity.ok(currentStatus);
     }
@@ -29,7 +29,7 @@ public class FavoriteController {
      * URL: GET /api/favorites/1
      */
     @GetMapping("/{userId}")
-    public ResponseEntity<Set<Prompt>> getFavorites(@PathVariable Long userId) {
+    public ResponseEntity<Set<Prompt>> getFavorites(@PathVariable("userId") Long userId) {
         Set<Prompt> favorites = favoriteService.getUserFavorites(userId);
         return ResponseEntity.ok(favorites);
     }

@@ -18,7 +18,7 @@ public class GuideController {
     private final GuideService guideService;
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<Guide>> getGuidesByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<List<Guide>> getGuidesByCategory(@PathVariable("categoryId") Long categoryId) {
         return ResponseEntity.ok(guideService.getGuidesByCategory(categoryId));
     }
 

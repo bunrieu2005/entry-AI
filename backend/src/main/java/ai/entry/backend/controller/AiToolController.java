@@ -23,7 +23,7 @@ public class AiToolController {
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<AiTool>> getToolsByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<List<AiTool>> getToolsByCategory(@PathVariable("categoryId") Long categoryId) {
         return ResponseEntity.ok(aiToolService.getToolsByCategory(categoryId));
     }
 
