@@ -19,11 +19,11 @@
   <!-- Actions -->
 <!-- Actions -->
 <div class="header__actions">
-  <a href="https://github.com" target="_blank" class="btn-icon" aria-label="GitHub">
+  <a href="/github" target="_blank" class="btn-icon" aria-label="GitHub">
     <app-github-icon [size]="18"></app-github-icon>
     <span class="header__shortcut">7</span>
   </a>
-  <a href="https://facebook.com" target="_blank" class="btn-icon" aria-label="Liên hệ">
+  <a href="/facebook" target="_blank" class="btn-icon" aria-label="Liên hệ">
     <app-facebook-icon [size]="18"></app-facebook-icon>
     <span class="header__shortcut">8</span>
   </a>
@@ -163,6 +163,27 @@
       <span *ngIf="authMode === 'register'">
         Đã có tài khoản? <a href="javascript:void(0)" (click)="authMode = 'login'">Đăng nhập</a>
       </span>
+    </div>
+  </div>
+</div>
+
+<!-- Logout Modal -->
+<div class="modal-overlay" *ngIf="showLogoutModal" (click)="cancelLogout()">
+  <div class="modal-box modal-box--sm" (click)="$event.stopPropagation()">
+    <div class="logout-icon">
+      <app-logout-icon [size]="32"></app-logout-icon>
+    </div>
+    <div class="modal-title">Đăng xuất?</div>
+    <p class="logout-desc">Bạn có chắc chắn muốn đăng xuất khỏi hệ thống không?</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="cancelLogout()">
+        Không
+        <span class="header__shortcut modal-key">N</span>
+      </button>
+      <button class="btn-full btn-danger" (click)="confirmLogout()">
+        Đăng xuất
+        <span class="header__shortcut modal-key">Y</span>
+      </button>
     </div>
   </div>
 </div>

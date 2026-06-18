@@ -39,29 +39,30 @@
         </button>
       </li>
     </ul>
-  </nav>
 
-  <div class="sidebar__footer">
+  <!-- Nút WCAG ngay dưới list -->
+  <div class="sidebar__wcag-inline">
     <button
       type="button"
       class="sidebar__btn wcag-btn"
       [class.wcag-btn--active]="isWcagModeActive"
       (click)="toggleWcagMode()">
-
       <span class="sidebar__icon">
         <i class="ti ti-accessible"></i>
       </span>
-
       <span class="sidebar__text">
-        <span class="sidebar__name">
-          Keyboard (Alt)
-        </span>
+        <span class="sidebar__name">Keyboard (Alt)</span>
       </span>
-
       <div class="wcag-toggle-switch">
         <div class="wcag-toggle-thumb"></div>
       </div>
-
     </button>
+
+    <!-- Hint bar -->
+    <div class="sidebar__hint" *ngIf="isWcagModeActive">
+      <span>1–6</span> chuyển trang •
+      <span>Alt</span> tắt
+    </div>
   </div>
+</nav>
 </aside>

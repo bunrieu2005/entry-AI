@@ -10,7 +10,7 @@
   background-color: #0d0d0d;
   border-right: 1px solid #2e2e2e;
   font-family: var(--font-body);
-  overflow-y: hidden;
+  overflow-y: auto;
   position: sticky;
   top: 0;
 }
@@ -33,7 +33,6 @@
 .sidebar__nav {
   flex: 1;
   padding: 16px 12px;
-  overflow-y: auto;
 }
 
 .sidebar__list { list-style: none; display: flex; flex-direction: column; gap: 4px; padding: 0; margin: 0; }
@@ -148,6 +147,36 @@
 .wcag-btn--active .sidebar__icon { color: #f97316; border-color: rgba(249, 115, 22, 0.4); }
 .wcag-btn--active .wcag-toggle-switch { background: rgba(249, 115, 22, 0.3); }
 .wcag-btn--active .wcag-toggle-thumb { transform: translateX(14px); background: #f97316; box-shadow: 0 0 6px rgba(249, 115, 22, 0.5); }
+
+/* WCAG button inline trong nav */
+.sidebar__wcag-inline {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #2e2e2e;
+}
+
+/* Hint bar */
+.sidebar__hint {
+  margin-top: 8px;
+  padding: 6px 12px;
+  font-size: 0.7rem;
+  color: #4a4a4a;
+  line-height: 1.6;
+}
+
+.sidebar__hint span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 5px;
+  background: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  color: #f97316;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+}
 
 @media (max-width: 900px) {
   .sidebar { width: 68px; min-width: 68px; }

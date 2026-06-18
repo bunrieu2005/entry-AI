@@ -467,3 +467,49 @@
 :host-context(body.wcag-on) .input-shortcut {
   display: inline-flex;
 }
+
+/* Logout modal */
+.modal-box--sm {
+  width: 360px;
+  padding: 32px;
+  text-align: center;
+}
+
+.logout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  background: rgba(229, 62, 62, 0.1);
+  border: 1px solid rgba(229, 62, 62, 0.25);
+  border-radius: 50%;
+  color: #E53E3E;
+}
+
+.logout-desc {
+  font-size: 13px;
+  color: rgba(244, 233, 210, 0.55);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.btn-danger {
+  background: #E53E3E;
+  color: #fff;
+  border-color: #E53E3E;
+}
+
+.btn-danger:hover {
+  background: #FC8181;
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+}
+
+/* Key badge trong modal */
+.modal-key {
+  position: static;
+  margin-left: 6px;
+  top: unset;
+  right: unset;
+}

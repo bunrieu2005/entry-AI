@@ -29,6 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Input() currentPageName: string = '';
 
   showModal: boolean = false;
+  showLogoutModal: boolean = false;
   authMode: 'login' | 'register' = 'login';
 
   authData = {
@@ -137,9 +138,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
-      this.authService.logout();
-    }
+    this.showLogoutModal = true;
+  }
+
+  confirmLogout() {
+    this.authService.logout();
+    this.showLogoutModal = false;
+  }
+
+  cancelLogout() {
+    this.showLogoutModal = false;
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -149,6 +157,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const target = event.target as HTMLElement;
     const tag = target.tagName;
     const isInputField = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
+
+    if (this.showLogoutModal) {
+      if (event.key === 'y' || event.key === 'Y') {
+        this.confirmLogout();
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      if (event.key === 'n' || event.key === 'N' || event.key === 'Escape') {
+        this.cancelLogout();
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      event.stopPropagation();
+      return;
+    }
 
     if (this.showModal) {
       if (event.key === 'Escape') {
@@ -169,15 +194,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     if (isInputField) return;
 
-  switch (event.key) {
-    case '7': window.open('https://github.com', '_blank'); break;
-    case '8': window.open('https://facebook.com', '_blank'); break;
-    case '9': break;
-    case '0': this.openModal('login'); break;
-    case 'q':
-    case 'Q': this.logout(); break;
-    case 'r':
-    case 'R': this.openModal('register'); break;
-  }
+    switch (event.key) {
+      case '7': window.open('https://github.com', '_blank'); break;
+      case '8': window.open('https://facebook.com', '_blank'); break;
+      case '9': break;
+      case '0': this.openModal('login'); break;
+      case 'q':
+      case 'Q': this.logout(); break;
+      case 'r':
+      case 'R': this.openModal('register'); break;
+    }
   }
 }
