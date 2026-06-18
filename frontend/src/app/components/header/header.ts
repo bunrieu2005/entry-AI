@@ -141,8 +141,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   handleShortcut(event: KeyboardEvent): void {
     if (!document.body.classList.contains('wcag-on')) return;
 
-    const tag = (event.target as HTMLElement).tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    // Bỏ qua khi đang nhập trong input/textarea/select/contenteditable
+    const target = event.target as HTMLElement;
+    const tag = target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable) return;
 
     switch (event.key) {
       case '7':

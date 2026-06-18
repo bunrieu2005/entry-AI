@@ -384,7 +384,7 @@
 }
 
 /* Hiện badge khi bật WCAG */
-.wcag-on .header__shortcut {
+body.wcag-on .header__shortcut {
   display: inline-flex;
 }
 

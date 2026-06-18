@@ -142,6 +142,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     if (!this.isWcagModeActive) return;
 
+    // Bỏ qua khi đang nhập trong input/textarea/select
+    const tag = (event.target as HTMLElement).tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
     switch (event.key) {
 
       case '1':
