@@ -125,62 +125,40 @@ export class SidebarComponent implements OnInit, OnDestroy {
           (e as NavigationEnd).url
         );
       });
+
+    // Capture phase để bắt phím trước browser
+    document.addEventListener('keydown', this.captureShortcut.bind(this), true);
   }
 
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe();
+    document.removeEventListener('keydown', this.captureShortcut.bind(this), true);
+  }
+
+  captureShortcut(event: KeyboardEvent): void {
+    if (!this.isWcagModeActive) return;
+
+    const target = event.target as HTMLElement;
+    const tag = target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable) return;
+    if (document.querySelector('.modal-overlay')) return;
+
+    const keyMap: Record<string, string> = {
+      '1': 'home', '2': 'explore', '3': 'glossary',
+      '4': 'prompts', '5': 'favorite-prompts', '6': 'ai-guidelines'
+    };
+
+    if (keyMap[event.key]) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.selectModule(keyMap[event.key]);
+    }
   }
 
   @HostListener('document:keyup.alt', ['$event'])
   handleAlt(event: Event): void {
     event.preventDefault();
     this.toggleWcagMode();
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  handleShortcut(event: KeyboardEvent): void {
-
-    if (!this.isWcagModeActive) return;
-
-    const target = event.target as HTMLElement;
-    const tag = target.tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable) return;
-
-    // Không xử lý nếu có modal overlay đang mở
-    if (document.querySelector('.modal-overlay')) return;
-
-    switch (event.key) {
-
-      case '1':
-        event.preventDefault();
-        this.selectModule('home');
-        break;
-
-      case '2':
-        event.preventDefault();
-        this.selectModule('explore');
-        break;
-
-      case '3':
-        event.preventDefault();
-        this.selectModule('glossary');
-        break;
-
-      case '4':
-        event.preventDefault();
-        this.selectModule('prompts');
-        break;
-
-      case '5':
-        event.preventDefault();
-        this.selectModule('favorite-prompts');
-        break;
-
-      case '6':
-        event.preventDefault();
-        this.selectModule('ai-guidelines');
-        break;
-    }
   }
 
   toggleWcagMode(event?: Event): void {

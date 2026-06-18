@@ -169,13 +169,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     if (isInputField) return;
 
-    switch (event.key) {
-      case '7': window.open('https://github.com', '_blank'); break;
-      case '8': window.open('https://facebook.com', '_blank'); break;
-      case '9': break;
-      case '0': this.openModal('login'); break;
-      case 'r':
-      case 'R': this.openModal('register'); break;
-    }
+  switch (event.key) {
+    case '7': window.open('https://github.com', '_blank'); break;
+    case '8': window.open('https://facebook.com', '_blank'); break;
+    case '9': break;
+    case '0': this.openModal('login'); break;
+    case 'q':
+    case 'Q': this.logout(); break;
+    case 'r':
+    case 'R': this.openModal('register'); break;
+  }
   }
 }
