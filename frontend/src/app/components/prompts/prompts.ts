@@ -284,7 +284,7 @@ export class PromptsComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    // ── ZONE_SUBS: Sidebar sub-category dọc ──────────────────────────────
+    // ── ZONE_SUBS: Sidebar danh mục con ──────────────────────────────────
     if (this.currentZone === 'ZONE_SUBS') {
       // W / ↑: lên item trước, hoặc về ZONE_FILTERS
       if (key === 'w' || key === 'arrowup') {
@@ -294,49 +294,33 @@ export class PromptsComponent implements OnInit, OnChanges, OnDestroy {
           this.currentZone = 'ZONE_FILTERS';
         } else {
           this.highlightedSubIndex--;
+          const sub = this.activeSubs[this.highlightedSubIndex];
+          if (sub) this.loadPromptsBySubcategory(sub.id);
           this.scrollActiveSubIntoView();
         }
         return;
       }
-      // S / ↓: xuống item tiếp theo, hoặc vào ZONE_MAIN
+      // S / ↓: xuống item tiếp theo
       if (key === 's' || key === 'arrowdown') {
         event.preventDefault();
         event.stopPropagation();
         if (this.highlightedSubIndex < this.activeSubs.length - 1) {
           this.highlightedSubIndex++;
+          const sub = this.activeSubs[this.highlightedSubIndex];
+          if (sub) this.loadPromptsBySubcategory(sub.id);
           this.scrollActiveSubIntoView();
-        } else {
-          // cuối danh sách sub → vào ZONE_MAIN
-          if (this.promptsList.length > 0) {
-            this.highlightedIndex = 0;
-            this.currentZone = 'ZONE_MAIN';
-            this.scrollActiveCardIntoView();
-          }
         }
         return;
       }
-      // Enter: load prompts của sub đang highlight → chuyển luôn sang ZONE_MAIN
-      if (key === 'enter') {
-        event.preventDefault();
-        event.stopPropagation();
-        const sub = this.activeSubs[this.highlightedSubIndex];
-        if (sub) {
-          this.loadPromptsBySubcategory(sub.id);
-          // Chuyển sang ZONE_MAIN ngay — highlight sub index reset về -1
-          // để không còn viền đen tồn đọng trên sub-btn
-          this.highlightedSubIndex = -1;
-          this.highlightedIndex = 0;
-          this.currentZone = 'ZONE_MAIN';
-          this.scrollActiveCardIntoView();
-        }
-        return;
-      }
-      // D / →: vào ZONE_MAIN nếu có prompt
+      // D / →: vào lưới card — vừa tải dữ liệu vừa chuyển vùng
       if (key === 'd' || key === 'arrowright') {
         event.preventDefault();
         event.stopPropagation();
+        const sub = this.activeSubs[this.highlightedSubIndex];
+        if (sub) this.loadPromptsBySubcategory(sub.id);
         if (this.promptsList.length > 0) {
           this.highlightedIndex = 0;
+          this.highlightedSubIndex = -1;
           this.currentZone = 'ZONE_MAIN';
           this.scrollActiveCardIntoView();
         }
