@@ -29,6 +29,7 @@
   </a>
   <a href="/wcag" target="_blank" class="btn-icon btn-icon--wide" aria-label="WCAG" title="WCAG">
     <app-wcag-icon [width]="48" [height]="20"></app-wcag-icon>
+    <span class="header__shortcut">W</span>
   </a>
 
   <button type="button" class="btn-add-prompt" aria-label="Bổ sung prompt" title="Bổ sung prompt">
@@ -41,6 +42,7 @@
   <a href="/privacy" target="_blank" class="btn-action-link" aria-label="Chính sách bảo mật">
     <app-lock-icon [size]="15"></app-lock-icon>
     <span>CSBM</span>
+    <span class="header__shortcut">C</span>
   </a>
 
   <!-- Vạch phân cách -->
@@ -102,6 +104,7 @@
         [attr.aria-invalid]="fieldErrors['username'] ? true : null"
         [attr.aria-describedby]="fieldErrors['username'] ? 'err-username' : null"
         (input)="clearFieldError('username')">
+      <span class="header__shortcut input-shortcut">Tab ↓</span>
       <div *ngIf="fieldErrors['username']" id="err-username" class="form-error" role="alert">
         <app-triangle-alert-icon [size]="13" color="#E53E3E"></app-triangle-alert-icon>
         {{ fieldErrors['username'] }}

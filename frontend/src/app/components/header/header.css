@@ -433,6 +433,7 @@
   font-weight: 600;
   text-decoration: none;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
+  position: relative;
 }
 
 .btn-action-link:hover {
@@ -447,4 +448,22 @@
   height: 20px;
   background: rgba(244, 233, 210, 0.15);
   margin: 0 4px;
+}
+
+/* Tab hint badge */
+.input-shortcut {
+  position: static;
+  display: none;
+  margin-top: 4px;
+  font-size: 10px;
+  color: rgba(249, 115, 22, 0.7);
+  background: transparent;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  box-shadow: none;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+:host-context(body.wcag-on) .input-shortcut {
+  display: inline-flex;
 }

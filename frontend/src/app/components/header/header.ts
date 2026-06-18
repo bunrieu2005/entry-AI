@@ -64,6 +64,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   openModal(mode: 'login' | 'register' = 'login') {
     this.authModalService.open(mode);
+    this.authMode = mode;
+    setTimeout(() => {
+      const input = document.getElementById('auth-username') as HTMLInputElement;
+      input?.focus();
+    }, 100);
   }
 
   closeModal() {
@@ -141,45 +146,36 @@ export class HeaderComponent implements OnInit, OnDestroy {
   handleShortcut(event: KeyboardEvent): void {
     if (!document.body.classList.contains('wcag-on')) return;
 
-    // Bỏ qua khi đang nhập trong input/textarea/select/contenteditable
     const target = event.target as HTMLElement;
     const tag = target.tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable) return;
+    const isInputField = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
 
-    // Xử lý phím khi modal đang mở
     if (this.showModal) {
       if (event.key === 'Escape') {
         this.closeModal();
         event.preventDefault();
         event.stopPropagation();
+        return;
       }
       if (event.key === 'Enter') {
         this.submitStep1();
         event.preventDefault();
         event.stopPropagation();
+        return;
       }
-      // Block tất cả phím khác không xuyên qua modal
       event.stopPropagation();
       return;
     }
 
+    if (isInputField) return;
+
     switch (event.key) {
-      case '7':
-        window.open('https://github.com', '_blank');
-        break;
-      case '8':
-        window.open('https://facebook.com', '_blank');
-        break;
-      case '9':
-        // trigger bổ sung prompt nếu có
-        break;
-      case '0':
-        this.openModal('login');
-        break;
+      case '7': window.open('https://github.com', '_blank'); break;
+      case '8': window.open('https://facebook.com', '_blank'); break;
+      case '9': break;
+      case '0': this.openModal('login'); break;
       case 'r':
-      case 'R':
-        this.openModal('register');
-        break;
+      case 'R': this.openModal('register'); break;
     }
   }
 }

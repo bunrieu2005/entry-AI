@@ -152,26 +152,32 @@ export class SidebarComponent implements OnInit, OnDestroy {
     switch (event.key) {
 
       case '1':
+        event.preventDefault();
         this.selectModule('home');
         break;
 
       case '2':
+        event.preventDefault();
         this.selectModule('explore');
         break;
 
       case '3':
+        event.preventDefault();
         this.selectModule('glossary');
         break;
 
       case '4':
+        event.preventDefault();
         this.selectModule('prompts');
         break;
 
       case '5':
+        event.preventDefault();
         this.selectModule('favorite-prompts');
         break;
 
       case '6':
+        event.preventDefault();
         this.selectModule('ai-guidelines');
         break;
     }
