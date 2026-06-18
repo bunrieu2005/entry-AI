@@ -130,7 +130,7 @@ export class HeroSectionComponent implements OnInit {
   mainItems: MainNavItem[] = [
     { type: 'prompt' },
     { type: 'video', title: 'Hướng Dẫn Sử Dụng Trang Web', videoId: '2BpCk4d2Cc0' },
-    { type: 'video', title: 'Hướng dẫn WCAG — Dành cho người hạn chế sử dụng chuột', videoId: 'kkmePFcbdws' },
+    { type: 'video', title: 'Hướng dẫn WCAG — Dành cho người hạn chế sử dụng chuột', videoId: 'RobRvZJIYto' },
     { type: 'blog' },
   ];
 
