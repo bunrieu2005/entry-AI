@@ -21,9 +21,11 @@
 <div class="header__actions">
   <a href="https://github.com" target="_blank" class="btn-icon" aria-label="GitHub">
     <app-github-icon [size]="18"></app-github-icon>
+    <span class="header__shortcut">7</span>
   </a>
   <a href="https://facebook.com" target="_blank" class="btn-icon" aria-label="Liên hệ">
     <app-facebook-icon [size]="18"></app-facebook-icon>
+    <span class="header__shortcut">8</span>
   </a>
   <a href="/wcag" target="_blank" class="btn-icon btn-icon--wide" aria-label="WCAG" title="WCAG">
     <app-wcag-icon [width]="48" [height]="20"></app-wcag-icon>
@@ -32,6 +34,7 @@
   <button type="button" class="btn-add-prompt" aria-label="Bổ sung prompt" title="Bổ sung prompt">
     <app-send-horizontal-icon [size]="15"></app-send-horizontal-icon>
     <span>Bổ sung prompt</span>
+    <span class="header__shortcut">9</span>
   </button>
 
   <!-- Fix nút CSBM: Bỏ bọc .btn-icon bên trong để không bị bể layout -->
@@ -44,8 +47,14 @@
   <span class="header__divider" aria-hidden="true"></span>
 
   <ng-container *ngIf="(currentUser$ | async) === null; else loggedInTpl">
-    <button class="btn-auth btn-ghost" (click)="openModal('login')">Đăng nhập</button>
-    <button class="btn-auth btn-solid" (click)="openModal('register')">Đăng ký</button>
+    <button class="btn-auth btn-ghost" (click)="openModal('login')">
+      Đăng nhập
+      <span class="header__shortcut">0</span>
+    </button>
+    <button class="btn-auth btn-solid" (click)="openModal('register')">
+      Đăng ký
+      <span class="header__shortcut">R</span>
+    </button>
   </ng-container>
 
   <ng-template #loggedInTpl>

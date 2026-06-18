@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
@@ -134,6 +134,33 @@ export class HeaderComponent implements OnInit, OnDestroy {
   logout() {
     if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
       this.authService.logout();
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleShortcut(event: KeyboardEvent): void {
+    if (!document.body.classList.contains('wcag-on')) return;
+
+    const tag = (event.target as HTMLElement).tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+    switch (event.key) {
+      case '7':
+        window.open('https://github.com', '_blank');
+        break;
+      case '8':
+        window.open('https://facebook.com', '_blank');
+        break;
+      case '9':
+        // trigger bổ sung prompt nếu có
+        break;
+      case '0':
+        this.openModal('login');
+        break;
+      case 'r':
+      case 'R':
+        this.openModal('register');
+        break;
     }
   }
 }

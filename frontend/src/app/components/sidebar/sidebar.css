@@ -3,14 +3,13 @@
 .sidebar {
   width: 260px;
   min-width: 260px;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #0d0d0d;
   border-right: 1px solid #2e2e2e;
   font-family: var(--font-body);
-  /* Trả lại thanh cuộn dọc để không bị lỗi layout */
-  overflow-y: auto; 
+  overflow-y: auto;
   position: relative;
 }
 

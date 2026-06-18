@@ -362,7 +362,45 @@
   }
   
   .auth-switch a:hover { text-decoration: underline; }
-  /* Sửa nút WCAG cho phép tự giãn chiều ngang */
+  /* WCAG shortcut badges */
+.header__shortcut {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 5px;
+  background: #f97316;
+  color: #fff;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(249, 115, 22, 0.4);
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: absolute;
+  top: -6px;
+  right: -6px;
+}
+
+/* Hiện badge khi bật WCAG */
+.wcag-on .header__shortcut {
+  display: inline-flex;
+}
+
+/* Các nút cần position relative để badge hiển thị đúng */
+.btn-icon,
+.btn-add-prompt,
+.btn-auth {
+  position: relative;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Sửa nút WCAG cho phép tự giãn chiều ngang */
 .btn-icon--wide {
   width: auto;
   padding: 0 10px;
