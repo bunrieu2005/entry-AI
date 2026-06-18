@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class FavoriteService {
-  private readonly API_URL = 'http://3.90.5.210:8080/api';
+  private readonly API_URL = '/api';
 
   private favoriteIdsSubject = new BehaviorSubject<Set<number>>(new Set());
   readonly favoriteIds$ = this.favoriteIdsSubject.asObservable();

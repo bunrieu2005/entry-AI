@@ -1,9 +1,7 @@
 {
   "outputDirectory": "dist/entry-AI/browser",
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/api/(.*)", "destination": "http://3.90.5.210:8080/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

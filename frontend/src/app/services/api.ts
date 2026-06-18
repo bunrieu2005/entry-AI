@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://3.90.5.210:8080/api';
+  private baseUrl = '/api';
   constructor(private http: HttpClient) {}
 
   getCategories(): Observable<any[]> {
