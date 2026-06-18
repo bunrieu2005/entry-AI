@@ -11,13 +11,14 @@
   display: flex;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .main-content {
   flex: 1;
   min-width: 0;
   overflow-y: auto;
+  height: 100vh;
 }
 
 /* ============================================================
