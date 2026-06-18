@@ -160,12 +160,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     if (this.keyboardNavigation.isFocusLocked()) {
-      if (this.keyboardNavigation.focusedSidebarModule() === 'ai-guidelines') {
-        return;
-      }
-
       const key = event.key.toLowerCase();
 
+      // Escape luôn unlock — kể cả khi đang ở ai-guidelines
       if (key === 'escape') {
         event.preventDefault();
         this.keyboardNavigation.setFocusLocked(false);

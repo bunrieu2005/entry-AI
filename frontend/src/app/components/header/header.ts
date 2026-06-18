@@ -1,10 +1,11 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { AuthModalService } from '../../services/auth-modal.service';
 import { FavoriteService } from '../../services/favorite.service';
+import { KeyboardNavigationService } from '../../services/keyboard-navigation.service';
 import { LogoutIconComponent } from '../shared/icons/logout-icon';
 import { UserCheckIconComponent } from '../shared/icons/user-check-icon';
 import { GithubIconComponent } from '../shared/icons/github-icon';
@@ -47,6 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private authModalService: AuthModalService,
     private favoriteService: FavoriteService,
+    private keyboardNav: KeyboardNavigationService,
   ) {
     this.currentUser$ = this.authService.currentUser$;
   }
@@ -157,6 +159,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const target = event.target as HTMLElement;
     const tag = target.tagName;
     const isInputField = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
+
+    // CHẶN phím tắt header khi trang con đang khóa focus — buộc phải ESC trước
+    if (this.keyboardNav.isFocusLocked()) return;
 
     if (this.showLogoutModal) {
       if (event.key === 'y' || event.key === 'Y') {

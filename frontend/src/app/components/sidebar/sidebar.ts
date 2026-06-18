@@ -12,7 +12,7 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter, Subscription } from 'rxjs';
 
-import { SidebarModuleId } from '../../services/keyboard-navigation.service';
+import { KeyboardNavigationService, SidebarModuleId } from '../../services/keyboard-navigation.service';
 
 import { HomeIconComponent } from '../shared/icons/home-icon';
 import { OpenaiIconComponent } from '../shared/icons/openai-icon';
@@ -113,7 +113,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   private routerSub?: Subscription;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private keyboardNav: KeyboardNavigationService,
+  ) {}
 
   ngOnInit(): void {
     this.syncExpandedFromUrl(this.router.url);
@@ -142,6 +145,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     const tag = target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable) return;
     if (document.querySelector('.modal-overlay')) return;
+
+    // CHẶN ĐỨNG mọi phím 1-6 khi trang con đang khóa focus — buộc phải ESC trước
+    if (this.keyboardNav.isFocusLocked()) return;
 
     const keyMap: Record<string, string> = {
       '1': 'home', '2': 'explore', '3': 'glossary',
