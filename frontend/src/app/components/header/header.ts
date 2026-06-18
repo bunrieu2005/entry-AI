@@ -26,8 +26,9 @@ import { WcagIconComponent } from '../shared/icons/wcag-icon';
 export class HeaderComponent implements OnInit, OnDestroy {
   currentUser$: Observable<any>;
 
-  // Tên trang hiện tại để hiện breadcrumb
   @Input() currentPageName: string = '';
+
+  isDarkMode = false;
 
   showModal: boolean = false;
   showLogoutModal: boolean = false;
@@ -143,6 +144,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.showLogoutModal = true;
   }
 
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    document.body.classList.toggle('dark-mode', this.isDarkMode);
+  }
+
   confirmLogout() {
     this.authService.logout();
     this.showLogoutModal = false;
@@ -200,6 +206,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (isInputField) return;
 
     switch (event.key) {
+      case 'm':
+      case 'M': this.toggleDarkMode(); break;
       case '7': window.open('https://github.com', '_blank'); break;
       case '8': window.open('https://facebook.com', '_blank'); break;
       case '9': break;

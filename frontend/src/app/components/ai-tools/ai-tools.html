@@ -1,6 +1,5 @@
 <article class="ai-tools">
 
-  <!-- Keyboard Navigation Banner -->
   <div
     *ngIf="isFocusLocked"
     class="nav-banner"
@@ -22,7 +21,6 @@
     </span>
   </div>
 
-  <!-- Header -->
   <div class="ai-tools__header">
     <div class="ai-tools__badge">
       <span class="ai-tools__badge-dot"></span>
@@ -31,13 +29,11 @@
     <h1 class="ai-tools__title">KHÁM PHÁ <span class="highlight">CÔNG CỤ AI</span></h1>
   </div>
 
-  <!-- Loading -->
   <div *ngIf="isLoading" class="state-box">
     <div class="spinner"></div>
     <span>Đang tải kho chứa...</span>
   </div>
 
-  <!-- Category tabs -->
   <div class="tabs" *ngIf="!isLoading && groupedTools.length > 0">
     <button
       class="tab"
@@ -51,7 +47,6 @@
     </button>
   </div>
 
-  <!-- Tools grid -->
   <div class="grid" *ngIf="!isLoading && currentTools.length > 0">
 
     <div
@@ -61,7 +56,6 @@
 
       <article class="card">
 
-        <!-- Logo banner area -->
         <div class="card-banner">
           <div class="card-logo-wrap" *ngIf="tool.logoUrl; else noLogo">
             <img [src]="tool.logoUrl" [alt]="tool.name" onerror="this.src='/assets/logos/default.png'" class="card-logo-img">
@@ -71,7 +65,6 @@
           </ng-template>
         </div>
 
-        <!-- Card body -->
         <div class="card-content">
           <div class="card-meta">
             <span class="card-tag">{{ tool.useCaseTag }}</span>
@@ -80,7 +73,6 @@
           <h3 class="card-title">{{ tool.name }}</h3>
           <p class="card-tagline">{{ tool.taglineVi }}</p>
 
-          <!-- Expanded description -->
           <div class="card-desc" [innerHTML]="tool.descriptionVi"></div>
 
           <button class="card-btn" (click)="openToolWebsite(tool.websiteUrl)" tabindex="-1">

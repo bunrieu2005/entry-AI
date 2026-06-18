@@ -1,6 +1,5 @@
 <header class="header" role="banner">
 
-  <!-- Brand -->
   <div class="header__left">
     <a href="/" class="header__brand" aria-label="Prompt-Entry - Trang chủ">
       <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true" class="header__logo-icon">
@@ -9,15 +8,12 @@
       <span class="header__wordmark">Prompt-Entry</span>
     </a>
 
-    <!-- Breadcrumb / tên trang đang đứng -->
     <nav class="header__breadcrumb" aria-label="Vị trí hiện tại" *ngIf="currentPageName">
       <span class="header__breadcrumb-sep" aria-hidden="true">/</span>
       <span class="header__breadcrumb-page">{{ currentPageName }}</span>
     </nav>
   </div>
 
-  <!-- Actions -->
-<!-- Actions -->
 <div class="header__actions">
   <a href="/github" target="_blank" class="btn-icon" aria-label="GitHub">
     <app-github-icon [size]="18"></app-github-icon>
@@ -38,14 +34,12 @@
     <span class="header__shortcut">9</span>
   </button>
 
-  <!-- Fix nút CSBM: Bỏ bọc .btn-icon bên trong để không bị bể layout -->
   <a href="/privacy" target="_blank" class="btn-action-link" aria-label="Chính sách bảo mật">
     <app-lock-icon [size]="15"></app-lock-icon>
     <span>CSBM</span>
     <span class="header__shortcut">C</span>
   </a>
 
-  <!-- Vạch phân cách -->
   <span class="header__divider" aria-hidden="true"></span>
 
   <ng-container *ngIf="(currentUser$ | async) === null; else loggedInTpl">
@@ -72,20 +66,19 @@
     </button>
   </ng-template>
 
-  <button type="button" class="btn-icon" aria-label="Chế độ tối">
+  <button type="button" class="btn-icon" aria-label="Chế độ tối" title="Chế độ tối (M)" (click)="toggleDarkMode()" [class.dark-mode-active]="isDarkMode">
     <app-moon-icon [size]="18"></app-moon-icon>
+    <span class="header__shortcut">M</span>
   </button>
-</div>  
+</div>
 </header>
 
-<!-- Auth Modal -->
 <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
   <div class="modal-box" (click)="$event.stopPropagation()">
     <div class="modal-title">
       {{ authMode === 'login' ? 'Đăng nhập hệ thống' : 'Đăng ký tài khoản' }}
     </div>
 
-    <!-- Server / success message -->
     <div *ngIf="fieldErrors['server']" class="form-server-error" role="alert">
       <app-triangle-alert-icon [size]="15" color="#E53E3E"></app-triangle-alert-icon>
       {{ fieldErrors['server'] }}
@@ -167,7 +160,6 @@
   </div>
 </div>
 
-<!-- Logout Modal -->
 <div class="modal-overlay" *ngIf="showLogoutModal" (click)="cancelLogout()">
   <div class="modal-box modal-box--sm" (click)="$event.stopPropagation()">
     <div class="logout-icon">

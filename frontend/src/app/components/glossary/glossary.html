@@ -1,6 +1,5 @@
 <div class="glossary" aria-label="Từ điển thuật ngữ AI" [class.kb-lock]="isFocusLocked">
 
-  <!-- ── Navigation Status Banner ── -->
   <div
     *ngIf="isFocusLocked"
     class="nav-status-banner"
@@ -33,15 +32,10 @@
     </span>
   </div>
 
-  <!-- ── TWO-COLUMN LAYOUT ── -->
   <div class="glossary__layout">
 
-    <!-- ═══════════════════════════════════════
-         COLUMN LEFT — Term List & Filters
-         ═══════════════════════════════════════ -->
     <aside class="glossary__sidebar" aria-label="Danh sách thuật ngữ">
 
-      <!-- ZONE_INPUT: Search Box -->
       <div class="sidebar__search" [class.is-keyboard-highlighted]="isFocusLocked && currentZone === 'ZONE_INPUT'">
         <label for="glossary-search" class="visually-hidden">Tìm thuật ngữ</label>
         <div class="search-box">
@@ -69,7 +63,6 @@
         </div>
       </div>
 
-      <!-- ZONE_FILTERS: Group Filter Pills -->
       <div class="sidebar__filters" role="group" aria-label="Lọc nhóm thuật ngữ">
         <button
           *ngFor="let g of filterGroups; let i = index"
@@ -83,13 +76,11 @@
         </button>
       </div>
 
-      <!-- Loading State -->
       <div *ngIf="isLoading" class="sidebar__loading" role="status" aria-live="polite">
         <div class="loading-spinner"></div>
         <span>Đang tải...</span>
       </div>
 
-      <!-- Error State -->
       <div *ngIf="errorMessage && !isLoading" class="sidebar__error" role="alert">
         <p>{{ errorMessage }}</p>
         <button type="button" class="retry-btn" (click)="loadTerms()">
@@ -97,13 +88,11 @@
         </button>
       </div>
 
-      <!-- ZONE_MAIN: Term List -->
       <nav
         *ngIf="!isLoading && !errorMessage"
         class="sidebar__list"
         aria-label="Danh sách thuật ngữ">
 
-        <!-- When group = all: show grouped list -->
         <ng-container *ngIf="activeGroup === 'all' && groupedTerms.length > 0">
           <div *ngFor="let group of groupedTerms" class="term-group">
             <div class="term-group__label" aria-hidden="true">{{ group.label }}</div>
@@ -132,7 +121,6 @@
           </div>
         </ng-container>
 
-        <!-- When group is filtered: show flat list -->
         <ng-container *ngIf="activeGroup !== 'all' || groupedTerms.length === 0">
           <ul class="term-list-flat" role="list">
             <li
@@ -158,7 +146,6 @@
           </ul>
         </ng-container>
 
-        <!-- Empty State -->
         <div *ngIf="!isLoading && filteredTerms.length === 0" class="sidebar__empty" role="status">
           <i class="ti ti-search" aria-hidden="true"></i>
           <p *ngIf="searchQuery">Không có kết quả cho "{{ searchQuery }}"</p>
@@ -169,9 +156,6 @@
 
     </aside>
 
-    <!-- ═══════════════════════════════════════
-         COLUMN RIGHT — Term Detail (ZONE_DETAIL)
-         ═══════════════════════════════════════ -->
     <main
       class="glossary__detail"
       id="glossary-detail-pane"
@@ -179,7 +163,6 @@
       aria-label="Chi tiết thuật ngữ"
       tabindex="-1">
 
-      <!-- Empty State: no term selected -->
       <div *ngIf="!isLoading && !errorMessage && activeTermId === null" class="detail__empty">
         <div class="detail__empty-icon" aria-hidden="true">
           <i class="ti ti-book-2"></i>
@@ -187,7 +170,6 @@
         <p class="detail__empty-text">Chọn một thuật ngữ để xem chi tiết</p>
       </div>
 
-      <!-- Term Detail -->
       <ng-container *ngIf="!isLoading && !errorMessage && activeTermId !== null">
         <ng-container *ngFor="let term of filteredTerms; trackBy: trackByTermId">
           <article
@@ -195,7 +177,6 @@
             class="term-detail"
             [attr.aria-label]="'Chi tiết: ' + term.term">
 
-            <!-- Detail Header -->
             <header class="term-detail__header">
               <h1 class="term-detail__title">{{ term.term }}</h1>
               <div class="term-detail__tags" *ngIf="parseTags(term.tags).length > 0">
@@ -209,7 +190,6 @@
 
             <div class="term-detail__divider" aria-hidden="true"></div>
 
-            <!-- Definition -->
             <section class="term-detail__section" [attr.aria-labelledby]="'def-label-' + term.id">
               <div [id]="'def-label-' + term.id" class="section__label">Định nghĩa</div>
               <div
@@ -220,7 +200,6 @@
 
             <div class="term-detail__divider" aria-hidden="true"></div>
 
-            <!-- Example -->
             <section
               *ngIf="term.exampleVi"
               class="term-detail__section"
@@ -234,7 +213,6 @@
               </div>
             </section>
 
-            <!-- Related Terms -->
             <section
               *ngIf="term.relatedTerms && term.relatedTerms.length > 0"
               class="term-detail__section"

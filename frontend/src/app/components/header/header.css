@@ -513,3 +513,68 @@
   top: unset;
   right: unset;
 }
+
+/* ── Dark Mode ── */
+:root.dark-mode {
+  --color-primary: #F4E9D2;
+  --color-surface: #2A1F15;
+  --color-neutral: #1A110B;
+  --color-on-primary: #1A110B;
+  --color-secondary: #8B6E52;
+  --color-tertiary: #C99A4B;
+}
+
+:root.dark-mode body {
+  background-color: #1A110B;
+  color: #F4E9D2;
+}
+
+:root.dark-mode .app-layout {
+  background-color: #1A110B;
+}
+
+:root.dark-mode .sidebar {
+  background-color: #241A12;
+  border-color: rgba(201, 154, 75, 0.15);
+}
+
+:root.dark-mode .hero {
+  background-color: #1A110B;
+  color: #F4E9D2;
+}
+
+:root.dark-mode .prompts,
+:root.dark-mode .prompts-fav,
+:root.dark-mode .glossary,
+:root.dark-mode .ai-tools,
+:root.dark-mode .ai-guidelines {
+  background-color: #1A110B;
+  color: #F4E9D2;
+}
+
+:root.dark-mode .prompt-card,
+:root.dark-mode .card-inner,
+:root.dark-mode .ai-tools .card,
+:root.dark-mode .glossary .sidebar__list,
+:root.dark-mode .term-detail {
+  background-color: #241A12;
+  border-color: rgba(201, 154, 75, 0.15);
+  color: #F4E9D2;
+}
+
+:root.dark-mode .search-box__input {
+  background-color: rgba(244, 233, 210, 0.06);
+  border-color: rgba(244, 233, 210, 0.15);
+  color: #F4E9D2;
+}
+
+:root.dark-mode .search-box__input::placeholder {
+  color: rgba(244, 233, 210, 0.3);
+}
+
+/* Moon button active state */
+.btn-icon.dark-mode-active {
+  background: rgba(201, 154, 75, 0.15);
+  border-color: rgba(201, 154, 75, 0.5);
+  color: #C99A4B;
+}

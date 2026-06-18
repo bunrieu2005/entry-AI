@@ -1,6 +1,5 @@
 <section class="prompts-fav" aria-labelledby="fav-heading">
 
-  <!-- Keyboard Navigation Banner -->
   <div
     *ngIf="isFocusLocked"
     class="nav-banner"
@@ -16,7 +15,6 @@
     </span>
   </div>
 
-  <!-- Loading hierarchy -->
   <div *ngIf="isLoading" class="state-block" role="status" aria-live="polite">
     <div class="spinner" aria-hidden="true"></div>
     <span>Đang tải danh sách yêu thích...</span>
@@ -24,7 +22,6 @@
 
   <ng-container *ngIf="!isLoading">
 
-    <!-- Page Header (editorial style) -->
     <div class="prompts-fav__header-block">
       <div class="prompts-fav__badge" aria-hidden="true">
         <span class="prompts-fav__badge-dot"></span>
@@ -38,10 +35,8 @@
       </p>
     </div>
 
-    <!-- Content Area -->
     <div class="prompts-fav__content">
 
-      <!-- Not logged in -->
       <div *ngIf="!isLoggedIn" class="state-block" role="status">
         <div class="state-icon"><i class="ti ti-lock"></i></div>
         <p>Vui lòng <a href="javascript:void(0)" (click)="openLogin()">đăng nhập</a> để xem prompt yêu thích của bạn.</p>
@@ -50,7 +45,6 @@
         </button>
       </div>
 
-      <!-- Error -->
       <div *ngIf="!errorMessage && promptsList.length === 0 && isLoggedIn" class="state-block" role="status">
         <div class="state-icon"><i class="ti ti-heart-off"></i></div>
         <p>Chưa có prompt yêu thích nào.</p>
@@ -65,7 +59,6 @@
         </button>
       </div>
 
-      <!-- Prompt Grid -->
       <div
         *ngIf="!errorMessage && promptsList.length > 0"
         class="prompts-fav__grid-container"
@@ -80,7 +73,6 @@
             [attr.aria-label]="'Prompt: ' + prompt.titleVi"
             [attr.aria-current]="isFocusLocked && currentZone === 'ZONE_MAIN' && i === highlightedIndex ? 'true' : null">
 
-            <!-- Accent stripe -->
             <span
               class="card-stripe"
               [class.stripe--claude]="prompt.compatibleTools[0] === 'Claude'"
@@ -90,7 +82,6 @@
 
             <div class="card-inner">
 
-              <!-- Header -->
               <div class="card-header">
                 <span class="card-index" aria-hidden="true">#{{ (i + 1).toString().padStart(2, '0') }}</span>
                 <div class="card-title-block">
@@ -102,13 +93,11 @@
                 </div>
               </div>
 
-              <!-- Content — notebook style -->
               <div class="card-notebook" role="region" [attr.aria-label]="'Nội dung: ' + prompt.titleVi">
                 <div class="notebook-margin" aria-hidden="true"></div>
                 <pre class="card-text">{{ prompt.content }}</pre>
               </div>
 
-              <!-- Footer -->
               <div class="card-footer">
                 <div class="card-tools" aria-label="Công cụ tương thích" *ngIf="prompt.compatibleTools.length">
                   <span
