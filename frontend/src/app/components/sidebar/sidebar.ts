@@ -142,9 +142,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     if (!this.isWcagModeActive) return;
 
-    // Bỏ qua khi đang nhập trong input/textarea/select
-    const tag = (event.target as HTMLElement).tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    const target = event.target as HTMLElement;
+    const tag = target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable) return;
+
+    // Không xử lý nếu có modal overlay đang mở
+    if (document.querySelector('.modal-overlay')) return;
 
     switch (event.key) {
 

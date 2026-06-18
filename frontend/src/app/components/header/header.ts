@@ -146,6 +146,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const tag = target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable) return;
 
+    // Xử lý phím khi modal đang mở
+    if (this.showModal) {
+      if (event.key === 'Escape') {
+        this.closeModal();
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      if (event.key === 'Enter') {
+        this.submitStep1();
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      // Block tất cả phím khác không xuyên qua modal
+      event.stopPropagation();
+      return;
+    }
+
     switch (event.key) {
       case '7':
         window.open('https://github.com', '_blank');

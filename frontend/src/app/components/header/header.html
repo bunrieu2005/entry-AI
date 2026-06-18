@@ -141,10 +141,14 @@
     </div>
 
     <div class="modal-actions">
-      <button class="btn-cancel" (click)="closeModal()">Hủy</button>
+      <button class="btn-cancel" (click)="closeModal()">
+        Hủy
+        <span class="header__shortcut">Esc</span>
+      </button>
       <button class="btn-full" (click)="submitStep1()">
         {{ authMode === 'login' ? 'Đăng nhập' : 'Tiếp tục' }}
         <i *ngIf="authMode === 'register'" class="ti ti-arrow-right"></i>
+        <span class="header__shortcut">↵</span>
       </button>
     </div>
 

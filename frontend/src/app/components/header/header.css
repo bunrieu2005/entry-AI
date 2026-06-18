@@ -384,7 +384,7 @@
 }
 
 /* Hiện badge khi bật WCAG */
-body.wcag-on .header__shortcut {
+:host-context(body.wcag-on) .header__shortcut {
   display: inline-flex;
 }
 
@@ -398,6 +398,19 @@ body.wcag-on .header__shortcut {
 @keyframes popIn {
   0% { transform: scale(0.5); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* Badge trong modal */
+.modal-actions .header__shortcut {
+  position: static;
+  margin-left: 6px;
+  top: unset;
+  right: unset;
+}
+
+.btn-cancel,
+.btn-full {
+  position: relative;
 }
 
 /* Sửa nút WCAG cho phép tự giãn chiều ngang */
