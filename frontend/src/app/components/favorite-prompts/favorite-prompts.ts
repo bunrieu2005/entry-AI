@@ -103,7 +103,7 @@ export class FavoritePromptsComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       return;
     }
-    this.http.get<Prompt[]>(`http://localhost:8080/api/favorites/${userId}`).subscribe({
+    this.http.get<Prompt[]>(`/api/favorites/${userId}`).subscribe({
       next: (data) => {
         this.promptsList = data;
         this.isLoading = false;

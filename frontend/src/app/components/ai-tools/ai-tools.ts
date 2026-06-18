@@ -33,7 +33,7 @@ type Zone = 'ZONE_FILTERS' | 'ZONE_MAIN';
   styleUrl: './ai-tools.css'
 })
 export class AiToolsComponent implements OnInit {
-  private readonly API_URL = 'http://localhost:8080/api/ai-tools/grouped';
+  private readonly API_URL = '/api/ai-tools/grouped';
   private http = inject(HttpClient);
   private keyboardNav = inject(KeyboardNavigationService);
 

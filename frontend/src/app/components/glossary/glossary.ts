@@ -33,7 +33,7 @@ interface GroupedTerms {
   styleUrl: './glossary.css'
 })
 export class GlossaryComponent implements OnInit, OnChanges {
-  private readonly API_URL = 'http://localhost:8080/api/glossary';
+  private readonly API_URL = '/api/glossary';
 
   @Input() isFocusLocked: boolean = false;
 

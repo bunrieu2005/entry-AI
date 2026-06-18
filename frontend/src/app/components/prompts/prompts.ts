@@ -52,7 +52,7 @@ type Zone = 'ZONE_FILTERS' | 'ZONE_SUBS' | 'ZONE_MAIN';
   styleUrl: './prompts.css',
 })
 export class PromptsComponent implements OnInit, OnChanges, OnDestroy {
-  private readonly API_URL = 'http://localhost:8080/api';
+  private readonly API_URL = '/api';
 
   categories: CategoryHierarchyDto[] = [];
   activeCategoryId: number = 0;

@@ -68,14 +68,14 @@ export class AiGuidelinesComponent implements OnInit, OnChanges {
       }
       this.currentCategory = cat;
 
-      this.http.get<any[]>(`http://localhost:8080/api/ai-guidelines/${cat}`)
+      this.http.get<any[]>(`/api/ai-guidelines/${cat}`)
         .subscribe({
           next: (res) => this.lessons = res,
           error: (err) => console.error('Lỗi tải danh sách bài:', err)
         });
 
       if (no) {
-        this.http.get(`http://localhost:8080/api/ai-guidelines/${cat}/${no}`)
+        this.http.get(`/api/ai-guidelines/${cat}/${no}`)
           .subscribe({
             next: (res) => this.currentLesson = res,
             error: (err) => {
