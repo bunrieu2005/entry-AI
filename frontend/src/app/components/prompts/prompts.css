@@ -113,13 +113,14 @@
     
     .prompts__title {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 56px;
+      font-size: 42px;
       font-weight: 900;
       line-height: 0.95;
       letter-spacing: -0.03em;
       color: var(--c-primary);
       margin: 0 0 16px;
       text-transform: uppercase;
+      white-space: nowrap;
     }
     
     .prompts__title .highlight { }
@@ -683,7 +684,7 @@
     /* ── Responsive ──────────────────────────────────────────────*/
     @media (max-width: 1000px) {
       .prompts { padding: 32px 20px; }
-      .prompts__title { font-size: 42px; }
+      .prompts__title { font-size: 36px; }
     }
     
     @media (max-width: 900px) {
@@ -787,18 +788,54 @@
     }
 
     /* ==========================
-      HERO 2 CỘT
+      HERO MỚI: title + pills ngang hàng
       ========================== */
+
+    .prompts__title-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .prompts__title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--c-primary);
+      margin: 0;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
 
     .prompts__hero {
       display: grid;
-      grid-template-columns: 1.6fr 0.7fr;
-      gap: 32px;
-      align-items: start;
+      grid-template-columns: 1fr 260px;
+      gap: 24px;
+      align-items: center;
       padding: 8px 0 0;
-      margin-bottom: 28px;
-      background: transparent;
+      margin-bottom: 20px;
     }
+
+    /* Ẩn badge + subtitle cũ */
+    .prompts__badge,
+    .prompts__subtitle,
+    .prompts__hero-separator {
+      display: none;
+    }
+
+    .prompts__support-strip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ==========================
+      HERO 2 CỘT (legacy — kept for reference below)
+      ========================== */
 
     .prompts__hero-left {
       padding: 0;
